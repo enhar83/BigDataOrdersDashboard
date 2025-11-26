@@ -1,0 +1,26 @@
+﻿<nav class="navbar">
+    <div class="col-12">
+
+        <div class="navbar-header">
+            <a href="javascript:void(0);" class="bars"></a>
+            <a class="navbar-brand" href="index.html">Büyük Veri Analitiği</a>
+        </div>
+
+        <!-- Burada QuickMenu için gerekli olan kodlar vardır. -->
+		@await Component.InvokeAsync("_NavbarQuickMenuComponentPartial")
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="zmdi zmdi-search"></i></a></li>
+            
+            <!-- Notifications için gerekli olan ViewComponent -->
+			@await Component.InvokeAsync("_NavbarNotificationsComponentPartial")
+
+            <!-- Tasks için gerekli olan ViewComponent -->
+            @await Component.InvokeAsync("_NavbarTasksComponentPartial")
+
+            <li><a href="sign-in.html" class="mega-menu xs-hide" data-close="true"><i class="zmdi zmdi-power"></i></a></li>
+            <li class=""><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
+        </ul>
+    </div>
+</nav>
