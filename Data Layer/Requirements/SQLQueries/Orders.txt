@@ -1,0 +1,23 @@
+﻿CREATE TABLE OrdersAll (
+    OrderId INT,
+    ProductId INT,
+    CustomerId INT,
+    Quantity INT,
+    PaymentMethod NVARCHAR(50),
+    OrderStatus NVARCHAR(50),
+    OrderDate DATETIME,
+    OrderNotes NVARCHAR(250)
+);
+
+----------------------------------
+
+INSERT INTO OrdersAll
+SELECT * FROM Orders1
+UNION ALL
+SELECT * FROM Orders2
+UNION ALL
+SELECT * FROM Orders3
+UNION ALL
+SELECT * FROM Orders4
+UNION ALL
+SELECT * FROM Orders5;
