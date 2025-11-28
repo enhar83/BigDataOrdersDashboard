@@ -1,3 +1,7 @@
+using Business_Layer.Abstract;
+using Business_Layer.Concrete;
+using Data_Layer.Abstract;
+using Data_Layer.Concrete;
 using Data_Layer.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +15,12 @@ builder.Services.AddDbContext<BigDataOrdersDbContext>(options =>
       options.UseSqlServer(builder.Configuration.GetConnectionString
             ("DefaultConnection"));
 });
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ICategoryService, CategoryManager>();
+
 
 
 var app = builder.Build();
