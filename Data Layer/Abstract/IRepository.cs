@@ -15,7 +15,7 @@ namespace Data_Layer.Abstract
         T GetFirstOrDefault(Expression<Func<T, bool>> predicate);
         void Add (T entity);
         void Update (T entity);
-        void Delete (T entity);
+        void Delete (int id);
 
 
     }
