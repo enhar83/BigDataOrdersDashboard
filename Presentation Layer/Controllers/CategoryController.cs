@@ -1,4 +1,5 @@
 ﻿using Business_Layer.Abstract;
+using Entity_Layer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation_Layer.Controllers
@@ -17,6 +18,19 @@ namespace Presentation_Layer.Controllers
             var categories = _categoryService.GetAll();
 
             return View(categories);
+        }
+
+        [HttpGet]
+        public IActionResult AddCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddCategory(Category category)
+        {
+            _categoryService.Add(category);
+            return RedirectToAction("CategoryList");
         }
     }
 }

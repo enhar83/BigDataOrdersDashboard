@@ -1,0 +1,27 @@
+﻿@model Category
+
+@{
+	ViewData["Title"] = "AddCategory";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<label>Kategori Adı</label>
+							<input type="text" asp-for="CategoryName" class="form-control">
+							<br />
+							<button class="btn btn-info">Kategoriyi Oluştur</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
