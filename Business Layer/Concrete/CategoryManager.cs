@@ -45,6 +45,11 @@ namespace Business_Layer.Concrete
             return _uow.Categories.GetById(id);
         }
 
+        public Category GetFirstOrDefault(int id)
+        {
+            return _uow.Categories.GetFirstOrDefault(c=>c.CategoryId==id);
+        }
+
         public void Update(Category category)
         {
             if (category.CategoryId <= 0)

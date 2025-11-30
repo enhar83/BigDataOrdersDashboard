@@ -40,5 +40,26 @@ namespace Presentation_Layer.Controllers
             _categoryService.Delete(id);
             return RedirectToAction("CategoryList");
         }
+
+        [HttpGet]
+        public IActionResult UpdateCategory(int id)
+        {
+            var categoryToUpdate = _categoryService.GetFirstOrDefault(id);
+            if (categoryToUpdate == null) return NotFound();
+            return View(categoryToUpdate);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCategory(Category updatedCategory)
+        {
+            if (updatedCategory == null || updatedCategory.CategoryId <= 0)
+                return RedirectToAction("CategoryList");
+
+            _categoryService.Update(updatedCategory);
+
+            return RedirectToAction("CategoryList");
+
+        }
     }
 }
