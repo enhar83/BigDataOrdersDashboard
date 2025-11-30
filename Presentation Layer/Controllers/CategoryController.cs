@@ -32,5 +32,13 @@ namespace Presentation_Layer.Controllers
             _categoryService.Add(category);
             return RedirectToAction("CategoryList");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCategory(int id)
+        {
+            _categoryService.Delete(id);
+            return RedirectToAction("CategoryList");
+        }
     }
 }
