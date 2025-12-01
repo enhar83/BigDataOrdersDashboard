@@ -54,7 +54,6 @@
         const categoryId = this.getAttribute('data-id');
         const categoryName = this.getAttribute('data-category-name');
         
-        // Form ID'si doğru olmalı: deleteForm_ + ID
         const form = document.getElementById(`deleteForm_${categoryId}`); 
 
         Swal.fire({
@@ -68,7 +67,6 @@
             cancelButtonText: 'Vazgeç'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Kullanıcı onayladıysa, gizli formu gönder
                 form.submit();
             }
         });
