@@ -10,6 +10,7 @@ namespace Data_Layer.Abstract
     public interface IUnitOfWork : IDisposable
     {
         IRepository<Category> Categories { get; }
+        IRepository<Product> Products { get; }
         int Save();
     }
 }

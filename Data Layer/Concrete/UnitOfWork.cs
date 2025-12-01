@@ -12,6 +12,7 @@ namespace Data_Layer.Concrete
     public class UnitOfWork:IUnitOfWork,IDisposable
     {
         public IRepository<Category> Categories { get; private set; }
+        public IRepository<Product> Products { get; private set; }
 
         private readonly BigDataOrdersDbContext _db;
 
@@ -20,6 +21,7 @@ namespace Data_Layer.Concrete
             _db = db;
             
             Categories = new Repository<Category>(_db);
+            Products = new Repository<Product>(_db);
         }
 
         public void Dispose()
