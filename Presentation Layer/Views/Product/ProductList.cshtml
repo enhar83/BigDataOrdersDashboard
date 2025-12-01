@@ -1,0 +1,60 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "ProductList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<table class="table table-bordered">
+							<tr>
+								<th>#</th>
+								<th>Ürün Adı</th>
+								<th>Ürün Açıklaması</th>
+								<th>Fiyat</th>
+								<th>Stok Miktarı</th>
+								<th>Ürün Kategorisi</th>
+								<th>Üretildiği Ülke</th>
+								<th>Sil</th>
+								<th>Güncelle</th>
+							</tr>
+
+							@foreach (var item in Model)
+							{
+								<tr>
+									<td>@item.ProductId</td>
+									<td>@item.ProductName</td>
+									<td>@item.ProductDescription</td>
+									<td>@item.UnitPrice</td>
+									<td>@item.StockQuantity</td>
+									<td>@item.Category.CategoryName</td>
+									<td>@item.CountryOfOrigin</td>
+									<td>
+										<form id="deleteForm_@item.ProductId" asp-action="DeleteProduct" method="post" style="display:inline;">
+											@Html.AntiForgeryToken()
+
+											<input type="hidden" name="id" value="@item.ProductId" />
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.ProductId" data-category-name="@item.ProductName">Sil</button>
+										</form>
+									</td>
+									<td><a href="/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Güncelle</a></td>
+								</tr>
+							}
+
+						</table>
+
+						<a href="/Product/AddProduct/" class="btn btn-info">Yeni Ürün Girişi</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
