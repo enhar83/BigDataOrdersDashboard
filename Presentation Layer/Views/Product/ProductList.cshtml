@@ -31,16 +31,25 @@
 									<td>@item.ProductId</td>
 									<td>@item.ProductName</td>
 									<td>@item.ProductDescription</td>
-									<td>@item.UnitPrice</td>
+									<td>@item.UnitPrice.ToString("C2")</td>
 									<td>@item.StockQuantity</td>
-									<td>@item.Category.CategoryName</td>
+									<td>
+										@if (item.Category != null)
+										{
+											@item.Category.CategoryName
+										}
+										else
+										{
+											@:Kategori Yok
+										}
+									</td>
 									<td>@item.CountryOfOrigin</td>
 									<td>
 										<form id="deleteForm_@item.ProductId" asp-action="DeleteProduct" method="post" style="display:inline;">
 											@Html.AntiForgeryToken()
 
 											<input type="hidden" name="id" value="@item.ProductId" />
-											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.ProductId" data-category-name="@item.ProductName">Sil</button>
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.ProductId" data-product-name="@item.ProductName">Sil</button>
 										</form>
 									</td>
 									<td><a href="/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Güncelle</a></td>
@@ -48,6 +57,66 @@
 							}
 
 						</table>
+
+						<div class="mt-3 text-center">
+							<nav aria-label="Page navigation">
+								<ul class="pagination justify-content-center">
+
+									@if (ViewBag.CurrentPage > 1)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Product/ProductList?page=@(ViewBag.CurrentPage - 1)">Önceki</a>
+										</li>
+									}
+
+									@{
+										int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+										int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+
+										if (startPage > 1)
+										{
+											<li class="page-item">
+												<a class="page-link" href="/Product/ProductList?page=1">1</a>
+											</li>
+											if (startPage > 2)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+										}
+
+										for (int i = startPage; i <= endPage; i++)
+										{
+											<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+												<a class="page-link" href="/Product/ProductList?page=@i">@i</a>
+											</li>
+										}
+
+										if (endPage < ViewBag.TotalPages)
+										{
+											if (endPage < ViewBag.TotalPages - 1)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+											<li class="page-item">
+												<a class="page-link" href="/Product/ProductList?page=@ViewBag.TotalPages">@ViewBag.TotalPages</a>
+											</li>
+										}
+									}
+
+									@if (ViewBag.CurrentPage < ViewBag.TotalPages)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Product/ProductList?page=@(ViewBag.CurrentPage + 1)">Sonraki</a>
+										</li>
+									}
+
+								</ul>
+							</nav>
+						</div>
 
 						<a href="/Product/AddProduct/" class="btn btn-info">Yeni Ürün Girişi</a>
 
@@ -58,3 +127,28 @@
 	</div>
 </section>
 
+<script>
+			document.querySelectorAll('.delete-btn').forEach(button => {
+		button.addEventListener('click', function() {
+			const productId = this.getAttribute('data-id');
+			const productName = this.getAttribute('data-product-name');
+
+			const form = document.getElementById(`deleteForm_${productId}`);
+
+			Swal.fire({
+				title: 'Emin misiniz?',
+				text: `${productName} kategorisi kalıcı olarak silinecek.`,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Evet, Sil!',
+				cancelButtonText: 'Vazgeç'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					form.submit();
+				}
+			});
+		});
+	});
+</script>

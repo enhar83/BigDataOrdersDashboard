@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
 using Data_Layer.Abstract;
+using Data_Layer.Concrete;
 using Entity_Layer;
 
 namespace Business_Layer.Concrete
@@ -12,10 +13,12 @@ namespace Business_Layer.Concrete
     public class ProductManager : IProductService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IProductRepository _productRepository;
 
-        public ProductManager(IUnitOfWork uow)
+        public ProductManager(IUnitOfWork uow, IProductRepository productRepository)
         {
             _uow = uow;
+            _productRepository = productRepository;
         }
 
         public void Add(Product product)
@@ -50,11 +53,16 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetFirstOrDefault(p => p.ProductId == id);
         }
 
+        public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)
+        {
+            return _productRepository.GetProductsWithPaging(pageNumber, pageSize);
+        }
+
         public void Update(Product product)
         {
             if (product.ProductId <= 0)
             {
-                throw new Exception("Geçersiz kategori ID'si.");
+                throw new Exception("Geçersiz ürün ID'si.");
             }
 
             _uow.Products.Update(product);

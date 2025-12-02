@@ -11,6 +11,18 @@
 
 ----------------------------------
 
+INSERT INTO Products (ProductName, ProductDescription, UnitPrice, StockQuantity, CategoryId, CountryOfOrigin, ProductImageUrl) VALUES
+(N'Tam Tahıllı Makarna', N'Sağlıklı, yüksek lif oranına sahip tam tahıllı makarna.', 42.90, 400, 1, N'İtalya', N'test'),
+(N'Gazlı İçecek Portakallı', N'Ferahlatıcı portakal aromalı gazlı içecek.', 18.50, 600, 2, N'Almanya', N'test'),
+(N'Masa Lambası', N'LED ampullü, ayarlanabilir modern masa lambası.', 259.00, 150, 5, N'Hollanda', N'test'),
+(N'Kadın Deri Cüzdan', N'Yüksek kaliteli hakiki deriden üretilmiş şık cüzdan.', 389.00, 220, 4, N'İspanya', N'test'),
+(N'Bluetooth Hoparlör', N'Su geçirmez taşınabilir Bluetooth hoparlör.', 549.00, 320, 3, N'Fransa', N'test'),
+(N'Saç Kurutma Makinesi', N'Yüksek güçlü, iyon teknolojili saç kurutma makinesi.', 299.00, 180, 6, N'Belçika', N'test'),
+(N'Spor Sırt Çantası', N'Hafif, su geçirmez, çok bölmeli sırt çantası.', 229.00, 270, 8, N'Avusturya', N'test'),
+(N'Bahçe Sulama Hortumu', N'Dayanıklı, esnek, 25 metrelik bahçe sulama hortumu.', 199.00, 130, 13, N'Polonya', N'test');
+
+----------------------------------
+
 INSERT INTO OrdersAll
 SELECT * FROM Orders1
 UNION ALL
