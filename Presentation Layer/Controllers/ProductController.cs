@@ -51,6 +51,34 @@ namespace Presentation_Layer.Controllers
             return RedirectToAction("ProductList");
         }
 
+        [HttpGet]
+        public IActionResult UpdateProduct(int id)
+        {
+            var productToUpdate = _productService.GetFirstOrDefault(id);
+            if (productToUpdate == null) return NotFound();
+
+            var categoryList = _categoryService.GetAll()
+                .Select(x => new SelectListItem
+                {
+                    Text = x.CategoryName,
+                    Value = x.CategoryId.ToString()
+                }).ToList();
+            ViewBag.CategoryList = categoryList;
+
+            return View(productToUpdate);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateProduct(Product updatedProduct)
+        {
+            if (updatedProduct == null || updatedProduct.ProductId <= 0)
+                return RedirectToAction("ProductList");
+
+            _productService.Update(updatedProduct);
+            return RedirectToAction("ProductList");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteProduct(int id)
