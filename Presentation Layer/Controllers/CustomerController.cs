@@ -12,9 +12,14 @@ namespace Presentation_Layer.Controllers
             _customerService = customerService;
         }
 
-        public IActionResult CustomerList()
+        public IActionResult CustomerList(int page=1)
         {
-            var customers= _customerService.GetAll();
+            int pageSize = 12;
+            var (customers, totalCount) = _customerService.GetCustomersWithPaging(page, pageSize);
+
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
 
             return View(customers);
         }
