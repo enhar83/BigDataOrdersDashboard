@@ -13,6 +13,7 @@ namespace Data_Layer.Concrete
     {
         public IRepository<Category> Categories { get; private set; }
         public IRepository<Product> Products { get; private set; }
+        public IRepository<Customer> Customers { get; private set; }
 
         private readonly BigDataOrdersDbContext _db;
 
@@ -22,6 +23,7 @@ namespace Data_Layer.Concrete
             
             Categories = new Repository<Category>(_db);
             Products = new Repository<Product>(_db);
+            Customers=new Repository<Customer>(_db);
         }
 
         public void Dispose()

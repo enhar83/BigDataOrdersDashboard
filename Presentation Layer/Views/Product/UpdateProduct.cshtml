@@ -50,9 +50,11 @@
 							<br />
 
 							<label>Yeni Kategori Adı</label>
-							<select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryList">
-								<option value="">-- Kategori Seçiniz --</option>
-							</select>
+							<div class="form-line">
+								<select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-control show-tick">
+									<option value="">-- Kategori Seçiniz --</option>
+								</select>
+							</div>
 							<br />
 
 							<label>Yeni Üretim Yeri</label>
