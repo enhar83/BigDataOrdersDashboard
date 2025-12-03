@@ -55,5 +55,13 @@ namespace Presentation_Layer.Controllers
             _customerService.Update(customer);
             return RedirectToAction("CustomerList");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCustomer(int id)
+        {
+            _customerService.Delete(id);
+            return RedirectToAction("CustomerList");    
+        }
     }
 }

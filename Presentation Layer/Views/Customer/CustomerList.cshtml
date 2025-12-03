@@ -68,7 +68,7 @@
 											@Html.AntiForgeryToken()
 
 											<input type="hidden" name="id" value="@item.CustomerId" />
-											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.CustomerId" data-customer-name="@item.CustomerId">Sil</button>
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.CustomerId" data-customer-name="@item.CustomerName @item.CustomerSurname">Sil</button>
 										</form>
 									</td>
 									<td><a href="/Customer/UpdateCustomer/@item.CustomerId" class="btn btn-success">Güncelle</a></td>
@@ -145,4 +145,30 @@
 		</div>
 	</div>
 </section>
+
+<script>
+			document.querySelectorAll('.delete-btn').forEach(button => {
+		button.addEventListener('click', function() {
+			const customerId = this.getAttribute('data-id');
+			const customerName = this.getAttribute('data-customer-name');
+
+			const form = document.getElementById(`deleteForm_${customerId}`);
+
+			Swal.fire({
+				title: 'Emin misiniz?',
+				text: `${customerName} müşterisi kalıcı olarak silinecek.`,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Evet, Sil!',
+				cancelButtonText: 'Vazgeç'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					form.submit();
+				}
+			});
+		});
+	});
+</script>
 
