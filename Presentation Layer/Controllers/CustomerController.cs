@@ -1,4 +1,5 @@
 ﻿using Business_Layer.Abstract;
+using Entity_Layer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation_Layer.Controllers
@@ -12,7 +13,7 @@ namespace Presentation_Layer.Controllers
             _customerService = customerService;
         }
 
-        public IActionResult CustomerList(int page=1)
+        public IActionResult CustomerList(int page = 1)
         {
             int pageSize = 12;
             var (customers, totalCount) = _customerService.GetCustomersWithPaging(page, pageSize);
@@ -22,6 +23,20 @@ namespace Presentation_Layer.Controllers
             ViewBag.PageSize = pageSize;
 
             return View(customers);
+        }
+
+        [HttpGet]
+        public IActionResult AddCustomer()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddCustomer(Customer customer)
+        {
+            _customerService.Add(customer);
+            return RedirectToAction("CustomerList");
         }
     }
 }
