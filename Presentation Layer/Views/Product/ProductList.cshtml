@@ -1,11 +1,35 @@
 ﻿@model List<Product>
 
 @{
-    ViewData["Title"] = "ProductList";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	ViewData["Title"] = "ProductList";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+	int currentPage= (int)ViewBag.CurrentPage;
+	int pageSize = (int)ViewBag.PageSize;
+
+	int count = (currentPage - 1) * pageSize;
 }
 
 <section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Ürün Listesi
+					<small class="text-muted">Ürün İşlemleri Sayfası</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Ürünler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Ürün Listesi</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
 	<div class="container-fluid">
 		<div class="row clearfix">
 			<div class="col-lg-12">
@@ -27,8 +51,9 @@
 
 							@foreach (var item in Model)
 							{
+								count++;
 								<tr>
-									<td>@item.ProductId</td>
+									<td>@count</td>
 									<td>@item.ProductName</td>
 									<td>@item.ProductDescription</td>
 									<td>@item.UnitPrice.ToString("C2")</td>

@@ -1,16 +1,19 @@
 ﻿using Business_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Presentation_Layer.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         public IActionResult ProductList(int page=1)
@@ -21,6 +24,7 @@ namespace Presentation_Layer.Controllers
 
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
             ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
 
             return View(values);
         }
@@ -28,6 +32,15 @@ namespace Presentation_Layer.Controllers
         [HttpGet]
         public IActionResult AddProduct()
         {
+            var categoryList = _categoryService.GetAll()
+                .Select(x => new SelectListItem
+                {
+                    Text = x.CategoryName,
+                    Value = x.CategoryId.ToString()
+                }).ToList();
+
+            ViewBag.CategoryList = categoryList;
+
             return View();
         }
 
