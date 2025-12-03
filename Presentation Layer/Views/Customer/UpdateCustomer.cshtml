@@ -1,0 +1,81 @@
+﻿@model Customer
+
+@{
+    ViewData["Title"] = "UpdateCustomer";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Ürün Güncelleme Sayfası
+					<small class="text-muted"> Müşteri İşlemleri</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Müşteriler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Müşteri Güncelleme</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<input type="hidden" asp-for="CustomerId" />
+							<label>Yeni Müşteri Adı</label>
+							<input type="text" asp-for="CustomerName" class="form-control">
+							<br />
+
+							<label>Yeni Müşteri Soyadı</label>
+							<input type="text" asp-for="CustomerSurname" class="form-control">
+							<br />
+
+							<label>Müşteri Email Adresi</label>
+							<input type="text" asp-for="CustomerEmail" class="form-control">
+							<br />
+
+							<label>Yeni Telefon Numarası</label>
+							<input type="text" asp-for="CustomerPhone" class="form-control">
+							<br />
+
+							<label>Yeni Müşteri Fotoğrafı</label>
+							<input type="text" asp-for="CustomerImageUrl" class="form-control">
+							<br />
+
+							<label>Ülkesi</label>
+							<input type="text" asp-for="CustomerCountry" class="form-control">
+							<br />
+
+							<label>Şehiri</label>
+							<input type="text" asp-for="CustomerCity" class="form-control">
+							<br />
+
+							<label>İlçesi</label>
+							<input type="text" asp-for="CustomerDistrict" class="form-control">
+							<br />
+
+							<label>Adresi</label>
+							<input type="text" asp-for="CustomerAddress" class="form-control">
+							<br />
+
+							<button class="btn btn-info">Müşteriyi Güncelle</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

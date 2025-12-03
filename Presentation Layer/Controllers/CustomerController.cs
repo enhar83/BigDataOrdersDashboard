@@ -1,6 +1,7 @@
 ﻿using Business_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace Presentation_Layer.Controllers
 {
@@ -36,6 +37,22 @@ namespace Presentation_Layer.Controllers
         public IActionResult AddCustomer(Customer customer)
         {
             _customerService.Add(customer);
+            return RedirectToAction("CustomerList");
+        }
+
+        [HttpGet]
+        public IActionResult UpdateCustomer(int id)
+        {
+            var customerToUpdate =_customerService.GetFirstOrDefault(id);
+            if (customerToUpdate == null) return NotFound();
+            return View(customerToUpdate);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCustomer(Customer customer)
+        {
+            _customerService.Update(customer);
             return RedirectToAction("CustomerList");
         }
     }
