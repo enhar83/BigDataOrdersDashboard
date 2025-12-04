@@ -10,7 +10,6 @@ namespace Business_Layer.Abstract
     public interface IProductService
     {
         List<Product> GetAll();
-        List<Product> GetAllWithCategories();
         Product GetById(int id);
         Product GetFirstOrDefault(int id);
         void Add(Product product);

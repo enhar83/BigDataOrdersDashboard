@@ -38,11 +38,6 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetAll().ToList();
         }
 
-        public List<Product> GetAllWithCategories()
-        {
-            return _uow.Products.GetAllIncluding(p => p.Category).ToList();
-        }
-
         public Product GetById(int id)
         {
             return _uow.Products.GetById(id);
