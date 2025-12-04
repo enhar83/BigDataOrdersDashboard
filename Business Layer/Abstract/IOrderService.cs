@@ -15,6 +15,6 @@ namespace Business_Layer.Abstract
         void Add(Order order);
         void Update(Order order);
         void Delete(int id);
-        (List<Order> orders, int totalCount) GetOrdersForPaging(int pageNumber, int pageSize);
+        (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize);
     }
 }

@@ -47,7 +47,7 @@ namespace Business_Layer.Concrete
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);
         }
 
-        public (List<Order> orders, int totalCount) GetOrdersForPaging(int pageNumber, int pageSize)
+        public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
             return _orderRepository.GetOrdersWithPaging(pageNumber, pageSize);
         }

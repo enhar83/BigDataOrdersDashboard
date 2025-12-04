@@ -1,0 +1,148 @@
+﻿@model List<Order>
+
+@{
+	ViewData["Title"] = "OrderList";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	int currentPage = (int)ViewBag.CurrentPage;
+	int pageSize = (int)ViewBag.PageSize;
+
+	int count = (currentPage - 1) * pageSize;
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Sipariş Listesi
+					<small class="text-muted">Sipariş İşlemleri Sayfası</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Siparişler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Sipariş Listesi</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<table class="table table-bordered">
+							<tr>
+								<th>#</th>
+								<th>Sipariş Sahibi</th>
+								<th>Sipariş Edilen Ürün</th>
+								<th>Miktar</th>
+								<th>Sipariş Tutarı</th>
+								<th>Ödeme Yöntemi</th>
+								<th>Sipariş Durumu</th>
+								<th>Sipariş Tarihi</th>
+								<th>Sipariş Notu</th>
+								<th>Sil</th>
+								<th>Güncelle</th>
+							</tr>
+
+							@foreach (var item in Model)
+							{
+								count++;
+								<tr>
+									<td>@count</td>
+									<td>@item.Customer.CustomerName @item.Customer.CustomerSurname</td>
+									<td>@item.Product.ProductName (@item.Product.UnitPrice.ToString("C2"))</td>
+									<td>@item.Quantity</td>
+									<td>@((item.Quantity* item.Product.UnitPrice).ToString("C2"))</td>
+									<td>@item.PaymentMethod</td>
+									<td>@item.OrderStatus</td>
+									<td>@item.OrderDate.ToString("dd/MM/yyyy")</td>
+									<td>@item.OrderNotes</td>
+									<td>
+										<form id="deleteForm_@item.OrderId" asp-action="DeleteOrder" method="post" style="display:inline;">
+											@Html.AntiForgeryToken()
+
+											<input type="hidden" name="id" value="@item.OrderId" />
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.OrderId" data-order-name="@item.Customer.CustomerName müşterisinin siparişi">Sil</button>
+										</form>
+									</td>
+									<td><a href="/Order/UpdateOrder/@item.OrderId" class="btn btn-success">Güncelle</a></td>
+								</tr>
+							}
+
+						</table>
+
+						<div class="mt-3 text-center">
+							<nav aria-label="Page navigation">
+								<ul class="pagination justify-content-center">
+
+									@if (ViewBag.CurrentPage > 1)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Order/OrderList?page=@(ViewBag.CurrentPage - 1)">Önceki</a>
+										</li>
+									}
+
+									@{
+										int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+										int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+
+										if (startPage > 1)
+										{
+											<li class="page-item">
+												<a class="page-link" href="/Order/OrderList?page=1">1</a>
+											</li>
+											if (startPage > 2)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+										}
+
+										for (int i = startPage; i <= endPage; i++)
+										{
+											<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+												<a class="page-link" href="/Order/OrderList?page=@i">@i</a>
+											</li>
+										}
+
+										if (endPage < ViewBag.TotalPages)
+										{
+											if (endPage < ViewBag.TotalPages - 1)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+											<li class="page-item">
+												<a class="page-link" href="/Order/OrderList?page=@ViewBag.TotalPages">@ViewBag.TotalPages</a>
+											</li>
+										}
+									}
+
+									@if (ViewBag.CurrentPage < ViewBag.TotalPages)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Order/OrderList?page=@(ViewBag.CurrentPage + 1)">Sonraki</a>
+										</li>
+									}
+
+								</ul>
+							</nav>
+						</div>
+
+						<a href="/Order/AddOrder/" class="btn btn-info">Yeni Sipariş Girişi</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

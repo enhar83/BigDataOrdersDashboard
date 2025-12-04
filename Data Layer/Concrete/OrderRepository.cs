@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Data_Layer.Abstract;
 using Data_Layer.Context;
 using Entity_Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data_Layer.Concrete
 {
@@ -21,6 +22,7 @@ namespace Data_Layer.Concrete
             int skipCount = (pageNumber - 1) * pageSize;
 
             var orders = _dbSet
+                .Include(o=> o.Customer).Include(o=>o.Product)
                 .OrderBy(o => o.OrderId)
                 .Skip(skipCount)
                 .Take(pageSize)
