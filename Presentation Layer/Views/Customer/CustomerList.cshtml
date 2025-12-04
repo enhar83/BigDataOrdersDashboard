@@ -42,9 +42,7 @@
 								<th>Müşteri Soyadı</th>
 								<th>Mail Adresi</th>
 								<th>Telefon Numarası</th>
-								<th>Ülkesi</th>
-								<th>Şehiri</th>
-								<th>İlçesi</th>
+								<th>Ülke - Şehir - İlçe</th>
 								<th>Adresi</th>
 								<th>Sil</th>
 								<th>Güncelle</th>
@@ -59,9 +57,7 @@
 									<td>@item.CustomerSurname</td>
 									<td>@item.CustomerEmail</td>
 									<td>@item.CustomerPhone</td>
-									<td>@item.CustomerCountry</td>
-									<td>@item.CustomerCity</td>
-									<td>@item.CustomerDistrict</td>
+									<td>@item.CustomerCountry - @item.CustomerCity - @item.CustomerDistrict</td>
 									<td>@item.CustomerAddress</td>
 									<td>
 										<form id="deleteForm_@item.CustomerId" asp-action="DeleteCustomer" method="post" style="display:inline;">

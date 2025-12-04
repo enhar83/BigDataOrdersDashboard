@@ -17,5 +17,6 @@ namespace Entity_Layer
         public Category Category { get; set; }
         public string CountryOfOrigin { get; set; }
         public string ProductImageUrl { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

@@ -18,5 +18,6 @@ namespace Entity_Layer
         public string CustomerCity { get; set; }
         public string CustomerDistrict { get; set; }
         public string CustomerAddress { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }
