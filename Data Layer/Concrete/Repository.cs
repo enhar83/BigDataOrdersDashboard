@@ -55,6 +55,22 @@ namespace Data_Layer.Concrete
             return query;
         }
 
+        public (List<T> items, int totalCount) GetAllWithPaging(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includeProperties)
+        {
+            int totalCount = _dbSet.Count();
+            int skipCount = (pageNumber - 1) * pageSize;
+
+            var query = GetAllIncluding(includeProperties);
+
+            var items = query
+            .OrderBy(e => EF.Property<object>(e, "Id"))
+            .Skip(skipCount)
+            .Take(pageSize)
+            .ToList();
+
+            return (items, totalCount);
+        }
+
         public T GetById(int id)
         {
             return _dbSet.Find(id);
