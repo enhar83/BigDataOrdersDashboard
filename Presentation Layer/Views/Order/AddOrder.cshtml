@@ -1,0 +1,85 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "AddOrder";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Sipariş Listesi
+					<small class="text-muted">Sipariş İşlemleri Sayfası</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Siparişler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Sipariş Ekleme</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<label>Sipariş Eden Müşteri</label>
+							<input type="text" asp-for="CustomerId" class="form-control">
+							<br />
+
+							<label>Sipariş Edilen Ürün</label>
+							<input type="text" asp-for="ProductId" class="form-control">
+							<br />
+
+							<label>Miktar/Adet</label>
+							<input type="text" asp-for="Quantity" class="form-control">
+							<br />
+
+							<label>Ödeme Yöntemi</label>
+							<select asp-for="PaymentMethod" class="form-control show-tick">
+								<option value="">-- Ödeme Yöntemi Seçiniz --</option>
+								<option value="Kredi Kartı">Kredi Kartı</option>
+								<option value="Google Pay">Google Pay</option>
+								<option value="Apple Pay">Apple Pay</option>
+								<option value="Banka Kartı">Banka Kartı</option>
+								<option value="PayPal">PayPal</option>
+								<option value="Havale / EFT">Havale/EFT</option>
+							</select>
+							<br />
+
+							<label>Sipariş Durumu</label>
+							<select asp-for="OrderStatus" class="form-control show-tick">
+								<option value="">-- Sipariş Durumu Seçiniz --</option>
+								<option value="Tamamlandı">Tamamlandı</option>
+								<option value="Beklemede">Beklemede</option>
+								<option value="İptal Edildi">İptal Edildi</option>
+								<option value="Kargoda">Kargoda</option>
+								<option value="Hazırlanıyor">Hazırlanıyor</option>
+							</select>
+							<br />
+							
+
+							<label>Sipariş Notu</label>
+							<input type="text" asp-for="OrderNotes" class="form-control">
+							<br />
+
+							<button class="btn btn-success">Siparişi Oluştur</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
