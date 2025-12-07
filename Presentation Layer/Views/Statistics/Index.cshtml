@@ -1,19 +1,202 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <section class="content">
-    <div class="container-fluid">
-        <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="body">
-                        <h4>İstatistik sayfası</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					İstatistik Sayfası
+					<small class="text-muted">Sipariş ve Diğer İstatistikler</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Müşteriler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Müşteri Listesi</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row clearfix">
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-seagreen">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-trending-up" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">USAGE</div>
+						<div class="number">98%</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-parpl">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-eye" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">IMPRESSIONS</div>
+						<div class="number">457 512</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-blue">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-shopping-cart" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">TOTAL SALES</div>
+						<div class="number">$125 543</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-coral">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-balance" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">CURRENCY</div>
+						<div class="number">$1 063</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<div class="row clearfix">
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-amber">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-accounts" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">CUSTOMERS</div>
+						<div class="number">12 345</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-salmon">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-label" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">PRODUCTS</div>
+						<div class="number">18 932</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2" style="background: linear-gradient(to right, #a18cd1, #fbc2eb);">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-shopping-basket" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">ORDERS</div>
+						<div class="number">503 224</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2" style="background: linear-gradient(to right, #f6d365, #fda085);">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-headset-mic" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">SUPPORT TICKETS</div>
+						<div class="number">1 209</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<div class="row clearfix">
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-green">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-money" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">REVENUE</div>
+						<div class="number">$984 320</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2 l-pink">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-undo" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">RETURNS</div>
+						<div class="number">1 142</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2" style="background: linear-gradient(to right, #4facfe, #00f2f3);">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-truck" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">DELIVERED ORDERS</div>
+						<div class="number">23 450</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2" style="background: linear-gradient(to right, #a8c0ff, #3f2b96);">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-thumb-up" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">FEEDBACK</div>
+						<div class="number">8 937</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>

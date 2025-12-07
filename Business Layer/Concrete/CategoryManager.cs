@@ -29,6 +29,11 @@ namespace Business_Layer.Concrete
             _uow.Save();
         }
 
+        public int CountCategories()
+        {
+            return _uow.Categories.Count();
+        }
+
         public void Delete(int id)
         {
             _uow.Categories.Delete(id);

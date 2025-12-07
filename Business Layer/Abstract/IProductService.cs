@@ -16,6 +16,7 @@ namespace Business_Layer.Abstract
         void Update(Product product);
         void Delete(int id);
         (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize);
+        int CountProducts();
     }
 }
 

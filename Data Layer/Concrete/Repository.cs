@@ -26,6 +26,11 @@ namespace Data_Layer.Concrete
             _dbSet.Add(entity);
         }
 
+        public int Count()
+        {
+            return _dbSet.Count();
+        }
+
         public void Delete(int id)
         {
             T entity = GetById(id);

@@ -1,0 +1,32 @@
+﻿<div class="row clearfix">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+           <div class="card info-box-2 l-seagreen">
+               <div class="body">
+                    <div class="icon col-12 text-center">
+                        <i class="zmdi zmdi-trending-up" style="font-size: 48px; color: white;"></i>
+                    </div>
+                    <div class="content col-12">
+                        <div class="text">USAGE</div>
+						<div class="number">%98</div>
+                    </div>
+               </div>
+           </div>
+        </div>
+
+---------------------------------------------------------------------------------
+
+<div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card info-box-2 l-parpl">
+                <div class="body">
+					<div class="icon" style="text-align:center; margin-top:-5px;">
+                        <i class="zmdi zmdi-eye" style="font-size: 36px; color: white;"></i>
+                    </div>
+                    <div class="content col-12 text-center" style="margin-top:5px;">
+                        <div class="text">IMPRESSIONS</div>
+                        <div class="number">457 512</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+---------------------------------------------------------------------------------

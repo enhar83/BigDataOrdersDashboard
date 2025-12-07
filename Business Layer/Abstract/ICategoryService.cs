@@ -15,6 +15,7 @@ namespace Business_Layer.Abstract
         void Add(Category category);
         void Update(Category category);
         void Delete(int id);
+        int CountCategories();
     }
 }
 

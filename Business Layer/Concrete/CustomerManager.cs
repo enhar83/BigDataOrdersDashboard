@@ -24,6 +24,11 @@ namespace Business_Layer.Concrete
             _uow.Save();
         }
 
+        public int CountCustomers()
+        {
+            return _uow.Customers.Count();
+        }
+
         public void Delete(int id)
         {
             _uow.Customers.Delete(id);

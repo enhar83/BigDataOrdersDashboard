@@ -53,8 +53,6 @@ namespace Presentation_Layer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdateOrder(Order order)
         {
-            order.OrderDate = DateTime.Now;
-
             _orderService.Update(order);
             return RedirectToAction("OrderList");
         }
