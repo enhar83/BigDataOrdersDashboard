@@ -1,4 +1,4 @@
-﻿@model StatisticsIndexViewModel
+﻿@model StatisticsIndexCartsViewModel
 
 @{
 	ViewData["Title"] = "Index";
@@ -106,8 +106,8 @@
 						<i class="zmdi zmdi-label" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">PRODUCTS</div>
-						<div class="number">18 932</div>
+						<div class="text">İPTAL EDİLEN SİPARİŞLER</div>
+						<div class="number">@Model.CancelledOrderCount</div>
 					</div>
 				</div>
 			</div>
@@ -120,8 +120,8 @@
 						<i class="zmdi zmdi-shopping-basket" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">ORDERS</div>
-						<div class="number">503 224</div>
+						<div class="text">ÜLKE SAYISI</div>
+						<div class="number">@Model.DistinctCountryCount</div>
 					</div>
 				</div>
 			</div>
@@ -134,8 +134,8 @@
 						<i class="zmdi zmdi-headset-mic" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">SUPPORT TICKETS</div>
-						<div class="number">1 209</div>
+						<div class="text">ŞEHİR SAYISI</div>
+						<div class="number">@Model.DistinctCityCount</div>
 					</div>
 				</div>
 			</div>
@@ -152,7 +152,7 @@
 						<i class="zmdi zmdi-money" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">REVENUE</div>
+						<div class="text">GELİR</div>
 						<div class="number">$984 320</div>
 					</div>
 				</div>
@@ -166,7 +166,7 @@
 						<i class="zmdi zmdi-undo" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">RETURNS</div>
+						<div class="text">GERİ DÖNÜŞLER</div>
 						<div class="number">1 142</div>
 					</div>
 				</div>

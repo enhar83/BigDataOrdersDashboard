@@ -18,5 +18,7 @@ namespace Business_Layer.Abstract
         (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize);
         int CountOrders();
         int CountCompletedOrders();
+        int CountCancelledOrders();
+        
     }
 }

@@ -21,13 +21,16 @@ namespace Presentation_Layer.Controllers
 
         public IActionResult Index()
         {
-            var model = new StatisticsIndexViewModel
+            var model = new StatisticsIndexCartsViewModel
             {
                 CategoryCount = _categoryService.CountCategories(),
                 ProductCount = _productService.CountProducts(),
                 CustomerCount = _customerService.CountCustomers(),
                 OrderCount = _orderService.CountOrders(),
-                CompletedOrderCount = _orderService.CountCompletedOrders()
+                CompletedOrderCount = _orderService.CountCompletedOrders(),
+                CancelledOrderCount = _orderService.CountCancelledOrders(),
+                DistinctCityCount = _customerService.GetCityNumber(),
+                DistinctCountryCount = _customerService.GetCountryNumber()
             };
 
             return View(model);

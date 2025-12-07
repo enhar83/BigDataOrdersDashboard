@@ -32,7 +32,6 @@ namespace Data_Layer.Concrete
 
             if (filter != null)
             {
-                // Varsa, önce filtreyi uygula.
                 query = query.Where(filter);
             }
 
@@ -97,6 +96,13 @@ namespace Data_Layer.Concrete
         public void Update(T entity)
         {
             _db.Entry(entity).State = EntityState.Modified;
+        }
+
+        public int GetDistinctCount<TKey>(Expression<Func<T, TKey>> selector)
+        {
+            IQueryable<T> query = _dbSet;
+
+            return query.Select(selector).Distinct().Count();
         }
     }
 }

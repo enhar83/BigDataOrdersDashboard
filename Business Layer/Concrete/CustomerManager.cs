@@ -45,6 +45,16 @@ namespace Business_Layer.Concrete
             return _uow.Customers.GetById(id);
         }
 
+        public int GetCityNumber()
+        {
+            return _uow.Customers.GetDistinctCount(c => c.CustomerCity);
+        }
+
+        public int GetCountryNumber()
+        {
+            return _uow.Customers.GetDistinctCount(c => c.CustomerCountry);
+        }
+
         public (List<Customer> customers, int totalCount) GetCustomersWithPaging(int pageNumber, int pageSize)
         {
             return _customerRepository.GetCustomersWithPaging(pageNumber, pageSize);

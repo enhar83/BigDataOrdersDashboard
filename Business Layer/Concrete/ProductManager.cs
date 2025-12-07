@@ -32,6 +32,7 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetCount();
         }
 
+
         public void Delete(int id)
         {
             _uow.Products.Delete(id);

@@ -26,6 +26,11 @@ namespace Business_Layer.Concrete
             _uow.Save();
         }
 
+        public int CountCancelledOrders()
+        {
+            return _uow.Orders.GetCount(o=> o.OrderStatus=="İptal Edildi");
+        }
+
         public int CountCompletedOrders()
         {
             return _uow.Orders.GetCount(o => o.OrderStatus=="Tamamlandı");

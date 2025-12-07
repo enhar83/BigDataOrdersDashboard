@@ -17,5 +17,7 @@ namespace Business_Layer.Abstract
         void Delete(int id);
         (List<Customer> customers, int totalCount) GetCustomersWithPaging(int pageNumber, int pageSize);
         int CountCustomers();
+        int GetCountryNumber();
+        int GetCityNumber();
     }
 }

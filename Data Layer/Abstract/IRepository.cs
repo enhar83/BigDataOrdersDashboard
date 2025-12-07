@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Data_Layer.Abstract
 {
-    public interface IRepository<T> where T: class
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
         IQueryable<T> GetAllIncluding(params Expression<Func<T, Object>>[] includeProperties);
-        T GetById (int id);
+        T GetById(int id);
         T GetFirstOrDefault(Expression<Func<T, bool>> predicate);
-        void Add (T entity);
-        void Update (T entity);
-        void Delete (int id);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(int id);
         int GetCount(Expression<Func<T, bool>> filter = null);
-
+        int GetDistinctCount<TKey>(Expression<Func<T, TKey>> selector);
     }
 }
