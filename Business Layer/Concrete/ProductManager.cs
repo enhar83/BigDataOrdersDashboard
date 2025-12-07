@@ -49,6 +49,23 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetById(id);
         }
 
+        public string GetCountryMostProducesProduct()
+        {
+            IQueryable<Product> query = _uow.Products.GetQueryable();
+
+            var result = query
+                .GroupBy(p=>p.CountryOfOrigin)
+                .Select(g => new
+                {
+                    Country = g.Key,
+                    ProductCount = g.Count()
+                })
+                .OrderByDescending(x => x.ProductCount)
+                .FirstOrDefault();
+
+            return result?.Country ?? "Bulunamadı";
+        }
+
         public Product GetFirstOrDefault(int id)
         {
             return _uow.Products.GetFirstOrDefault(p => p.ProductId == id);

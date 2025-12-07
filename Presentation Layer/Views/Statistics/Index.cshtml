@@ -16,8 +16,8 @@
 			</div>
 			<div class="col-lg-5 col-md-6 col-sm-12">
 				<ul class="breadcrumb float-md-right">
-					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Müşteriler</a></li>
-					<li class="breadcrumb-item"><a href="javascript:void(0);">Müşteri Listesi</a></li>
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> İstatistikler</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">İstatistik Listesi</a></li>
 					<li class="breadcrumb-item active">Ana Sayfa</li>
 				</ul>
 			</div>
@@ -152,8 +152,8 @@
 						<i class="zmdi zmdi-money" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">GELİR</div>
-						<div class="number">$984 320</div>
+						<div class="text">EN ÇOK SİPARİŞ VEREN ÜLKE</div>
+						<div class="number">@Model.MostOrderingCountry</div>
 					</div>
 				</div>
 			</div>
@@ -166,8 +166,8 @@
 						<i class="zmdi zmdi-undo" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">GERİ DÖNÜŞLER</div>
-						<div class="number">1 142</div>
+						<div class="text">EN ÇOK SİPARİŞ VEREN MÜŞTERİ</div>
+						<div class="number">@Model.MostOrderingCustomer</div>
 					</div>
 				</div>
 			</div>
@@ -180,8 +180,8 @@
 						<i class="zmdi zmdi-truck" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">DELIVERED ORDERS</div>
-						<div class="number">23 450</div>
+						<div class="text">BU YIL VERİLEN SİPARİŞ SAYISI</div>
+						<div class="number">@Model.ThisYearOrders</div>
 					</div>
 				</div>
 			</div>
@@ -194,8 +194,8 @@
 						<i class="zmdi zmdi-thumb-up" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">FEEDBACK</div>
-						<div class="number">8 937</div>
+						<div class="text">EN ÇOK ÜRÜN ÜRETEN ÜLKE</div>
+						<div class="number">@Model.MostProducedProductCountry</div>
 					</div>
 				</div>
 			</div>

@@ -19,6 +19,8 @@ namespace Business_Layer.Abstract
         int CountOrders();
         int CountCompletedOrders();
         int CountCancelledOrders();
-        
+        string GetMostOrderingCountry();
+        string GetMostOrderingCustomer();
+        int GetThisYearOrders();
     }
 }

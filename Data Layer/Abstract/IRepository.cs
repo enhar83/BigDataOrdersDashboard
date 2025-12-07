@@ -19,5 +19,6 @@ namespace Data_Layer.Abstract
         void Delete(int id);
         int GetCount(Expression<Func<T, bool>> filter = null);
         int GetDistinctCount<TKey>(Expression<Func<T, TKey>> selector);
+        IQueryable<T> GetQueryable(Expression<Func<T, bool>> filter = null);
     }
 }

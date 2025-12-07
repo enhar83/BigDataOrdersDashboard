@@ -62,9 +62,50 @@ namespace Business_Layer.Concrete
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);
         }
 
+        public string GetMostOrderingCountry()
+        {
+            var query = _uow.Orders.GetQueryable();
+
+            var result = query
+                .GroupBy(o=> o.Customer.CustomerCountry)
+                .Select(g=> new
+                {
+                    Country = g.Key,
+                    OrderCount = g.Count()
+                })
+                .OrderByDescending(x=> x.OrderCount)
+                .FirstOrDefault();
+
+            return result?.Country ?? "Bulunamadı";
+        }
+
+        public string GetMostOrderingCustomer()
+        {
+            var query = _uow.Orders.GetQueryable();
+
+            var result = query
+                .GroupBy(o => new { o.Customer.CustomerName, o.Customer.CustomerSurname })
+                .Select(g => new
+                {
+                    FullName = g.Key.CustomerName+ " " + g.Key.CustomerSurname,
+                    OrderCount = g.Count()
+                })
+                .OrderByDescending(x => x.OrderCount)
+                .FirstOrDefault();
+
+            return result?.FullName ?? "Bulunamadı";
+        }
+
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
             return _orderRepository.GetOrdersWithPaging(pageNumber, pageSize);
+        }
+
+        public int GetThisYearOrders()
+        {
+            return _uow.Orders.GetCount(o => o.OrderDate.Year == DateTime.Now.Year);
+
+            //return _uow.Orders.GetCount(o=>o.OrderDate >= new DateTime(2025,01,01) && o.OrderDate <= new DateTime(2025,12,31));
         }
 
         public void Update(Order order)

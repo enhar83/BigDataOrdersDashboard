@@ -104,5 +104,17 @@ namespace Data_Layer.Concrete
 
             return query.Select(selector).Distinct().Count();
         }
+
+        public IQueryable<T> GetQueryable(Expression<Func<T, bool>> filter = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return query;
+        }
     }
 }
