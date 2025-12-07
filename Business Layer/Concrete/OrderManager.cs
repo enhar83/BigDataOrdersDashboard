@@ -26,9 +26,14 @@ namespace Business_Layer.Concrete
             _uow.Save();
         }
 
+        public int CountCompletedOrders()
+        {
+            return _uow.Orders.GetCount(o => o.OrderStatus=="Tamamlandı");
+        }
+
         public int CountOrders()
         {
-            return _uow.Orders.Count();
+            return _uow.Orders.GetCount();
         }
 
         public void Delete(int id)

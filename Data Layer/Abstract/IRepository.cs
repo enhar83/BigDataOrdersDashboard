@@ -17,7 +17,7 @@ namespace Data_Layer.Abstract
         void Add (T entity);
         void Update (T entity);
         void Delete (int id);
-        int Count();
+        int GetCount(Expression<Func<T, bool>> filter = null);
 
     }
 }

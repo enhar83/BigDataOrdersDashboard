@@ -26,9 +26,17 @@ namespace Data_Layer.Concrete
             _dbSet.Add(entity);
         }
 
-        public int Count()
+        public int GetCount(Expression<Func<T, bool>> filter = null)
         {
-            return _dbSet.Count();
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                // Varsa, önce filtreyi uygula.
+                query = query.Where(filter);
+            }
+
+            return query.Count();
         }
 
         public void Delete(int id)

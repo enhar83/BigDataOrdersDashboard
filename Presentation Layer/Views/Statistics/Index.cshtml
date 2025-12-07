@@ -1,4 +1,6 @@
-﻿@{
+﻿@model StatisticsIndexViewModel
+
+@{
 	ViewData["Title"] = "Index";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -30,8 +32,8 @@
 						<i class="zmdi zmdi-trending-up" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">USAGE</div>
-						<div class="number">98%</div>
+						<div class="text">KATEGORİ SAYISI</div>
+						<div class="number">@Model.CategoryCount</div>
 					</div>
 				</div>
 			</div>
@@ -44,8 +46,8 @@
 						<i class="zmdi zmdi-eye" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">IMPRESSIONS</div>
-						<div class="number">457 512</div>
+						<div class="text">ÜRÜN SAYISI</div>
+						<div class="number">@Model.ProductCount</div>
 					</div>
 				</div>
 			</div>
@@ -58,8 +60,8 @@
 						<i class="zmdi zmdi-shopping-cart" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">TOTAL SALES</div>
-						<div class="number">$125 543</div>
+						<div class="text">MÜŞTERİ SAYISI</div>
+						<div class="number">@Model.CustomerCount</div>
 					</div>
 				</div>
 			</div>
@@ -72,8 +74,8 @@
 						<i class="zmdi zmdi-balance" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">CURRENCY</div>
-						<div class="number">$1 063</div>
+						<div class="text">SİPARİŞ SAYISI</div>
+						<div class="number">@Model.OrderCount</div>
 					</div>
 				</div>
 			</div>
@@ -90,8 +92,8 @@
 						<i class="zmdi zmdi-accounts" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">CUSTOMERS</div>
-						<div class="number">12 345</div>
+						<div class="text">TAMAMLANAN SİPARİŞLER</div>
+						<div class="number">@Model.CompletedOrderCount</div>
 					</div>
 				</div>
 			</div>

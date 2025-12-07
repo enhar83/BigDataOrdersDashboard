@@ -29,7 +29,7 @@ namespace Business_Layer.Concrete
 
         public int CountProducts()
         {
-            return _uow.Products.Count();
+            return _uow.Products.GetCount();
         }
 
         public void Delete(int id)

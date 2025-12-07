@@ -31,7 +31,7 @@ namespace Business_Layer.Concrete
 
         public int CountCategories()
         {
-            return _uow.Categories.Count();
+            return _uow.Categories.GetCount();
         }
 
         public void Delete(int id)
