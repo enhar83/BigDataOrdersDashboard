@@ -96,6 +96,11 @@ namespace Business_Layer.Concrete
             return result?.FullName ?? "Bulunamadı";
         }
 
+        public int GetOctoberOrders()
+        {
+            return _uow.Orders.GetCount(o => o.OrderDate.Month == 10);
+        }
+
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
             return _orderRepository.GetOrdersWithPaging(pageNumber, pageSize);

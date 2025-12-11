@@ -18,6 +18,8 @@ namespace Business_Layer.Abstract
         (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize);
         int CountProducts();
         string GetCountryMostProducesProduct();
+        decimal GetAverageProductStock();
+        int GetTotalProductStock();
     }
 }
 

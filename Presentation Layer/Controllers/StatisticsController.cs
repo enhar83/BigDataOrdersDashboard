@@ -31,10 +31,10 @@ namespace Presentation_Layer.Controllers
                 CancelledOrderCount = _orderService.CountCancelledOrders(),
                 DistinctCityCount = _customerService.GetCityNumber(),
                 DistinctCountryCount = _customerService.GetCountryNumber(),
-                MostOrderingCountry = _orderService.GetMostOrderingCountry(),
-                MostOrderingCustomer = _orderService.GetMostOrderingCustomer(),
                 ThisYearOrders = _orderService.GetThisYearOrders(),
-                MostProducedProductCountry = _productService.GetCountryMostProducesProduct()
+                OctoberOrders = _orderService.GetOctoberOrders(),
+                AverageProductStock = _productService.GetAverageProductStock(),
+                TotalProductStock = _productService.GetTotalProductStock()
             };
 
             return View(model);

@@ -44,6 +44,11 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetAll().ToList();
         }
 
+        public decimal GetAverageProductStock()
+        {
+            return _uow.Products.Sum(p=>p.StockQuantity) / CountProducts();
+        }
+
         public Product GetById(int id)
         {
             return _uow.Products.GetById(id);
@@ -74,6 +79,11 @@ namespace Business_Layer.Concrete
         public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)
         {
             return _productRepository.GetProductsWithPaging(pageNumber, pageSize);
+        }
+
+        public int GetTotalProductStock()
+        {
+            return _uow.Products.Sum(p => p.StockQuantity);
         }
 
         public void Update(Product product)

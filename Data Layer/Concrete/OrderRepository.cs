@@ -22,7 +22,7 @@ namespace Data_Layer.Concrete
             int skipCount = (pageNumber - 1) * pageSize;
 
             var orders = _dbSet
-                .Include(o=> o.Customer).Include(o=>o.Product)
+                .Include(o => o.Customer).Include(o => o.Product)
                 .OrderBy(o => o.OrderId)
                 .Skip(skipCount)
                 .Take(pageSize)

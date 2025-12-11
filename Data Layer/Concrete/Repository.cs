@@ -116,5 +116,15 @@ namespace Data_Layer.Concrete
 
             return query;
         }
+
+        public decimal Sum(Expression<Func<T, decimal>> selector)
+        {
+            return _dbSet.Sum(selector);
+        }
+
+        public int Sum(Expression<Func<T, int>> selector)
+        {
+            return _dbSet.Sum(selector);
+        }
     }
 }

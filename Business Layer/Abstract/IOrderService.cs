@@ -22,5 +22,6 @@ namespace Business_Layer.Abstract
         string GetMostOrderingCountry();
         string GetMostOrderingCustomer();
         int GetThisYearOrders();
+        int GetOctoberOrders();
     }
 }

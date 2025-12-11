@@ -10,9 +10,9 @@
         public int CancelledOrderCount { get; set; }
         public int DistinctCountryCount { get; set; }
         public int DistinctCityCount { get; set; }
-        public string MostOrderingCountry { get; set; }
-        public string MostOrderingCustomer { get; set; }
         public int ThisYearOrders { get; set; }
-        public string MostProducedProductCountry { get; set; }
+        public int OctoberOrders { get; set; }
+        public decimal AverageProductStock { get; set; }
+        public int TotalProductStock { get; set; }
     }
 }
