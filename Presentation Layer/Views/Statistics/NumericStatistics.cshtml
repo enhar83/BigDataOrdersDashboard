@@ -1,7 +1,7 @@
-﻿@model StatisticsIndexCartsViewModel
+﻿@model NumericStatisticsCartsViewModel
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "NumericStatistics";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -16,7 +16,7 @@
 			</div>
 			<div class="col-lg-5 col-md-6 col-sm-12">
 				<ul class="breadcrumb float-md-right">
-					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> İstatistikler</a></li>
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Sayısal İstatistikler</a></li>
 					<li class="breadcrumb-item"><a href="javascript:void(0);">İstatistik Listesi</a></li>
 					<li class="breadcrumb-item active">Ana Sayfa</li>
 				</ul>
@@ -29,7 +29,7 @@
 			<div class="card info-box-2 l-seagreen">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-trending-up" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-view-list" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">KATEGORİ SAYISI</div>
@@ -43,7 +43,7 @@
 			<div class="card info-box-2 l-parpl">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-eye" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-shopping-basket" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">ÜRÜN SAYISI</div>
@@ -57,7 +57,7 @@
 			<div class="card info-box-2 l-blue">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-shopping-cart" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-accounts" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">MÜŞTERİ SAYISI</div>
@@ -71,7 +71,7 @@
 			<div class="card info-box-2 l-coral">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-balance" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-shopping-cart" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">SİPARİŞ SAYISI</div>
@@ -89,7 +89,7 @@
 			<div class="card info-box-2 l-amber">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-accounts" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-check-circle" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">TAMAMLANAN SİPARİŞLER</div>
@@ -103,7 +103,7 @@
 			<div class="card info-box-2 l-salmon">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-label" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-close-circle" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">İPTAL EDİLEN SİPARİŞLER</div>
@@ -117,7 +117,7 @@
 			<div class="card info-box-2" style="background: linear-gradient(to right, #a18cd1, #fbc2eb);">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-shopping-basket" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-globe" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">ÜLKE SAYISI</div>
@@ -131,7 +131,7 @@
 			<div class="card info-box-2" style="background: linear-gradient(to right, #f6d365, #fda085);">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-headset-mic" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-city" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">ŞEHİR SAYISI</div>
@@ -149,7 +149,7 @@
 			<div class="card info-box-2 l-green">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-money" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-archive" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">TOPLAM ÜRÜN STOK SAYISI</div>
@@ -163,21 +163,7 @@
 			<div class="card info-box-2 l-pink">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-undo" style="font-size: 34px; color: white;"></i>
-					</div>
-					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">ORTALAMA ÜRÜN STOĞU</div>
-						<div class="number">@Model.AverageProductStock</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #4facfe, #00f2f3);">
-				<div class="body" style="padding:10px 0 8px 0;">
-					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-truck" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-calendar" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
 						<div class="text">BU YIL VERİLEN SİPARİŞ SAYISI</div>
@@ -188,14 +174,28 @@
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12">
+			<div class="card info-box-2" style="background: linear-gradient(to right, #4facfe, #00f2f3);">
+				<div class="body" style="padding:10px 0 8px 0;">
+					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
+						<i class="zmdi zmdi-money" style="font-size: 34px; color: white;"></i>
+					</div>
+					<div class="content col-12 text-center" style="margin-top: 2px;">
+						<div class="text">SİPARİŞLERDEN EDİLEN GELİR</div>
+						<div class="number">@Model.TotalRevenue</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-sm-12">
 			<div class="card info-box-2" style="background: linear-gradient(to right, #a8c0ff, #3f2b96);">
 				<div class="body" style="padding:10px 0 8px 0;">
 					<div class="icon" style="display:flex; align-items:center; justify-content:center; height:45px;">
-						<i class="zmdi zmdi-thumb-up" style="font-size: 34px; color: white;"></i>
+						<i class="zmdi zmdi-trending-up" style="font-size: 34px; color: white;"></i>
 					</div>
 					<div class="content col-12 text-center" style="margin-top: 2px;">
-						<div class="text">EKİM AYINDA VERİLEN SİPARİŞLER</div>
-						<div class="number">@Model.OctoberOrders</div>
+						<div class="text">SİPARİŞLERDEN EDİLEN ORTALAMA GELİR</div>
+						<div class="number">@Model.AverageTotalRevenue</div>
 					</div>
 				</div>
 			</div>

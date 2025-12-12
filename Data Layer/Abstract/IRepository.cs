@@ -23,6 +23,7 @@ namespace Data_Layer.Abstract
         IQueryable<T> GetQueryable(Expression<Func<T, bool>> filter = null);
         decimal Sum(Expression<Func<T, decimal>> selector);
         int Sum(Expression<Func<T, int>> selector);
+        decimal Average(Expression<Func<T, decimal>> selector);
     }
 }
 

@@ -69,13 +69,14 @@ namespace Data_Layer.Concrete
 
         public (List<T> items, int totalCount) GetAllWithPaging(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includeProperties)
         {
-            int totalCount = _dbSet.Count();
             int skipCount = (pageNumber - 1) * pageSize;
 
             string entityName = typeof(T).Name;
             string expectedId = entityName + "Id";
 
-            var query = GetAllIncluding(includeProperties);
+            var query = GetAllIncluding(includeProperties); //primary key'ler ProductId, CategoryId... olduğu için böyle. 
+
+            int totalCount = query.Count(); //Include uygulanmadan, filtre kullanılmadan, paging uygulanmadan direkt tabloyu saymak yanlış olduğu için Include'dan sonra ama Skip/Take'den önce kullanılmalıdır.
 
             var items = query
             .OrderBy(e=> EF.Property<object>(e, expectedId))
@@ -128,6 +129,11 @@ namespace Data_Layer.Concrete
         public int Sum(Expression<Func<T, int>> selector)
         {
             return _dbSet.Sum(selector);
+        }
+
+        public decimal Average(Expression<Func<T, decimal>> selector)
+        {
+            return _dbSet.Average(selector);
         }
     }
 }

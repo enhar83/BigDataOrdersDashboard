@@ -19,5 +19,7 @@ namespace Business_Layer.Abstract
         int CountCustomers();
         int GetCountryNumber();
         int GetCityNumber();
+        string GetLastAddedCustomer();
+        string GetFirstAddedCustomer();
     }
 }

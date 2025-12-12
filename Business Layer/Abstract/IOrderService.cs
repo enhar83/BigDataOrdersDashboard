@@ -19,9 +19,15 @@ namespace Business_Layer.Abstract
         int CountOrders();
         int CountCompletedOrders();
         int CountCancelledOrders();
-        string GetMostOrderingCountry();
-        string GetMostOrderingCustomer();
         int GetThisYearOrders();
-        int GetOctoberOrders();
+        decimal GetTotalRevenue();
+        decimal GetAverageRevenue();
+        string GetMostOrderedCustomer();
+        string GetMostOrderedCategory();
+        string GetMostOrderedCity();
+        string GetMostOrderedCountry();
+        string GetMostOrderedProductThisMonth();
+        string GetMostCancelledProduct();
+        string GetMostOrderedPayment();
     }
 }

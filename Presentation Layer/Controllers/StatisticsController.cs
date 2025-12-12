@@ -19,9 +19,9 @@ namespace Presentation_Layer.Controllers
             _orderService = orderService;
         }
 
-        public IActionResult Index()
+        public IActionResult NumericStatistics()
         {
-            var model = new StatisticsIndexCartsViewModel
+            var model = new NumericStatisticsCartsViewModel
             {
                 CategoryCount = _categoryService.CountCategories(),
                 ProductCount = _productService.CountProducts(),
@@ -32,9 +32,29 @@ namespace Presentation_Layer.Controllers
                 DistinctCityCount = _customerService.GetCityNumber(),
                 DistinctCountryCount = _customerService.GetCountryNumber(),
                 ThisYearOrders = _orderService.GetThisYearOrders(),
-                OctoberOrders = _orderService.GetOctoberOrders(),
-                AverageProductStock = _productService.GetAverageProductStock(),
-                TotalProductStock = _productService.GetTotalProductStock()
+                TotalProductStock = _productService.GetTotalProductStock(),
+                TotalRevenue = _orderService.GetTotalRevenue(),
+                AverageTotalRevenue = _orderService.GetAverageRevenue()
+            };
+
+            return View(model);
+        }
+
+        public IActionResult TextualStatistics()
+        {
+            var model = new TextualStatisticsCartsViewModel
+            {
+                MostExpensiveProduct = _productService.GetMostExpensiveProductName(),
+                CustomerWithMostOrders = _orderService.GetMostOrderedCustomer(),
+                CategoryWithMostOrders = _orderService.GetMostOrderedCategory(),
+                CityWithMostOrders = _orderService.GetMostOrderedCity(),
+                CountryWithMostOrders = _orderService.GetMostOrderedCountry(),
+                LeastStockedProduct = _productService.GetLeastStockedProductName(),
+                MostOrderedProductThisMonth = _orderService.GetMostOrderedProductThisMonth(),
+                MostCancelledProduct = _orderService.GetMostCancelledProduct(),
+                LastAddedCustomer = _customerService.GetLastAddedCustomer(),
+                FirstAddedCustomer = _customerService.GetFirstAddedCustomer(),
+                MostOrderedPayment = _orderService.GetMostOrderedPayment()
             };
 
             return View(model);

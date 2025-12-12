@@ -59,9 +59,37 @@ namespace Business_Layer.Concrete
             return _uow.Customers.GetAllWithPaging(pageNumber, pageSize);
         }
 
+        public string GetFirstAddedCustomer()
+        {
+            IQueryable<Customer> query = _uow.Customers.GetQueryable();
+
+            var firstCustomer=query
+                .OrderBy(c => c.CustomerId)
+                .FirstOrDefault();
+
+            if (firstCustomer == null)
+                return "Bulunamadı";
+
+            return $"{firstCustomer.CustomerName} {firstCustomer.CustomerSurname}";
+        }
+
         public Customer GetFirstOrDefault(int id)
         {
             return _uow.Customers.GetFirstOrDefault(c => c.CustomerId == id);
+        }
+
+        public string GetLastAddedCustomer()
+        {
+            IQueryable<Customer> query = _uow.Customers.GetQueryable();
+
+            var lastCustomer = query
+                .OrderByDescending(c => c.CustomerId)
+                .FirstOrDefault();
+
+            if (lastCustomer == null)
+                return "Bulunamadı";
+
+            return $"{lastCustomer.CustomerName} {lastCustomer.CustomerSurname}";
         }
 
         public void Update(Customer customer)

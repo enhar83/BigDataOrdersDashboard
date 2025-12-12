@@ -1,6 +1,6 @@
 ﻿namespace Presentation_Layer.Models
 {
-    public class StatisticsIndexCartsViewModel
+    public class NumericStatisticsCartsViewModel
     {
         public int CategoryCount { get; set; }
         public int ProductCount { get; set; }
@@ -11,8 +11,8 @@
         public int DistinctCountryCount { get; set; }
         public int DistinctCityCount { get; set; }
         public int ThisYearOrders { get; set; }
-        public int OctoberOrders { get; set; }
-        public decimal AverageProductStock { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public decimal AverageTotalRevenue { get; set; }
         public int TotalProductStock { get; set; }
     }
 }

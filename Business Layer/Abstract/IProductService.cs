@@ -17,9 +17,9 @@ namespace Business_Layer.Abstract
         void Delete(int id);
         (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize);
         int CountProducts();
-        string GetCountryMostProducesProduct();
-        decimal GetAverageProductStock();
         int GetTotalProductStock();
+        string GetMostExpensiveProductName();
+        string GetLeastStockedProductName();
     }
 }
 
