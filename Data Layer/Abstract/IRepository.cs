@@ -17,6 +17,7 @@ namespace Data_Layer.Abstract
         void Add(T entity);
         void Update(T entity);
         void Delete(int id);
+        (List <T> items, int totalCount) GetAllWithPaging(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includeProperties);
         int GetCount(Expression<Func<T, bool>> filter = null);
         int GetDistinctCount<TKey>(Expression<Func<T, TKey>> selector);
         IQueryable<T> GetQueryable(Expression<Func<T, bool>> filter = null);
@@ -24,3 +25,6 @@ namespace Data_Layer.Abstract
         int Sum(Expression<Func<T, int>> selector);
     }
 }
+
+//Sum metodlarının tür ayırt etmeyecek şekilde yapamamızın sebebi IQueryable arayüzünün generic tip parametresinin tek bir türle sınırlı olmamasıdır.
+//Bu nedenle, farklı türlerdeki toplamları hesaplamak için ayrı metotlar tanımlanmıştır.

@@ -12,11 +12,10 @@ namespace Business_Layer.Concrete
     public class CustomerManager : ICustomerService
     {
         private readonly IUnitOfWork _uow;
-        private readonly ICustomerRepository _customerRepository;
-        public CustomerManager(IUnitOfWork uow, ICustomerRepository customerRepository)
+
+        public CustomerManager(IUnitOfWork uow)
         {
             _uow = uow;
-            _customerRepository = customerRepository;
         }
         public void Add(Customer customer)
         {
@@ -57,7 +56,7 @@ namespace Business_Layer.Concrete
 
         public (List<Customer> customers, int totalCount) GetCustomersWithPaging(int pageNumber, int pageSize)
         {
-            return _customerRepository.GetCustomersWithPaging(pageNumber, pageSize);
+            return _uow.Customers.GetAllWithPaging(pageNumber, pageSize);
         }
 
         public Customer GetFirstOrDefault(int id)

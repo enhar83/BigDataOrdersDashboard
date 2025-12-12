@@ -13,12 +13,10 @@ namespace Business_Layer.Concrete
     public class ProductManager : IProductService
     {
         private readonly IUnitOfWork _uow;
-        private readonly IProductRepository _productRepository;
 
-        public ProductManager(IUnitOfWork uow, IProductRepository productRepository)
+        public ProductManager(IUnitOfWork uow)
         {
             _uow = uow;
-            _productRepository = productRepository;
         }
 
         public void Add(Product product)
@@ -78,7 +76,7 @@ namespace Business_Layer.Concrete
 
         public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)
         {
-            return _productRepository.GetProductsWithPaging(pageNumber, pageSize);
+            return _uow.Products.GetAllWithPaging(pageNumber, pageSize,x=>x.Category);
         }
 
         public int GetTotalProductStock()

@@ -12,12 +12,11 @@ namespace Business_Layer.Concrete
     public class OrderManager : IOrderService
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOrderRepository _orderRepository;
 
-        public OrderManager(IUnitOfWork uow, IOrderRepository orderRepository)
+
+        public OrderManager(IUnitOfWork uow)
         {
             _uow = uow;
-            _orderRepository = orderRepository;
         }
 
         public void Add(Order order)
@@ -103,7 +102,7 @@ namespace Business_Layer.Concrete
 
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
-            return _orderRepository.GetOrdersWithPaging(pageNumber, pageSize);
+            return _uow.Orders.GetAllWithPaging(pageNumber, pageSize,o=> o.Customer,o=>o.Product);
         }
 
         public int GetThisYearOrders()

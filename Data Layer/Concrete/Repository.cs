@@ -72,10 +72,13 @@ namespace Data_Layer.Concrete
             int totalCount = _dbSet.Count();
             int skipCount = (pageNumber - 1) * pageSize;
 
+            string entityName = typeof(T).Name;
+            string expectedId = entityName + "Id";
+
             var query = GetAllIncluding(includeProperties);
 
             var items = query
-            .OrderBy(e => EF.Property<object>(e, "Id"))
+            .OrderBy(e=> EF.Property<object>(e, expectedId))
             .Skip(skipCount)
             .Take(pageSize)
             .ToList();
