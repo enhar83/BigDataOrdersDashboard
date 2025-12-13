@@ -26,209 +26,169 @@
 	</div>
 
 	<div class="row clearfix">
-
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #11998e, #38ef7d);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-view-list"></i></div>
-					<div class="content">
-						<div class="text">KATEGORİ SAYISI</div>
-						<div class="number">@Model.CategoryCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #7F00FF, #E100FF);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Kategori Sayısı</div>
+					<div class="stat-value">@Model.CategoryCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #f7971e, #ffd200);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-shopping-basket"></i></div>
-					<div class="content">
-						<div class="text">ÜRÜN SAYISI</div>
-						<div class="number">@Model.ProductCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #36d1dc, #5b86e5);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Ürün Sayısı</div>
+					<div class="stat-value">@Model.ProductCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #396afc, #2948ff);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-accounts"></i></div>
-					<div class="content">
-						<div class="text">MÜŞTERİ SAYISI</div>
-						<div class="number">@Model.CustomerCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #f7971e, #ffd200);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Müşteri Sayısı</div>
+					<div class="stat-value">@Model.CustomerCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #ff512f, #dd2476);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-shopping-cart"></i></div>
-					<div class="content">
-						<div class="text">SİPARİŞ SAYISI</div>
-						<div class="number">@Model.OrderCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #00b09b, #96c93d);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Sipariş Sayısı</div>
+					<div class="stat-value">@Model.OrderCount</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="row clearfix">
-
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #56ab2f, #a8e063);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-check-circle"></i></div>
-					<div class="content">
-						<div class="text">TAMAMLANAN SİPARİŞLER</div>
-						<div class="number">@Model.CompletedOrderCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #56ab2f, #a8e063);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Tamamlanan Siparişler</div>
+					<div class="stat-value">@Model.CompletedOrderCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #cb2d3e, #ef473a);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-close-circle"></i></div>
-					<div class="content">
-						<div class="text">İPTAL EDİLEN SİPARİŞLER</div>
-						<div class="number">@Model.CancelledOrderCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #f85032, #e73827);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">İptal Edilen Siparişler</div>
+					<div class="stat-value">@Model.CancelledOrderCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-globe"></i></div>
-					<div class="content">
-						<div class="text">ÜLKE SAYISI</div>
-						<div class="number">@Model.DistinctCountryCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #ee0979, #ff6a00);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Ülke Sayısı</div>
+					<div class="stat-value">@Model.DistinctCountryCount</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #f7971e, #f9d423);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-city"></i></div>
-					<div class="content">
-						<div class="text">ŞEHİR SAYISI</div>
-						<div class="number">@Model.DistinctCityCount</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #614385, #516395);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Şehir Sayısı</div>
+					<div class="stat-value">@Model.DistinctCityCount</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="row clearfix">
-
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #00b09b, #96c93d);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-archive"></i></div>
-					<div class="content">
-						<div class="text">TOPLAM STOK</div>
-						<div class="number">@Model.TotalProductStock</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #f857a6, #ff5858);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Toplam Stok</div>
+					<div class="stat-value">@Model.TotalProductStock</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #fc5c7d, #6a82fb);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-calendar"></i></div>
-					<div class="content">
-						<div class="text">BU YILKİ SİPARİŞLER</div>
-						<div class="number">@Model.ThisYearOrders</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #cb2d3e, #ef473a);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Bu Yılki Siparişler</div>
+					<div class="stat-value">@Model.ThisYearOrders</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #11998e, #38ef7d);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-money"></i></div>
-					<div class="content">
-						<div class="text">TOPLAM GELİR</div>
-						<div class="number">@Model.TotalRevenue</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #396afc, #2948ff);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Toplam Gelir</div>
+					<div class="stat-value">@Model.TotalRevenue.ToString("N2")</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-			<div class="card info-box-2 stat-card"
-				 style="background: linear-gradient(to right, #396afc, #2948ff);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-trending-up"></i></div>
-					<div class="content">
-						<div class="text">ORT. GELİR</div>
-						<div class="number">@Model.AverageTotalRevenue</div>
-					</div>
+			<div class="stat-card" style="background: linear-gradient(to right, #ff416c, #ff4b2b);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">Ortalama Gelir</div>
+					<div class="stat-value">@Model.AverageTotalRevenue.ToString("N2")</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 </section>
 
 <style>
-	/* Ortak istatistik kart ayarları */
-	.stat-card .body {
-		padding: 12px 0 10px 0 !important;
+	.stat-card {
+		height: 170px;
+		border-radius: 12px;
+		color: #fff;
+		box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 	}
 
-	.stat-card .icon {
+	.stat-card-body {
+		height: 100%;
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		justify-content: center;
-		height: 48px;
-	}
-
-		.stat-card .icon i {
-			font-size: 36px;
-			color: #fff;
-		}
-
-	.stat-card .content {
-		margin-top: 4px;
+		align-items: center;
 		text-align: center;
+		padding: 15px;
 	}
 
-	.stat-card .text {
+	.stat-icon {
+		font-size: 28px;
+		margin-bottom: 8px;
+		opacity: 0.9;
+	}
+
+	.stat-title {
 		font-size: 13px;
-		font-weight: 600;
-		letter-spacing: .4px;
-		opacity: .9;
+		opacity: 0.85;
+		margin-bottom: 6px;
 	}
 
-	.stat-card .number {
-		font-size: 26px;
-		font-weight: 700;
-		line-height: 1.2;
+	.stat-value {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 1.3;
+		max-width: 100%;
+		word-break: break-word;
 	}
 
 </style>
