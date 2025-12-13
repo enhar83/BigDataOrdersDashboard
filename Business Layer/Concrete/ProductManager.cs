@@ -46,23 +46,6 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetById(id);
         }
 
-        public string GetCountryMostProducesProduct()
-        {
-            IQueryable<Product> query = _uow.Products.GetQueryable();
-
-            var result = query
-                .GroupBy(p=>p.CountryOfOrigin)
-                .Select(g => new
-                {
-                    Country = g.Key,
-                    ProductCount = g.Count()
-                })
-                .OrderByDescending(x => x.ProductCount)
-                .FirstOrDefault();
-
-            return result?.Country ?? "Bulunamadı";
-        }
-
         public Product GetFirstOrDefault(int id)
         {
             return _uow.Products.GetFirstOrDefault(p => p.ProductId == id);
@@ -76,7 +59,7 @@ namespace Business_Layer.Concrete
                 .OrderBy(p=>p.UnitPrice)
                 .FirstOrDefault();
 
-            return leastExpensiveProduct?.ProductName ?? "Bulunamadı";
+            return leastExpensiveProduct == null ? "Bulunamadı" : $"{leastExpensiveProduct.ProductName} ({leastExpensiveProduct.UnitPrice} $)";
         }
 
         public string GetLeastStockedProductName()
@@ -87,7 +70,7 @@ namespace Business_Layer.Concrete
                 .OrderBy(p => p.StockQuantity)
                 .FirstOrDefault();
 
-            return leastStockedProduct?.ProductName ?? "Bulunamadı";
+            return leastStockedProduct == null ? "Bulunamadı" : $"{leastStockedProduct.ProductName} ({leastStockedProduct.StockQuantity} adet)";
         }
 
         public string GetMostExpensiveProductName()
@@ -97,7 +80,7 @@ namespace Business_Layer.Concrete
             var mostExpensiveProduct = query.OrderByDescending(p => p.UnitPrice)
                 .FirstOrDefault();
 
-            return mostExpensiveProduct != null ? mostExpensiveProduct.ProductName : "Bulunamadı";
+            return mostExpensiveProduct == null ? "Bulunamadı" : $"{mostExpensiveProduct.ProductName} ({mostExpensiveProduct.UnitPrice} $)";
         }
 
         public string GetMostStockedProductName()
@@ -108,7 +91,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(p => p.StockQuantity)
                 .FirstOrDefault();
 
-            return mostStocledProduct?.ProductName ?? "Bulunamadı";
+            return mostStocledProduct == null ? "Bulunamadı" : $"{mostStocledProduct.ProductName} ({mostStocledProduct.StockQuantity} adet)";
         }
 
         public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)

@@ -86,7 +86,7 @@ namespace Business_Layer.Concrete
                 .OrderBy(x=>x.OrderCount)
                 .FirstOrDefault();
 
-            return leastOrderedProduct?.ProductName ?? "Bulunamadı";
+            return leastOrderedProduct == null ? "Bulunamadı" : $"{leastOrderedProduct.ProductName} ({leastOrderedProduct.OrderCount} adet)";
         }
 
         public string GetMostCancelledProduct()
@@ -104,7 +104,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.CancelCount)
                 .FirstOrDefault();
 
-            return mostCancelledProduct?.ProductName ?? "Bulunamadı";
+            return mostCancelledProduct == null ? "Bulunamadı" : $"{mostCancelledProduct.ProductName} ({mostCancelledProduct.CancelCount} adet)";
         }
 
         public string GetMostCompletedProductName()
@@ -122,7 +122,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x=>x.CompletedCount)
                 .FirstOrDefault();
 
-            return mostCompletedProduct?.ProductName ?? "Bulunamadı";
+            return mostCompletedProduct == null ? "Bulunamadı" : $"{mostCompletedProduct.ProductName} ({mostCompletedProduct.CompletedCount} adet)";
         }
 
         public string GetMostOrderedCategory()
@@ -139,7 +139,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedCategory?.CategoryName ?? "Bulunamadı";
+            return mostOrderedCategory == null ? "Bulunamadı" : $"{mostOrderedCategory.CategoryName} ({mostOrderedCategory.OrderCount} adet)";
         }
 
         public string GetMostOrderedCity()
@@ -156,14 +156,14 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedCity?.City ?? "Bulunamadı";
+            return mostOrderedCity == null ? "Bulunamadı" : $"{mostOrderedCity.City} ({mostOrderedCity.OrderCount} adet)";
         }
 
         public string GetMostOrderedCountry()
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var mostOrderedCity = query
+            var mostOrderedCountry = query
                 .GroupBy(o => o.Customer.CustomerCountry)
                 .Select(g => new
                 {
@@ -173,7 +173,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedCity?.Country ?? "Bulunamadı";
+            return mostOrderedCountry == null ? "Bulunamadı" : $"{mostOrderedCountry.Country} ({mostOrderedCountry.OrderCount} adet)";
         }
 
         public string GetMostOrderedCustomer()
@@ -190,7 +190,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedCustomer != null ? mostOrderedCustomer.FullName : string.Empty;
+            return mostOrderedCustomer == null ? "Bulunamadı" : $"{mostOrderedCustomer.FullName} ({mostOrderedCustomer.OrderCount} adet)";
         }
 
         public string GetMostOrderedPayment()
@@ -207,7 +207,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedPayment?.PaymentMethod ?? "Bulunamadı";
+            return mostOrderedPayment == null ? "Bulunamadı" : $"{mostOrderedPayment.PaymentMethod} ({mostOrderedPayment.OrderCount} adet)";
         }
 
         public string GetMostOrderedProduct()
@@ -224,7 +224,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x=>x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedProduct?.ProductName ?? "Bulunamadı";
+            return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
         public string GetMostOrderedProductThisMonth()
@@ -242,7 +242,7 @@ namespace Business_Layer.Concrete
                 .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
-            return mostOrderedProduct?.ProductName ?? "Bulunamadı";
+            return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
@@ -259,8 +259,6 @@ namespace Business_Layer.Concrete
 
         public decimal GetTotalRevenue()
         {
-
-
             return _uow.Orders.Sum(o => ((o.Quantity) * (o.Product.UnitPrice)));
         }
 

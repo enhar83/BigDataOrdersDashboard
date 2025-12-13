@@ -16,8 +16,8 @@
 			</div>
 			<div class="col-lg-5 col-md-6 col-sm-12">
 				<ul class="breadcrumb float-md-right">
-					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Metinsel İstatistikler</a></li>
-					<li class="breadcrumb-item"><a href="javascript:void(0);">İstatistik Listesi</a></li>
+					<li class="breadcrumb-item"><a href="#"><i class="zmdi zmdi-home"></i> Metinsel İstatistikler</a></li>
+					<li class="breadcrumb-item"><a href="#">İstatistik Listesi</a></li>
 					<li class="breadcrumb-item active">Ana Sayfa</li>
 				</ul>
 			</div>
@@ -25,203 +25,211 @@
 	</div>
 
 	<div class="row clearfix">
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #6a11cb, #2575fc);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-star"></i></div>
-					<div class="content text-center">
-						<div class="text">En Pahalı Ürün</div>
-						<div class="number">@Model.MostExpensiveProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #7F00FF, #E100FF);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-star"></i></div>
+					<div class="stat-title">En Pahalı Ürün</div>
+					<div class="stat-value">@Model.MostExpensiveProduct</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-amber">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-account-circle"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok Sipariş Veren</div>
-						<div class="number">@Model.CustomerWithMostOrders</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #11998e, #38ef7d);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-money-off"></i></div>
+					<div class="stat-title">En Ucuz Ürün</div>
+					<div class="stat-value">@Model.LeastExpensiveProduct</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #ff9966, #ff5e62);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-labels"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok Satılan Kategori</div>
-						<div class="number">@Model.CategoryWithMostOrders</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #f7971e, #ffd200);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-globe"></i></div>
+					<div class="stat-title">En Aktif Ülke</div>
+					<div class="stat-value">@Model.CountryWithMostOrders</div>
 				</div>
 			</div>
 		</div>
 
-
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-green">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-city"></i></div>
-					<div class="content text-center">
-						<div class="text">En Aktif Şehir</div>
-						<div class="number">@Model.CityWithMostOrders</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #00c6ff, #0072ff);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-city"></i></div>
+					<div class="stat-title">En Aktif Şehir</div>
+					<div class="stat-value">@Model.CityWithMostOrders</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row clearfix">
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #11998e, #38ef7d);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-globe"></i></div>
-					<div class="content text-center">
-						<div class="text">En Aktif Ülke</div>
-						<div class="number">@Model.CountryWithMostOrders</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #56ab2f, #a8e063);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-account-add"></i></div>
+					<div class="stat-title">En Yeni Müşteri</div>
+					<div class="stat-value">@Model.LastAddedCustomer</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-coral">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-money"></i></div>
-					<div class="content text-center">
-						<div class="text">En Ucuz Ürün</div>
-						<div class="number">@Model.LeastExpensiveProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #614385, #516395);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-account"></i></div>
+					<div class="stat-title">En Eski Müşteri</div>
+					<div class="stat-value">@Model.FirstAddedCustomer</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #ff512f, #dd2476);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-alert-circle"></i></div>
-					<div class="content text-center">
-						<div class="text">Stok Uyarısı</div>
-						<div class="number">@Model.LeastStockedProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #f85032, #e73827);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-check-circle"></i></div>
+					<div class="stat-title">En Çok Siparişi Tamamlanan Ürün</div>
+					<div class="stat-value">@Model.MostCompletedProductName</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-blue">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-shopping-cart"></i></div>
-					<div class="content text-center">
-						<div class="text">Bu Ayın En Çok Satanı</div>
-						<div class="number">@Model.MostOrderedProductThisMonth</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #ee0979, #ff6a00);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-rotate-left"></i></div>
+					<div class="stat-title">En Çok İade Edilen Ürün</div>
+					<div class="stat-value">@Model.MostCancelledProduct</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row clearfix">
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-salmon">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-rotate-left"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok İade Edilen Ürün</div>
-						<div class="number">@Model.MostCancelledProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #11998e, #38ef7d);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-store"></i></div>
+					<div class="stat-title">En Yüksek Stoklu Ürün</div>
+					<div class="stat-value">@Model.MostStockedProduct</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #7F7FD5, #86A8E7, #91EAE4);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-account-add"></i></div>
-					<div class="content text-center">
-						<div class="text">Yeni Müşteri</div>
-						<div class="number">@Model.LastAddedCustomer</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #cb2d3e, #ef473a);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-alert-circle"></i></div>
+					<div class="stat-title">En Az Stoklu Ürün</div>
+					<div class="stat-value">@Model.LeastStockedProduct</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-salmon">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-account"></i></div>
-					<div class="content text-center">
-						<div class="text">En Eski Müşteri</div>
-						<div class="number">@Model.FirstAddedCustomer</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #396afc, #2948ff);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-trending-up"></i></div>
+					<div class="stat-title">En Çok Sipariş Verilen Ürün</div>
+					<div class="stat-value">@Model.MostOrderedProduct</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #fdc830, #f37335);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-calendar"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok Siparişi Tamamlanan Ürün</div>
-						<div class="number">@Model.MostCompletedProductName</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #ff416c, #ff4b2b);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-trending-down"></i></div>
+					<div class="stat-title">En Az Sipariş Verilen Ürün</div>
+					<div class="stat-value">@Model.LeastOrderedProduct</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row clearfix">
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-blush">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-time"></i></div>
-					<div class="content text-center">
-						<div class="text">En Yüksek Stoklu Ürün</div>
-						<div class="number">@Model.MostStockedProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #36d1dc, #5b86e5);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-balance-wallet"></i></div>
+					<div class="stat-title">En Çok Kullanılan Ödeme Yöntemi</div>
+					<div class="stat-value">@Model.MostOrderedPayment</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #36d1dc, #5b86e5);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-balance-wallet"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok Kullanılan Ödeme Yöntemi</div>
-						<div class="number">@Model.MostOrderedPayment</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #f7971e, #ffd200);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-label"></i></div>
+					<div class="stat-title">En Çok Sipariş Verilen Kategori</div>
+					<div class="stat-value">@Model.CategoryWithMostOrders</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2 l-khaki">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-truck"></i></div>
-					<div class="content text-center">
-						<div class="text">En Çok Sipariş Edilen Ürün</div>
-						<div class="number">@Model.MostOrderedProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #00b09b, #96c93d);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-account-circle"></i></div>
+					<div class="stat-title">En Çok Sipariş Veren Müşteri</div>
+					<div class="stat-value">@Model.CustomerWithMostOrders</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-lg-3 col-md-6 col-sm-12">
-			<div class="card info-box-2" style="background: linear-gradient(to right, #ff5858, #f09819);">
-				<div class="body">
-					<div class="icon"><i class="zmdi zmdi-search"></i></div>
-					<div class="content text-center">
-						<div class="text">En Az Satılan Ürün</div>
-						<div class="number">@Model.LeastOrderedProduct</div>
-					</div>
+		<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+			<div class="stat-card" style="background: linear-gradient(to right, #f857a6, #ff5858);">
+				<div class="stat-card-body">
+					<div class="stat-icon"><i class="zmdi zmdi-calendar"></i></div>
+					<div class="stat-title">Bu Ay En Çok Sipariş Verilen Ürün</div>
+					<div class="stat-value">@Model.MostOrderedProductThisMonth</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
+
+<style>
+	.stat-card {
+		height: 170px;
+		border-radius: 12px;
+		color: #fff;
+		box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+	}
+
+	.stat-card-body {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		padding: 15px;
+	}
+
+	.stat-icon {
+		font-size: 28px;
+		margin-bottom: 8px;
+		opacity: 0.9;
+	}
+
+	.stat-title {
+		font-size: 13px;
+		opacity: 0.85;
+		margin-bottom: 6px;
+	}
+
+	.stat-value {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 1.3;
+		max-width: 100%;
+		word-break: break-word;
+	}
+
+</style>
