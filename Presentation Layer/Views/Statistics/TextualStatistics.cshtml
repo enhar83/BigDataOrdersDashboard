@@ -93,8 +93,8 @@
 				<div class="body">
 					<div class="icon"><i class="zmdi zmdi-money"></i></div>
 					<div class="content text-center">
-						<div class="text">En Pahalı Ürün</div>
-						<div class="number">Gaming Laptop</div>
+						<div class="text">En Ucuz Ürün</div>
+						<div class="number">@Model.LeastExpensiveProduct</div>
 					</div>
 				</div>
 			</div>
@@ -167,8 +167,8 @@
 				<div class="body">
 					<div class="icon"><i class="zmdi zmdi-calendar"></i></div>
 					<div class="content text-center">
-						<div class="text">En Yoğun Gün</div>
-						<div class="number">Pazartesi</div>
+						<div class="text">En Çok Siparişi Tamamlanan Ürün</div>
+						<div class="number">@Model.MostCompletedProductName</div>
 					</div>
 				</div>
 			</div>
@@ -181,8 +181,8 @@
 				<div class="body">
 					<div class="icon"><i class="zmdi zmdi-time"></i></div>
 					<div class="content text-center">
-						<div class="text">Satış Saati</div>
-						<div class="number">20:00</div>
+						<div class="text">En Yüksek Stoklu Ürün</div>
+						<div class="number">@Model.MostStockedProduct</div>
 					</div>
 				</div>
 			</div>
@@ -205,8 +205,8 @@
 				<div class="body">
 					<div class="icon"><i class="zmdi zmdi-truck"></i></div>
 					<div class="content text-center">
-						<div class="text">Kargo Firması</div>
-						<div class="number">Yurtiçi Kargo</div>
+						<div class="text">En Çok Sipariş Edilen Ürün</div>
+						<div class="number">@Model.MostOrderedProduct</div>
 					</div>
 				</div>
 			</div>
@@ -217,8 +217,8 @@
 				<div class="body">
 					<div class="icon"><i class="zmdi zmdi-search"></i></div>
 					<div class="content text-center">
-						<div class="text">En Çok Aranan Ürün</div>
-						<div class="number">Kulaklık</div>
+						<div class="text">En Az Satılan Ürün</div>
+						<div class="number">@Model.LeastOrderedProduct</div>
 					</div>
 				</div>
 			</div>

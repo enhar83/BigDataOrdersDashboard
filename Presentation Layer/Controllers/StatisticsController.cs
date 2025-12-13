@@ -45,16 +45,21 @@ namespace Presentation_Layer.Controllers
             var model = new TextualStatisticsCartsViewModel
             {
                 MostExpensiveProduct = _productService.GetMostExpensiveProductName(),
+                LeastExpensiveProduct = _productService.GetLeastExpensiveProductName(),
                 CustomerWithMostOrders = _orderService.GetMostOrderedCustomer(),
                 CategoryWithMostOrders = _orderService.GetMostOrderedCategory(),
                 CityWithMostOrders = _orderService.GetMostOrderedCity(),
                 CountryWithMostOrders = _orderService.GetMostOrderedCountry(),
+                MostStockedProduct = _productService.GetMostStockedProductName(),
                 LeastStockedProduct = _productService.GetLeastStockedProductName(),
                 MostOrderedProductThisMonth = _orderService.GetMostOrderedProductThisMonth(),
                 MostCancelledProduct = _orderService.GetMostCancelledProduct(),
                 LastAddedCustomer = _customerService.GetLastAddedCustomer(),
                 FirstAddedCustomer = _customerService.GetFirstAddedCustomer(),
-                MostOrderedPayment = _orderService.GetMostOrderedPayment()
+                MostOrderedPayment = _orderService.GetMostOrderedPayment(),
+                MostOrderedProduct = _orderService.GetMostOrderedProduct(),
+                LeastOrderedProduct = _orderService.GetLeastOrderedProduct(),
+                MostCompletedProductName = _orderService.GetMostCompletedProductName()
             };
 
             return View(model);

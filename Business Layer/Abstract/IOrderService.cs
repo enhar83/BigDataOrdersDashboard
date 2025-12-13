@@ -22,6 +22,8 @@ namespace Business_Layer.Abstract
         int GetThisYearOrders();
         decimal GetTotalRevenue();
         decimal GetAverageRevenue();
+        string GetMostOrderedProduct();
+        string GetLeastOrderedProduct();
         string GetMostOrderedCustomer();
         string GetMostOrderedCategory();
         string GetMostOrderedCity();
@@ -29,5 +31,6 @@ namespace Business_Layer.Abstract
         string GetMostOrderedProductThisMonth();
         string GetMostCancelledProduct();
         string GetMostOrderedPayment();
+        string GetMostCompletedProductName();
     }
 }

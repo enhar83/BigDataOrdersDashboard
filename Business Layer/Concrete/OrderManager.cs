@@ -31,16 +31,19 @@ namespace Business_Layer.Concrete
         public int CountCancelledOrders()
         {
             return _uow.Orders.GetCount(o=> o.OrderStatus=="İptal Edildi");
+            //SELECT Count(*) FROM Orders WHERE OrderStatus='İptal Edildi'
         }
 
         public int CountCompletedOrders()
         {
             return _uow.Orders.GetCount(o => o.OrderStatus=="Tamamlandı");
+            //SELECT Count(*) FROM Orders WHERE OrderStatus='Tamamlandı'
         }
 
         public int CountOrders()
         {
             return _uow.Orders.GetCount();
+            //SELECT Count(*) FROM Orders
         }
 
         public void Delete(int id)
@@ -56,7 +59,7 @@ namespace Business_Layer.Concrete
 
         public decimal GetAverageRevenue()
         {
-            return _uow.Orders.Average(o => (o.Quantity) * (o.Product.UnitPrice));
+            return _uow.Orders.Average(o => (o.Quantity) * (o.Product.UnitPrice)); 
         }
 
         public Order GetById(int id)
@@ -67,6 +70,23 @@ namespace Business_Layer.Concrete
         public Order GetFirstOrDefault(int id)
         {
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);
+        }
+
+        public string GetLeastOrderedProduct()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var leastOrderedProduct = query
+                .GroupBy(o=>o.Product.ProductName)
+                .Select(g => new
+                {
+                    ProductName=g.Key,
+                    OrderCount=g.Count()
+                })
+                .OrderBy(x=>x.OrderCount)
+                .FirstOrDefault();
+
+            return leastOrderedProduct?.ProductName ?? "Bulunamadı";
         }
 
         public string GetMostCancelledProduct()
@@ -85,6 +105,24 @@ namespace Business_Layer.Concrete
                 .FirstOrDefault();
 
             return mostCancelledProduct?.ProductName ?? "Bulunamadı";
+        }
+
+        public string GetMostCompletedProductName()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var mostCompletedProduct= query
+                .Where(o=>o.OrderStatus=="Tamamlandı")
+                .GroupBy(o=>o.Product.ProductName)
+                .Select(g=> new
+                {
+                    ProductName = g.Key,
+                    CompletedCount = g.Count()
+                })
+                .OrderByDescending(x=>x.CompletedCount)
+                .FirstOrDefault();
+
+            return mostCompletedProduct?.ProductName ?? "Bulunamadı";
         }
 
         public string GetMostOrderedCategory()
@@ -170,6 +208,23 @@ namespace Business_Layer.Concrete
                 .FirstOrDefault();
 
             return mostOrderedPayment?.PaymentMethod ?? "Bulunamadı";
+        }
+
+        public string GetMostOrderedProduct()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var mostOrderedProduct = query
+                .GroupBy(o=>o.Product.ProductName)
+                .Select(g=> new
+                {
+                    ProductName = g.Key,
+                    OrderCount= g.Count()
+                })
+                .OrderByDescending(x=>x.OrderCount)
+                .FirstOrDefault();
+
+            return mostOrderedProduct?.ProductName ?? "Bulunamadı";
         }
 
         public string GetMostOrderedProductThisMonth()

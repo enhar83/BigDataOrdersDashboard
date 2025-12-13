@@ -19,6 +19,8 @@ namespace Business_Layer.Abstract
         int CountProducts();
         int GetTotalProductStock();
         string GetMostExpensiveProductName();
+        string GetLeastExpensiveProductName();
+        string GetMostStockedProductName();
         string GetLeastStockedProductName();
     }
 }

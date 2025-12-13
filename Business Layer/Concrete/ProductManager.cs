@@ -68,6 +68,17 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetFirstOrDefault(p => p.ProductId == id);
         }
 
+        public string GetLeastExpensiveProductName()
+        {
+            IQueryable<Product> query = _uow.Products.GetQueryable();
+
+            var leastExpensiveProduct= query
+                .OrderBy(p=>p.UnitPrice)
+                .FirstOrDefault();
+
+            return leastExpensiveProduct?.ProductName ?? "Bulunamadı";
+        }
+
         public string GetLeastStockedProductName()
         {
             IQueryable<Product> query = _uow.Products.GetQueryable();
@@ -87,6 +98,17 @@ namespace Business_Layer.Concrete
                 .FirstOrDefault();
 
             return mostExpensiveProduct != null ? mostExpensiveProduct.ProductName : "Bulunamadı";
+        }
+
+        public string GetMostStockedProductName()
+        {
+            IQueryable<Product> query = _uow.Products.GetQueryable();
+
+            var mostStocledProduct = query
+                .OrderByDescending(p => p.StockQuantity)
+                .FirstOrDefault();
+
+            return mostStocledProduct?.ProductName ?? "Bulunamadı";
         }
 
         public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)
