@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business_Layer.DTOs;
 using Entity_Layer;
 
 namespace Business_Layer.Abstract
@@ -32,5 +33,6 @@ namespace Business_Layer.Abstract
         string GetMostCancelledProduct();
         string GetMostOrderedPayment();
         string GetMostCompletedProductName();
+        List<TodayOrdersDto> GetLast10OrdersToday();
     }
 }

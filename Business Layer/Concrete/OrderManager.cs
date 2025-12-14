@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
+using Business_Layer.DTOs;
 using Data_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.EntityFrameworkCore;
@@ -30,13 +31,13 @@ namespace Business_Layer.Concrete
 
         public int CountCancelledOrders()
         {
-            return _uow.Orders.GetCount(o=> o.OrderStatus=="İptal Edildi");
+            return _uow.Orders.GetCount(o => o.OrderStatus == "İptal Edildi");
             //SELECT Count(*) FROM Orders WHERE OrderStatus='İptal Edildi'
         }
 
         public int CountCompletedOrders()
         {
-            return _uow.Orders.GetCount(o => o.OrderStatus=="Tamamlandı");
+            return _uow.Orders.GetCount(o => o.OrderStatus == "Tamamlandı");
             //SELECT Count(*) FROM Orders WHERE OrderStatus='Tamamlandı'
         }
 
@@ -59,7 +60,7 @@ namespace Business_Layer.Concrete
 
         public decimal GetAverageRevenue()
         {
-            return _uow.Orders.Average(o => (o.Quantity) * (o.Product.UnitPrice)); 
+            return _uow.Orders.Average(o => (o.Quantity) * (o.Product.UnitPrice));
         }
 
         public Order GetById(int id)
@@ -72,18 +73,44 @@ namespace Business_Layer.Concrete
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);
         }
 
+        public List<TodayOrdersDto> GetLast10OrdersToday()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var last10OrdersToday = query
+                .Where(o => o.OrderDate.Date == DateTime.Today.Date)
+                .OrderByDescending(o => o.OrderDate)
+                .Include(o => o.Customer)
+                .Include(o => o.Product)
+                .Take(5)
+                .Select(o => new TodayOrdersDto
+                {
+                    OrderId = o.OrderId,
+                    OrderDate = o.OrderDate,
+                    CustomerName = o.Customer.CustomerName + " " + o.Customer.CustomerSurname,
+                    ProductName = o.Product.ProductName,
+                    UnitPrice = o.Product.UnitPrice,
+                    TotalPrice = o.Quantity * o.Product.UnitPrice,
+                    Quantity = o.Quantity,
+                    OrderStatus = o.OrderStatus,
+                    PaymentMethod = o.PaymentMethod
+                });
+
+            return last10OrdersToday.ToList();
+        }
+
         public string GetLeastOrderedProduct()
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
             var leastOrderedProduct = query
-                .GroupBy(o=>o.Product.ProductName)
+                .GroupBy(o => o.Product.ProductName)
                 .Select(g => new
                 {
-                    ProductName=g.Key,
-                    OrderCount=g.Count()
+                    ProductName = g.Key,
+                    OrderCount = g.Count()
                 })
-                .OrderBy(x=>x.OrderCount)
+                .OrderBy(x => x.OrderCount)
                 .FirstOrDefault();
 
             return leastOrderedProduct == null ? "Bulunamadı" : $"{leastOrderedProduct.ProductName} ({leastOrderedProduct.OrderCount} adet)";
@@ -94,7 +121,7 @@ namespace Business_Layer.Concrete
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
             var mostCancelledProduct = query
-                .Where(p=>p.OrderStatus=="İptal Edildi")
+                .Where(p => p.OrderStatus == "İptal Edildi")
                 .GroupBy(p => p.Product.ProductName)
                 .Select(g => new
                 {
@@ -111,15 +138,15 @@ namespace Business_Layer.Concrete
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var mostCompletedProduct= query
-                .Where(o=>o.OrderStatus=="Tamamlandı")
-                .GroupBy(o=>o.Product.ProductName)
-                .Select(g=> new
+            var mostCompletedProduct = query
+                .Where(o => o.OrderStatus == "Tamamlandı")
+                .GroupBy(o => o.Product.ProductName)
+                .Select(g => new
                 {
                     ProductName = g.Key,
                     CompletedCount = g.Count()
                 })
-                .OrderByDescending(x=>x.CompletedCount)
+                .OrderByDescending(x => x.CompletedCount)
                 .FirstOrDefault();
 
             return mostCompletedProduct == null ? "Bulunamadı" : $"{mostCompletedProduct.ProductName} ({mostCompletedProduct.CompletedCount} adet)";
@@ -146,7 +173,7 @@ namespace Business_Layer.Concrete
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var mostOrderedCity=query
+            var mostOrderedCity = query
                 .GroupBy(o => o.Customer.CustomerCity)
                 .Select(g => new
                 {
@@ -181,7 +208,7 @@ namespace Business_Layer.Concrete
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
             var mostOrderedCustomer = query
-                .GroupBy(o => new { o.Customer.CustomerName, o.Customer.CustomerSurname})
+                .GroupBy(o => new { o.Customer.CustomerName, o.Customer.CustomerSurname })
                 .Select(g => new
                 {
                     FullName = g.Key.CustomerName + " " + g.Key.CustomerSurname,
@@ -215,13 +242,13 @@ namespace Business_Layer.Concrete
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
             var mostOrderedProduct = query
-                .GroupBy(o=>o.Product.ProductName)
-                .Select(g=> new
+                .GroupBy(o => o.Product.ProductName)
+                .Select(g => new
                 {
                     ProductName = g.Key,
-                    OrderCount= g.Count()
+                    OrderCount = g.Count()
                 })
-                .OrderByDescending(x=>x.OrderCount)
+                .OrderByDescending(x => x.OrderCount)
                 .FirstOrDefault();
 
             return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
@@ -247,7 +274,7 @@ namespace Business_Layer.Concrete
 
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
-            return _uow.Orders.GetAllWithPaging(pageNumber, pageSize,o=> o.Customer,o=>o.Product);
+            return _uow.Orders.GetAllWithPaging(pageNumber, pageSize, o => o.Customer, o => o.Product);
         }
 
         public int GetThisYearOrders()
