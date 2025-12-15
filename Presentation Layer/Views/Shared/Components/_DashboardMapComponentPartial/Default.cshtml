@@ -1,0 +1,143 @@
+﻿@model List<CountryReportDto>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
+	.dashboard-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+
+	.map-container {
+		flex: 2;
+		min-width: 600px;
+		height: 500px;
+		border-radius: 10px;
+		overflow: hidden;
+		box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	}
+
+	.table-container {
+		flex: 1;
+		min-width: 400px;
+		background: #fff;
+		border-radius: 10px;
+		box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+		padding: 15px;
+	}
+
+		.table-container table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.table-container th, .table-container td {
+			padding: 10px;
+			text-align: left;
+		}
+
+		.table-container th {
+			background: #f5f5f5;
+		}
+
+	.positive {
+		color: green;
+		font-weight: bold;
+	}
+
+	.negative {
+		color: red;
+		font-weight: bold;
+	}
+</style>
+
+<div class="dashboard-container">
+	<!-- Harita -->
+	<div id="map" class="map-container"></div>
+
+	<!-- Tablo -->
+	<div class="table-container">
+		<h3>Ülke İstatistikleri</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>Ülke</th>
+					<th>2023</th>
+					<th>2024</th>
+					<th>Değişim</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Country</td>
+						<td>@item.Total2023</td>
+						<td>@item.Total2024</td>
+						<td>
+							@if (item.ChangeRate >= 0)
+							{
+								<span class="positive">+@item.ChangeRate.ToString("N2") % ⬆</span>
+							}
+							else
+							{
+								<span class="negative">@item.ChangeRate.ToString("N2") % ⬇</span>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+	// Ülke -> Koordinat mapping
+	var countryCoords = {
+		"Fransa": [48.8566, 2.3522],
+		"Türkiye": [39.9208, 32.8541],
+		"Almanya": [52.5200, 13.4050],
+		"İtalya": [41.9028, 12.4964],
+		"İngiltere": [51.5074, -0.1278],
+		"İspanya": [40.4168, -3.7038],
+		"Hollanda": [52.3676, 4.9041],
+		"Polonya": [52.2297, 21.0122],
+		"Avusturya": [48.2100, 16.3700],
+		"Çekya": [50.0755, 14.4378],
+		"Belçika": [50.8503, 4.3517],  
+		"Slovakya": [48.1486, 17.1077],     
+		"Bulgaristan": [42.6977, 23.3219]   
+	};
+
+	// DB'den gelen veriler
+	var data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+
+	// Harita init
+	var map = L.map('map').setView([20, 10], 2); // Dünya ortası
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19
+	}).addTo(map);
+
+	// Marker ekle
+	data.forEach(x => {
+		if (countryCoords[x.Country]) {
+			var coords = countryCoords[x.Country];
+			var popupContent = `
+				<b>${x.Country}</b><br>
+				2023: ${x.Total2023}<br>
+				2024: ${x.Total2024}<br>
+				Değişim: ${x.ChangeRate} %
+			`;
+			var marker = L.circleMarker(coords, {
+				radius: 10,
+				fillColor: x.ChangeRate >= 0 ? "green" : "red",
+				color: "#fff",
+				weight: 2,
+				opacity: 1,
+				fillOpacity: 0.8
+			}).addTo(map);
+			marker.bindPopup(popupContent);
+		}
+	});
+</script>

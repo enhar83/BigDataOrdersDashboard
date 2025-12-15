@@ -68,6 +68,51 @@ namespace Business_Layer.Concrete
             return _uow.Orders.GetById(id);
         }
 
+        public List<CountryReportDto> GetCountryReportForMap()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var start2023 = new DateTime(2023, 1, 1);
+            var start2024 = new DateTime(2024, 1, 1);
+            var start2025 = new DateTime(2025, 1, 1);
+
+            //2023 yılı siparişleri ayrı olarak gruplanıyor
+            var orders2023 = query
+                .Where(o=>o.OrderDate>= start2023 && o.OrderDate < start2024)
+                .GroupBy(o => o.Customer.CustomerCountry)
+                .Select(g => new
+                {
+                    Country = g.Key,
+                    Total2023 = g.Count()
+                });
+
+            //2024 yılı siparişleri ayrı olarak gruplanıyor
+            var orders2024 = query
+                .Where(o => o.OrderDate >= start2024 && o.OrderDate < start2025)
+                .GroupBy(o => o.Customer.CustomerCountry)
+                .Select(g => new
+                {
+                    Country = g.Key,
+                    Total2024 = g.Count()
+                });
+
+            //2023 ve 2024 verilerini ülke bazlı olarak birleştirip SQL'de INNER JOIN ile Country üzerinden hazırlıyoruz.
+            var result = orders2023
+                .Join(orders2024,
+                y2023 => y2023.Country,
+                y2024 => y2024.Country,
+                (y2023, y2024) => new CountryReportDto
+                {
+                    Country = y2023.Country,
+                    Total2023 = y2023.Total2023,
+                    Total2024 = y2024.Total2024,
+                    ChangeRate = y2023.Total2023 == 0 ? 0 : ((decimal)(y2024.Total2024 - y2023.Total2023) / y2023.Total2023) * 100
+                })
+                .ToList();
+
+            return result;
+        }
+
         public Order GetFirstOrDefault(int id)
         {
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);

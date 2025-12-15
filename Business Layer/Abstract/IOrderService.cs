@@ -34,5 +34,6 @@ namespace Business_Layer.Abstract
         string GetMostOrderedPayment();
         string GetMostCompletedProductName();
         List<TodayOrdersDto> GetLast10OrdersToday();
+        List<CountryReportDto> GetCountryReportForMap();
     }
 }

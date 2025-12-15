@@ -38,8 +38,51 @@
 								<td>@item.UnitPrice</td>
 								<td>@item.Quantity</td>
                                 <td>@item.TotalPrice.ToString("N2")</td>
-								<td>@item.PaymentMethod</td>
-								<td>@item.OrderStatus</td>
+                                <td>
+                                    @if (item.PaymentMethod == "Kredi Kartı")
+                                    {
+                                        <span>💳 @item.PaymentMethod</span>
+                                    }
+                                    else if (item.PaymentMethod == "Google Pay")
+                                    {
+                                        <span>📱 @item.PaymentMethod</span>
+                                    }
+                                    else if (item.PaymentMethod == "Banka Kartı")
+                                    {
+                                        <span>🏦 @item.PaymentMethod</span>
+                                    }
+                                    else if (item.PaymentMethod == "PayPal")
+                                    {
+                                        <span>💻 @item.PaymentMethod</span>
+                                    }
+                                    else if (item.PaymentMethod == "Havale / EFT")
+                                    {
+                                        <span>💰 @item.PaymentMethod</span>
+                                    }
+                                    else
+                                    {
+                                        <span>⚙️ @item.PaymentMethod</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.OrderStatus == "Tamamlandı")
+                                    {
+                                        <span>✅ @item.OrderStatus</span>
+                                    }
+                                    else if (item.OrderStatus == "Beklemede" || item.OrderStatus == "Hazırlanıyor" || item.OrderStatus == "Kargoda")
+                                    {
+                                        <span>⏳ @item.OrderStatus</span>
+                                    }
+                                    else if (item.OrderStatus == "İptal Edildi")
+                                    {
+                                        <span>❌ @item.OrderStatus</span>
+                                    }
+                                    else
+                                    {
+                                        <span>⚪ @item.OrderStatus</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
