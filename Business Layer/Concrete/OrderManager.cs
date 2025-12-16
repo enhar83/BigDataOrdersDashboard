@@ -336,6 +336,41 @@ namespace Business_Layer.Concrete
             return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
+        public List<OrderStatusChartDto> GetOrderStatusChartData()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var allStatuses = new[] { "Tamamlandı", "İptal Edildi", "Hazırlanıyor", "Kargoda", "Beklemede" };
+
+            var totalOrders = query.Count();
+
+            var statusCounts = query
+                .GroupBy(o => o.OrderStatus)
+                .Select(g => new
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+
+            var result = allStatuses.Select(status =>
+            {
+                var data = statusCounts.FirstOrDefault(x => x.Status == status);
+
+                var count = data?.Count ?? 0;
+
+                return new OrderStatusChartDto
+                {
+                    Status = status,
+                    Count = count,
+                    Rate = totalOrders == 0 ? 0 : (double)count / totalOrders * 100
+                };
+            })
+            .ToList();
+
+            return result;
+        }
+
         public (List<Order> orders, int totalCount) GetOrdersWithPaging(int pageNumber, int pageSize)
         {
             return _uow.Orders.GetAllWithPaging(pageNumber, pageSize, o => o.Customer, o => o.Product);

@@ -1,13 +1,17 @@
-﻿<style>
+﻿@model List<OrderStatusChartDto>
+@using Core_Layer.Helpers
+@using System.Globalization
+
+<style>
 	.cards-container {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
 		gap: 25px;
-		justify-content: center;
-		padding: 20px;
-		max-width: 1200px;
+		max-width: 1300px;
 		margin: 0 auto;
+		padding: 20px;
 	}
+
 
 	.circle-card {
 		flex: 1 1 220px;
@@ -73,76 +77,44 @@
 	.card-sub {
 		font-size: 14px;
 		margin-top: 4px;
-	}
-
-	.positive {
-		color: green;
-	}
-
-	.negative {
-		color: red;
+		color: #666;
 	}
 </style>
 
 <div class="cards-container">
 
-	<div class="circle-card">
-		<div class="progress-circle" data-value="78" data-color="#00BCD4">
-			<svg>
-				<circle class="bg" cx="50" cy="50" r="45"></circle>
-				<circle class="progress" cx="50" cy="50" r="45"></circle>
-			</svg>
-			<div class="circle-value">78%</div>
-		</div>
-		<div class="card-title">Sipariş Tamamlanma</div>
-		<div class="card-sub positive">+12% Artış ⬆</div>
-	</div>
+	@foreach (var item in Model)
+	{
+		<div class="circle-card">
 
-	<div class="circle-card">
-		<div class="progress-circle" data-value="22" data-color="#FF7043">
-			<svg>
-				<circle class="bg" cx="50" cy="50" r="45"></circle>
-				<circle class="progress" cx="50" cy="50" r="45"></circle>
-			</svg>
-			<div class="circle-value">22%</div>
-		</div>
-		<div class="card-title">İade Oranı</div>
-		<div class="card-sub negative">-5% Azalış ⬇</div>
-	</div>
+			<div class="progress-circle"
+				 data-value="@item.Rate.ToString(CultureInfo.InvariantCulture)"
+				 data-color="@GetColorForCharts.GetColor(item.Status)">
 
-	<div class="circle-card">
-		<div class="progress-circle" data-value="65" data-color="#66BB6A">
-			<svg>
-				<circle class="bg" cx="50" cy="50" r="45"></circle>
-				<circle class="progress" cx="50" cy="50" r="45"></circle>
-			</svg>
-			<div class="circle-value">65%</div>
-		</div>
-		<div class="card-title">Sepet Ortalama Değeri</div>
-		<div class="card-sub positive">+8% Artış ⬆</div>
-	</div>
+				<svg>
+					<circle class="bg" cx="50" cy="50" r="45"></circle>
+					<circle class="progress" cx="50" cy="50" r="45"></circle>
+				</svg>
 
-	<div class="circle-card">
-		<div class="progress-circle" data-value="90" data-color="#2196F3">
-			<svg>
-				<circle class="bg" cx="50" cy="50" r="45"></circle>
-				<circle class="progress" cx="50" cy="50" r="45"></circle>
-			</svg>
-			<div class="circle-value">90%</div>
+				<div class="circle-value">
+					@item.Rate.ToString("N2")%
+				</div>
+			</div>
+
+			<div class="card-title">@item.Status</div>
+			<div class="card-sub">@item.Count adet</div>
+
 		</div>
-		<div class="card-title">Gelir Artış Oranı</div>
-		<div class="card-sub positive">+20% Artış ⬆</div>
-	</div>
+	}
 
 </div>
 
-
-
 <script>
 	document.querySelectorAll('.progress-circle').forEach(el => {
-		const value = el.getAttribute('data-value');
+		const value = parseFloat(el.getAttribute('data-value'));
 		const color = el.getAttribute('data-color');
 		const circle = el.querySelector('.progress');
+
 		const radius = 45;
 		const circumference = 2 * Math.PI * radius;
 		const offset = circumference - (value / 100) * circumference;
