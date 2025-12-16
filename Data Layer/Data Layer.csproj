@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core Layer\Core Layer.csproj" />
     <ProjectReference Include="..\Entity Layer\Entity Layer.csproj" />
   </ItemGroup>
 

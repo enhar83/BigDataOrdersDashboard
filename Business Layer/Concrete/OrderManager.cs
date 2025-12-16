@@ -76,7 +76,6 @@ namespace Business_Layer.Concrete
             var start2024 = new DateTime(2024, 1, 1);
             var start2025 = new DateTime(2025, 1, 1);
 
-            //2023 yılı siparişleri ayrı olarak gruplanıyor
             var orders2023 = query
                 .Where(o=>o.OrderDate>= start2023 && o.OrderDate < start2024)
                 .GroupBy(o => o.Customer.CustomerCountry)
@@ -86,7 +85,6 @@ namespace Business_Layer.Concrete
                     Total2023 = g.Count()
                 });
 
-            //2024 yılı siparişleri ayrı olarak gruplanıyor
             var orders2024 = query
                 .Where(o => o.OrderDate >= start2024 && o.OrderDate < start2025)
                 .GroupBy(o => o.Customer.CustomerCountry)
@@ -96,7 +94,6 @@ namespace Business_Layer.Concrete
                     Total2024 = g.Count()
                 });
 
-            //2023 ve 2024 verilerini ülke bazlı olarak birleştirip SQL'de INNER JOIN ile Country üzerinden hazırlıyoruz.
             var result = orders2023
                 .Join(orders2024,
                 y2023 => y2023.Country,

@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Business Layer\Business Layer.csproj" />
+    <ProjectReference Include="..\Core Layer\Core Layer.csproj" />
     <ProjectReference Include="..\Data Layer\Data Layer.csproj" />
     <ProjectReference Include="..\Entity Layer\Entity Layer.csproj" />
   </ItemGroup>
