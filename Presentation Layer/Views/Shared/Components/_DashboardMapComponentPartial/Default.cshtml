@@ -93,44 +93,27 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-	// Ülke -> Koordinat mapping
-	var countryCoords = {
-		"Fransa": [48.8566, 2.3522],
-		"Türkiye": [39.9208, 32.8541],
-		"Almanya": [52.5200, 13.4050],
-		"İtalya": [41.9028, 12.4964],
-		"İngiltere": [51.5074, -0.1278],
-		"İspanya": [40.4168, -3.7038],
-		"Hollanda": [52.3676, 4.9041],
-		"Polonya": [52.2297, 21.0122],
-		"Avusturya": [48.2100, 16.3700],
-		"Çekya": [50.0755, 14.4378],
-		"Belçika": [50.8503, 4.3517],  
-		"Slovakya": [48.1486, 17.1077],     
-		"Bulgaristan": [42.6977, 23.3219]   
-	};
-
-	// DB'den gelen veriler
+	// DB'den gelen veriler (artık Lat/Lon da içeriyor)
 	var data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
 
-	// Harita init
-	var map = L.map('map').setView([20, 10], 2); // Dünya ortası
+	// Harita oluştur
+	var map = L.map('map').setView([45, 10], 4); // Avrupa odaklı başlangıç
+
+	// OpenStreetMap katmanı
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 19
 	}).addTo(map);
 
-	// Marker ekle
+	// Marker ekleme
 	data.forEach(x => {
-		if (countryCoords[x.Country]) {
-			var coords = countryCoords[x.Country];
-
+		if (x.Latitude && x.Longitude) {
 			var popupContent = `
 				<b>${x.Country}</b><br>
 				2023: ${x.Total2023}<br>
 				2024: ${x.Total2024}<br>
 				Değişim: ${x.ChangeRate} %
 			`;
-			var marker = L.circleMarker(coords, {
+			var marker = L.circleMarker([x.Latitude, x.Longitude], {
 				radius: 10,
 				fillColor: x.ChangeRate >= 0 ? "green" : "red",
 				color: "#fff",

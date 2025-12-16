@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
 using Business_Layer.DTOs;
+using Core_Layer.Helpers;
 using Data_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +78,7 @@ namespace Business_Layer.Concrete
             var start2025 = new DateTime(2025, 1, 1);
 
             var orders2023 = query
-                .Where(o=>o.OrderDate>= start2023 && o.OrderDate < start2024)
+                .Where(o => o.OrderDate >= start2023 && o.OrderDate < start2024)
                 .GroupBy(o => o.Customer.CustomerCountry)
                 .Select(g => new
                 {
@@ -94,20 +95,41 @@ namespace Business_Layer.Concrete
                     Total2024 = g.Count()
                 });
 
-            var result = orders2023
+            var rawData = orders2023
                 .Join(orders2024,
                 y2023 => y2023.Country,
                 y2024 => y2024.Country,
-                (y2023, y2024) => new CountryReportDto
+                (y2023, y2024) => new
                 {
                     Country = y2023.Country,
                     Total2023 = y2023.Total2023,
-                    Total2024 = y2024.Total2024,
-                    ChangeRate = y2023.Total2023 == 0 ? 0 : ((decimal)(y2024.Total2024 - y2023.Total2023) / y2023.Total2023) * 100
+                    Total2024 = y2024.Total2024
                 })
+            .ToList(); //Buradaki ToList() sayesinde EF artık SQL üretmeyi bırakıp veriyi RAM'e alır.
+                       //Bu kısımdan sonrası LINQ to Objects'tir.
+
+
+            //CountryCoordinaterHelper EF tarafından SQL'e çevrilmez.
+            //Ancak eski şekilde bırakılsa hala IQueryable üzerinde çalışacaktı.
+            //EF buna bazen izin verip, bazen vermiyor ve runtime exception fırlatıyor.
+            var result = rawData
+                .Select(x => new CountryReportDto
+                {
+                    Country = x.Country,
+                    Total2023 = x.Total2023,
+                    Total2024 = x.Total2024,
+                    ChangeRate = x.Total2023 == 0
+                        ? 0
+                        : ((decimal)(x.Total2024 - x.Total2023) / x.Total2023) * 100,
+
+                    Latitude = CountryCoordinateHelper.GetLatitude(x.Country) ?? 0,
+                    Longitude = CountryCoordinateHelper.GetLongitude(x.Country) ?? 0
+                })
+                .Where(x => x.Latitude != 0 && x.Longitude != 0)
                 .ToList();
 
             return result;
+            //EF SQL üretirken helper çağırma, Helper'ı RAM'e geçtikten sonra çağır.
         }
 
         public Order GetFirstOrDefault(int id)
