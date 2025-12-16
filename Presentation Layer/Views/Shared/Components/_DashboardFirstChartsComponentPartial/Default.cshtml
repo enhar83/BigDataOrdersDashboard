@@ -1,0 +1,153 @@
+﻿<style>
+	.cards-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 25px;
+		justify-content: center;
+		padding: 20px;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.circle-card {
+		flex: 1 1 220px;
+		max-width: 250px;
+		background: #fff;
+		border-radius: 16px;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+		text-align: center;
+		padding: 25px 15px;
+		transition: transform .2s ease-in-out;
+	}
+
+		.circle-card:hover {
+			transform: translateY(-5px);
+		}
+
+	.progress-circle {
+		position: relative;
+		width: 100px;
+		height: 100px;
+		margin: 0 auto 15px auto;
+	}
+
+		.progress-circle svg {
+			transform: rotate(-90deg);
+			width: 100px;
+			height: 100px;
+		}
+
+		.progress-circle circle {
+			fill: none;
+			stroke-width: 10;
+			stroke-linecap: round;
+		}
+
+		.progress-circle .bg {
+			stroke: #e6e6e6;
+		}
+
+		.progress-circle .progress {
+			stroke-dasharray: 283;
+			stroke-dashoffset: 283;
+			transition: stroke-dashoffset 1s ease;
+		}
+
+	.circle-value {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 22px;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.card-title {
+		font-weight: 600;
+		font-size: 16px;
+		margin-top: 8px;
+		color: #444;
+	}
+
+	.card-sub {
+		font-size: 14px;
+		margin-top: 4px;
+	}
+
+	.positive {
+		color: green;
+	}
+
+	.negative {
+		color: red;
+	}
+</style>
+
+<div class="cards-container">
+
+	<div class="circle-card">
+		<div class="progress-circle" data-value="78" data-color="#00BCD4">
+			<svg>
+				<circle class="bg" cx="50" cy="50" r="45"></circle>
+				<circle class="progress" cx="50" cy="50" r="45"></circle>
+			</svg>
+			<div class="circle-value">78%</div>
+		</div>
+		<div class="card-title">Sipariş Tamamlanma</div>
+		<div class="card-sub positive">+12% Artış ⬆</div>
+	</div>
+
+	<div class="circle-card">
+		<div class="progress-circle" data-value="22" data-color="#FF7043">
+			<svg>
+				<circle class="bg" cx="50" cy="50" r="45"></circle>
+				<circle class="progress" cx="50" cy="50" r="45"></circle>
+			</svg>
+			<div class="circle-value">22%</div>
+		</div>
+		<div class="card-title">İade Oranı</div>
+		<div class="card-sub negative">-5% Azalış ⬇</div>
+	</div>
+
+	<div class="circle-card">
+		<div class="progress-circle" data-value="65" data-color="#66BB6A">
+			<svg>
+				<circle class="bg" cx="50" cy="50" r="45"></circle>
+				<circle class="progress" cx="50" cy="50" r="45"></circle>
+			</svg>
+			<div class="circle-value">65%</div>
+		</div>
+		<div class="card-title">Sepet Ortalama Değeri</div>
+		<div class="card-sub positive">+8% Artış ⬆</div>
+	</div>
+
+	<div class="circle-card">
+		<div class="progress-circle" data-value="90" data-color="#2196F3">
+			<svg>
+				<circle class="bg" cx="50" cy="50" r="45"></circle>
+				<circle class="progress" cx="50" cy="50" r="45"></circle>
+			</svg>
+			<div class="circle-value">90%</div>
+		</div>
+		<div class="card-title">Gelir Artış Oranı</div>
+		<div class="card-sub positive">+20% Artış ⬆</div>
+	</div>
+
+</div>
+
+
+
+<script>
+	document.querySelectorAll('.progress-circle').forEach(el => {
+		const value = el.getAttribute('data-value');
+		const color = el.getAttribute('data-color');
+		const circle = el.querySelector('.progress');
+		const radius = 45;
+		const circumference = 2 * Math.PI * radius;
+		const offset = circumference - (value / 100) * circumference;
+
+		circle.style.stroke = color;
+		circle.style.strokeDashoffset = offset;
+	});
+</script>
