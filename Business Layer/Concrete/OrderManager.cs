@@ -30,6 +30,72 @@ namespace Business_Layer.Concrete
             _uow.Save();
         }
 
+        public KpiCartsDto CompareTodayAndYesterdayOrdersForKpiCarts()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+
+            var summary = query
+                .Where(o => o.OrderDate.Date == today || o.OrderDate.Date == yesterday)
+                .GroupBy(o => o.OrderDate.Date)
+                .Select(g => new
+                {
+                    OrderDate = g.Key,
+                    OrdersCount = g.Count(),
+                    OrdersPrice = g.Sum(o => o.Quantity * o.Product.UnitPrice)
+                })
+                .ToList();
+
+            var todayData = summary.FirstOrDefault(s => s.OrderDate == today);
+            var yesterdayData = summary.FirstOrDefault(s => s.OrderDate == yesterday);
+
+            long todayOrdersCount = todayData?.OrdersCount ?? 0;
+            long yesterdayOrdersCount = yesterdayData?.OrdersCount ?? 0;
+            decimal todayOrdersPrice = todayData?.OrdersPrice ?? 0M;
+            decimal yesterdayOrdersPrice = yesterdayData?.OrdersPrice ?? 0M;
+            decimal todayOrdersAveragePrice = todayOrdersCount == 0 ? 0 : todayOrdersPrice / todayOrdersCount;
+            decimal yesterdayOrdersAveragePrice = yesterdayOrdersCount == 0 ? 0 : yesterdayOrdersPrice / yesterdayOrdersCount;
+
+
+            decimal changeRate = 0;
+            if (yesterdayOrdersCount != 0)
+            {
+                changeRate = ((decimal)(todayOrdersCount - yesterdayOrdersCount) / yesterdayOrdersCount) * 100;
+            }
+
+            decimal priceChangeRate = 0;
+            if (yesterdayOrdersPrice != 0)
+            {
+                priceChangeRate = ((todayOrdersPrice - yesterdayOrdersPrice) / yesterdayOrdersPrice) * 100;
+            }
+
+            decimal averagePriceChangeRate = 0;
+            if (yesterdayOrdersAveragePrice != 0)
+            {
+                averagePriceChangeRate = ((todayOrdersAveragePrice - yesterdayOrdersAveragePrice) / yesterdayOrdersAveragePrice) * 100;
+            }
+
+
+
+            var result = new KpiCartsDto
+            {
+                TodayOrdersCount = (int)todayOrdersCount,
+                YesterdayOrdersCount = (int)yesterdayOrdersCount,
+                TodayOrdersPrice = (double)todayOrdersPrice,
+                YesterdayOrdersPrice = (double)yesterdayOrdersPrice,
+                TodayOrdersAveragePrice = (double)todayOrdersAveragePrice,
+                YesterdayOrdersAveragePrice = (double)yesterdayOrdersAveragePrice,
+                OrdersCountPercentageChange = (double)changeRate,
+                OrdersPricePercentageChange = (double)priceChangeRate,
+                OrdersAveragePricePercentageChange = (double)averagePriceChangeRate
+            };
+
+
+            return result;
+        }
+
         public int CountCancelledOrders()
         {
             return _uow.Orders.GetCount(o => o.OrderStatus == "İptal Edildi");
