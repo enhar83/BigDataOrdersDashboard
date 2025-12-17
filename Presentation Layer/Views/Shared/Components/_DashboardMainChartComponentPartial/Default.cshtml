@@ -1,0 +1,35 @@
+﻿@model MainChartDto
+
+<div class="col-lg-9 col-md-8">
+	<div class="card product-report">
+		<div class="header">
+			<h2>Sipariş Rapor Grafiği <small>Son 6 Aylık Sipariş Grafiği</small></h2>
+		</div>
+		<div class="body">
+			<div class="row clearfix m-b-15">
+				<div class="col-lg-4 col-md-4 col-sm-4">
+					<div class="icon l-amber"><i class="zmdi zmdi-chart-donut"></i></div>
+					<div class="col-in">
+						<h4 class="counter m-b-0">@Model.TodayOrdersPrice.ToString("N2")</h4>
+						<small class="text-muted m-t-0">Bugünkü Kazanç</small>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4">
+					<div class="icon l-turquoise"><i class="zmdi zmdi-chart"></i></div>
+					<div class="col-in">
+						<h4 class="counter m-b-0">@Model.ThisMonthOrdersPrice.ToString("N2")</h4>
+						<small class="text-muted m-t-0">Aylık Kazanç </small>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4">
+					<div class="icon l-parpl"><i class="zmdi zmdi-card"></i></div>
+					<div class="col-in">
+						<h4 class="counter m-b-0">@Model.LastSixMonthsOrdersPrice.ToString("N2")</h4>
+						<small class="text-muted m-t-0">6 Aylık Kazanç</small>
+					</div>
+				</div>
+			</div>
+			<div id="area_chart" class="graph"></div>
+		</div>
+	</div>
+</div>

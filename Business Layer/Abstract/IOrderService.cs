@@ -37,6 +37,7 @@ namespace Business_Layer.Abstract
         List<CountryReportDto> GetCountryReportForMap();
         List<OrderStatusChartDto> GetOrderStatusChartData();
         KpiCartsDto CompareTodayAndYesterdayOrdersForKpiCarts();
+        MainChartDto SalesWithinTimeIntervals();
     }
 
 }

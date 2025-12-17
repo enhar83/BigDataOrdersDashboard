@@ -36,64 +36,45 @@ namespace Business_Layer.Concrete
 
             var today = DateTime.Today;
             var yesterday = today.AddDays(-1);
+            var tomorrow = today.AddDays(1);
 
             var summary = query
-                .Where(o => o.OrderDate.Date == today || o.OrderDate.Date == yesterday)
+                .Where(o => o.OrderDate >= yesterday && o.OrderDate < tomorrow)
                 .GroupBy(o => o.OrderDate.Date)
                 .Select(g => new
                 {
-                    OrderDate = g.Key,
+                    Date = g.Key,
                     OrdersCount = g.Count(),
-                    OrdersPrice = g.Sum(o => o.Quantity * o.Product.UnitPrice)
+                    OrdersPrice = g.Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0M
                 })
                 .ToList();
 
-            var todayData = summary.FirstOrDefault(s => s.OrderDate == today);
-            var yesterdayData = summary.FirstOrDefault(s => s.OrderDate == yesterday);
+            var todayData = summary.FirstOrDefault(s => s.Date == today);
+            var yesterdayData = summary.FirstOrDefault(s => s.Date == yesterday);
 
-            long todayOrdersCount = todayData?.OrdersCount ?? 0;
-            long yesterdayOrdersCount = yesterdayData?.OrdersCount ?? 0;
-            decimal todayOrdersPrice = todayData?.OrdersPrice ?? 0M;
-            decimal yesterdayOrdersPrice = yesterdayData?.OrdersPrice ?? 0M;
-            decimal todayOrdersAveragePrice = todayOrdersCount == 0 ? 0 : todayOrdersPrice / todayOrdersCount;
-            decimal yesterdayOrdersAveragePrice = yesterdayOrdersCount == 0 ? 0 : yesterdayOrdersPrice / yesterdayOrdersCount;
+            decimal tPrice = todayData?.OrdersPrice ?? 0;
+            decimal yPrice = yesterdayData?.OrdersPrice ?? 0;
+            int tCount = todayData?.OrdersCount ?? 0;
+            int yCount = yesterdayData?.OrdersCount ?? 0;
 
+            decimal tAvg = tCount > 0 ? tPrice / tCount : 0;
+            decimal yAvg = yCount > 0 ? yPrice / yCount : 0;
 
-            decimal changeRate = 0;
-            if (yesterdayOrdersCount != 0)
+            // Yüzde değişim hesaplama fonksiyonu
+            double CalcChange(decimal cur, decimal prev) => prev == 0 ? 0 : (double)((cur - prev) / prev * 100);
+
+            return new KpiCartsDto
             {
-                changeRate = ((decimal)(todayOrdersCount - yesterdayOrdersCount) / yesterdayOrdersCount) * 100;
-            }
-
-            decimal priceChangeRate = 0;
-            if (yesterdayOrdersPrice != 0)
-            {
-                priceChangeRate = ((todayOrdersPrice - yesterdayOrdersPrice) / yesterdayOrdersPrice) * 100;
-            }
-
-            decimal averagePriceChangeRate = 0;
-            if (yesterdayOrdersAveragePrice != 0)
-            {
-                averagePriceChangeRate = ((todayOrdersAveragePrice - yesterdayOrdersAveragePrice) / yesterdayOrdersAveragePrice) * 100;
-            }
-
-
-
-            var result = new KpiCartsDto
-            {
-                TodayOrdersCount = (int)todayOrdersCount,
-                YesterdayOrdersCount = (int)yesterdayOrdersCount,
-                TodayOrdersPrice = (double)todayOrdersPrice,
-                YesterdayOrdersPrice = (double)yesterdayOrdersPrice,
-                TodayOrdersAveragePrice = (double)todayOrdersAveragePrice,
-                YesterdayOrdersAveragePrice = (double)yesterdayOrdersAveragePrice,
-                OrdersCountPercentageChange = (double)changeRate,
-                OrdersPricePercentageChange = (double)priceChangeRate,
-                OrdersAveragePricePercentageChange = (double)averagePriceChangeRate
+                TodayOrdersCount = tCount,
+                YesterdayOrdersCount = yCount,
+                TodayOrdersPrice = (double)tPrice,
+                YesterdayOrdersPrice = (double)yPrice,
+                TodayOrdersAveragePrice = (double)tAvg,
+                YesterdayOrdersAveragePrice = (double)yAvg,
+                OrdersCountPercentageChange = CalcChange(tCount, yCount),
+                OrdersPricePercentageChange = CalcChange(tPrice, yPrice),
+                OrdersAveragePricePercentageChange = CalcChange(tAvg, yAvg)
             };
-
-
-            return result;
         }
 
         public int CountCancelledOrders()
@@ -454,6 +435,30 @@ namespace Business_Layer.Concrete
             return _uow.Orders.Sum(o => ((o.Quantity) * (o.Product.UnitPrice)));
         }
 
+        public MainChartDto SalesWithinTimeIntervals()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var todayStart = DateTime.Today;
+            var tomorrowStart = todayStart.AddDays(1);
+            var lastMonthStart = todayStart.AddMonths(-1);
+            var last6MonthsStart = todayStart.AddMonths(-6);
+
+            return query
+                .Where(o => o.OrderDate >= last6MonthsStart)
+                .GroupBy(o => 1)
+                .Select(g => new MainChartDto
+                {
+                    TodayOrdersPrice = g.Where(o => o.OrderDate >= todayStart && o.OrderDate < tomorrowStart)
+                                        .Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
+
+                    ThisMonthOrdersPrice = g.Where(o => o.OrderDate >= lastMonthStart)
+                                            .Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
+
+                    LastSixMonthsOrdersPrice = g.Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0
+                })
+                .FirstOrDefault() ?? new MainChartDto();
+        }
         public void Update(Order order)
         {
             _uow.Orders.Update(order);
