@@ -32,38 +32,67 @@
 
             ﻿<div class="card">
                 <div class="body">
-                    <h4>Son 6 Aylık Satış Adetleri</h4>
-                    <canvas id="salesChart"></canvas>
+                    <h4>Son 6 Aylık Satış Durumları</h4>
+                    <canvas id="salesStatusChart"></canvas>
                 </div>
             </div>
 
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
-                const ctx = document.getElementById('salesChart').getContext('2d');
+                const ctx = document.getElementById('salesStatusChart').getContext('2d');
 
                 const data = {
                   labels: ['Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos'],
-                  datasets: [{
-                    label: 'Satış Adedi',
-                    data: [12540, 11589, 13688, 12945, 14110, 15432],
-                    fill: true,
-                    backgroundColor: 'rgba(66, 165, 245, 0.25)',  // açık mavi ton
-                    borderColor: 'rgba(66, 165, 245, 1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: 'rgba(66, 165, 245, 1)',
-                    pointRadius: 4,
-                    tension: 0.4, // eğimli çizgi efekti
-                  }]
+                  datasets: [
+                    {
+                      label: 'Tamamlanan Satışlar',
+                      data: [12540, 11589, 13688, 12945, 14110, 15432],
+                      fill: true,
+                      backgroundColor: 'rgba(76, 175, 80, 0.2)',   // yeşil alan
+                      borderColor: 'rgba(76, 175, 80, 1)',
+                      borderWidth: 2,
+                      pointBackgroundColor: '#fff',
+                      pointBorderColor: 'rgba(76, 175, 80, 1)',
+                      pointRadius: 4,
+                      tension: 0.4
+                    },
+                    {
+                      label: 'İptal Edilen Satışlar',
+                      data: [540, 620, 580, 490, 610, 555],
+                      fill: true,
+                      backgroundColor: 'rgba(244, 67, 54, 0.2)',   // kırmızı alan
+                      borderColor: 'rgba(244, 67, 54, 1)',
+                      borderWidth: 2,
+                      pointBackgroundColor: '#fff',
+                      pointBorderColor: 'rgba(244, 67, 54, 1)',
+                      pointRadius: 4,
+                      tension: 0.4
+                    },
+                    {
+                      label: 'Kargodaki Satışlar',
+                      data: [2100, 1880, 2020, 1950, 2210, 2340],
+                      fill: true,
+                      backgroundColor: 'rgba(255, 193, 7, 0.2)',   // sarı alan
+                      borderColor: 'rgba(255, 193, 7, 1)',
+                      borderWidth: 2,
+                      pointBackgroundColor: '#fff',
+                      pointBorderColor: 'rgba(255, 193, 7, 1)',
+                      pointRadius: 4,
+                      tension: 0.4
+                    }
+                  ]
                 };
 
                 const options = {
                   responsive: true,
                   plugins: {
-                    legend: { display: false },
+                    legend: {
+                      position: 'top',
+                      labels: { color: '#333', usePointStyle: true, pointStyle: 'circle' }
+                    },
                     tooltip: {
                       callbacks: {
-                        label: ctx => `${ctx.parsed.y.toLocaleString()} adet`
+                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} adet`
                       }
                     }
                   },
