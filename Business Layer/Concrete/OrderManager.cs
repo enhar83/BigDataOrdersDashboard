@@ -435,6 +435,31 @@ namespace Business_Layer.Concrete
             return _uow.Orders.Sum(o => ((o.Quantity) * (o.Product.UnitPrice)));
         }
 
+        public List<MonthlySalesDto> Last6MonthsSalesGraph()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var today = new DateTime(2025, 12, 31);
+            var sixMonthsAgo = new DateTime(today.AddMonths(-5).Year, today.AddMonths(-5).Month, 1); // yılı ve ayı alır. Ardından bulunan ayın en başına gider ki tüm ay kapsansın.
+
+            return query
+                .Where(o=>o.OrderDate <=today && o.OrderDate >= sixMonthsAgo)
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                .OrderBy(g=>g.Key.Year)
+                .ThenBy(g=>g.Key.Month)
+                .Select(g => new MonthlySalesDto
+                {
+                    MonthName = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
+                    CompletedCount = g.Count(o=>o.OrderStatus=="Tamamlandı"),
+                    CompletedAmount = g.Where(o => o.OrderStatus == "Tamamlandı").Sum(o=> (decimal?)(o.Quantity*o.Product.UnitPrice)) ?? 0,
+                    CancelledCount = g.Count(o => o.OrderStatus == "İptal Edildi"),
+                    CancelledAmount = g.Where(o => o.OrderStatus == "İptal Edildi").Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
+                    ShippedCount = g.Count(o => o.OrderStatus == "Kargoda"),
+                    ShippedAmount = g.Where(o => o.OrderStatus == "Kargoda").Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0
+                })
+                .ToList();
+        }
+
         public MainChartDto TodaysSalesStatus() //Dashboard sayfasındaki kıyaslama için 
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();

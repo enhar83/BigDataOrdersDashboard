@@ -1,122 +1,35 @@
 ﻿@model MainChartDto
 
-<div class="col-lg-9 col-md-8">
-	<div class="card product-report">
-		<div class="header">
-			<h2>Sipariş Rapor Grafiği <small>Bugünkü Tamamlanan / İptal Edilen ve Kargodaki Sipariş Tutarları</small></h2>
-		</div>
-		<div class="body">
-			<div class="row clearfix m-b-15">
-				<div class="col-lg-4 col-md-4 col-sm-4">
-					<div class="icon l-amber"><i class="zmdi zmdi-chart-donut"></i></div>
-					<div class="col-in">
-						<h4 class="counter m-b-0">@Model.CompletedOrdersPrice.ToString("N2")</h4>
-						<small class="text-muted m-t-0">Bugünkü Tamamlanan Siparişler</small>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-4">
-					<div class="icon l-turquoise"><i class="zmdi zmdi-chart"></i></div>
-					<div class="col-in">
-						<h4 class="counter m-b-0">@Model.CancelledOrdersPrice.ToString("N2")</h4>
-						<small class="text-muted m-t-0">İptal Edilen Sipariş Tutarı </small>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-4 col-sm-4">
-					<div class="icon l-parpl"><i class="zmdi zmdi-card"></i></div>
-					<div class="col-in">
-						<h4 class="counter m-b-0">@Model.ShippingOrdersPrice.ToString("N2")</h4>
-						<small class="text-muted m-t-0">Kargodaki Sipariş Tutarı</small>
-					</div>
+
+<div class="card product-report">
+	<div class="header">
+		<h2>Sipariş Rapor Grafiği <small>Bugünkü Tamamlanan / İptal Edilen ve Kargodaki Sipariş Tutarları</small></h2>
+	</div>
+	<div class="body">
+		<div class="row clearfix m-b-15">
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="icon l-amber"><i class="zmdi zmdi-chart-donut"></i></div>
+				<div class="col-in">
+					<h4 class="counter m-b-0">@Model.CompletedOrdersPrice.ToString("N2")</h4>
+					<small class="text-muted m-t-0">Bugünkü Tamamlanan Siparişler</small>
 				</div>
 			</div>
-
-            ﻿<div class="card">
-                <div class="body">
-                    <h4>Son 6 Aylık Satış Durumları</h4>
-                    <canvas id="salesStatusChart"></canvas>
-                </div>
-            </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const ctx = document.getElementById('salesStatusChart').getContext('2d');
-
-                const data = {
-                  labels: ['Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos'],
-                  datasets: [
-                    {
-                      label: 'Tamamlanan Satışlar',
-                      data: [12540, 11589, 13688, 12945, 14110, 15432],
-                      fill: true,
-                      backgroundColor: 'rgba(76, 175, 80, 0.2)',   // yeşil alan
-                      borderColor: 'rgba(76, 175, 80, 1)',
-                      borderWidth: 2,
-                      pointBackgroundColor: '#fff',
-                      pointBorderColor: 'rgba(76, 175, 80, 1)',
-                      pointRadius: 4,
-                      tension: 0.4
-                    },
-                    {
-                      label: 'İptal Edilen Satışlar',
-                      data: [540, 620, 580, 490, 610, 555],
-                      fill: true,
-                      backgroundColor: 'rgba(244, 67, 54, 0.2)',   // kırmızı alan
-                      borderColor: 'rgba(244, 67, 54, 1)',
-                      borderWidth: 2,
-                      pointBackgroundColor: '#fff',
-                      pointBorderColor: 'rgba(244, 67, 54, 1)',
-                      pointRadius: 4,
-                      tension: 0.4
-                    },
-                    {
-                      label: 'Kargodaki Satışlar',
-                      data: [2100, 1880, 2020, 1950, 2210, 2340],
-                      fill: true,
-                      backgroundColor: 'rgba(255, 193, 7, 0.2)',   // sarı alan
-                      borderColor: 'rgba(255, 193, 7, 1)',
-                      borderWidth: 2,
-                      pointBackgroundColor: '#fff',
-                      pointBorderColor: 'rgba(255, 193, 7, 1)',
-                      pointRadius: 4,
-                      tension: 0.4
-                    }
-                  ]
-                };
-
-                const options = {
-                  responsive: true,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                      labels: { color: '#333', usePointStyle: true, pointStyle: 'circle' }
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} adet`
-                      }
-                    }
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      ticks: { color: '#666' },
-                      grid: { color: '#eee' }
-                    },
-                    x: {
-                      ticks: { color: '#666' },
-                      grid: { display: false }
-                    }
-                  }
-                };
-
-                new Chart(ctx, {
-                  type: 'line',
-                  data: data,
-                  options: options
-                });
-            </script>
-
-			@* <div id="area_chart" class="graph"></div> *@
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="icon l-turquoise"><i class="zmdi zmdi-chart"></i></div>
+				<div class="col-in">
+					<h4 class="counter m-b-0">@Model.CancelledOrdersPrice.ToString("N2")</h4>
+					<small class="text-muted m-t-0">İptal Edilen Sipariş Tutarı </small>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="icon l-parpl"><i class="zmdi zmdi-card"></i></div>
+				<div class="col-in">
+					<h4 class="counter m-b-0">@Model.ShippingOrdersPrice.ToString("N2")</h4>
+					<small class="text-muted m-t-0">Kargodaki Sipariş Tutarı</small>
+				</div>
+			</div>
 		</div>
+
+		@* <div id="area_chart" class="graph"></div> *@
 	</div>
 </div>

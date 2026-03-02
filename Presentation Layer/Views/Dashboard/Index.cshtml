@@ -14,8 +14,14 @@
 		<br />
 
 		<div class="row clearfix">
+			<div class="col-lg-9 col-md-8">
+				<div class="card product-report">
+					@await Component.InvokeAsync("_DashboardMainChartComponentPartial")
+					@await Component.InvokeAsync("_DashboardMainChartGraphComponentPartial")
+				</div>
 
-			@await Component.InvokeAsync("_DashboardMainChartComponentPartial")
+			</div>
+
 
 			@await Component.InvokeAsync("_DashboardKpiComponentPartial")
 
