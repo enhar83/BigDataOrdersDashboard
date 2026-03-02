@@ -34,6 +34,7 @@ namespace Business_Layer.Abstract
         string GetMostCancelledProduct();
         string GetMostOrderedPayment();
         string GetMostCompletedProductName();
+        int GetOrdersCountInThisMonth();
         List<TodayOrdersDto> GetLast10OrdersToday();
         List<CountryReportDto> GetCountryReportForMap();
         List<OrderStatusChartDto> GetOrderStatusChartData();

@@ -390,6 +390,14 @@ namespace Business_Layer.Concrete
             return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
+        public int GetOrdersCountInThisMonth()
+        {
+            var today = new DateTime(2025, 12, 31);
+            var thisMonth = new DateTime(today.Year, today.Month, 1);
+
+            return _uow.Orders.GetCount(o => o.OrderDate <= today && o.OrderDate >= thisMonth);
+        }
+
         public List<OrderStatusChartDto> GetOrderStatusChartData() //Dashboard sayfasındaki en üstteki bar'lar
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
@@ -450,15 +458,15 @@ namespace Business_Layer.Concrete
             var sixMonthsAgo = new DateTime(today.AddMonths(-5).Year, today.AddMonths(-5).Month, 1); // yılı ve ayı alır. Ardından bulunan ayın en başına gider ki tüm ay kapsansın.
 
             return query
-                .Where(o=>o.OrderDate <=today && o.OrderDate >= sixMonthsAgo)
+                .Where(o => o.OrderDate <= today && o.OrderDate >= sixMonthsAgo)
                 .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month }) //farklı yılların ayları karışmaması için böyle yapıldı.
-                .OrderBy(g=>g.Key.Year)
-                .ThenBy(g=>g.Key.Month)
+                .OrderBy(g => g.Key.Year)
+                .ThenBy(g => g.Key.Month)
                 .Select(g => new MonthlySalesDto
                 {
                     MonthName = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
-                    CompletedCount = g.Count(o=>o.OrderStatus=="Tamamlandı"),
-                    CompletedAmount = g.Where(o => o.OrderStatus == "Tamamlandı").Sum(o=> (decimal?)(o.Quantity*o.Product.UnitPrice)) ?? 0,
+                    CompletedCount = g.Count(o => o.OrderStatus == "Tamamlandı"),
+                    CompletedAmount = g.Where(o => o.OrderStatus == "Tamamlandı").Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
                     CancelledCount = g.Count(o => o.OrderStatus == "İptal Edildi"),
                     CancelledAmount = g.Where(o => o.OrderStatus == "İptal Edildi").Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
                     ShippedCount = g.Count(o => o.OrderStatus == "Kargoda"),
@@ -467,7 +475,7 @@ namespace Business_Layer.Concrete
                 .ToList();
         }
 
-        public MainChartDto TodaysSalesStatus() 
+        public MainChartDto TodaysSalesStatus()
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 

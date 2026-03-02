@@ -1,47 +1,49 @@
-﻿<div class="row clearfix">
+﻿@model DashboardMiniCartsViewModel
+
+<div class="row clearfix">
 	<div class="col-lg-12">
 		<div class="card">
 			<ul class="row profile_state list-unstyled">
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-camera col-amber"></i>
-						<h4>2,365</h4>
-						<span>Shots View</span>
+						<i class="zmdi zmdi-collection-item col-amber"></i>
+						<h4>@Model.CategoryCount</h4>
+						<span>Kategori Sayısı</span>
 					</div>
 				</li>
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-thumb-up col-blue"></i>
-						<h4>365</h4>
-						<span>Likes</span>
+						<i class="zmdi zmdi-shopping-basket col-blue"></i>
+						<h4>@Model.ProductCount</h4>
+						<span>Ürün Sayısı</span>
 					</div>
 				</li>
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-comment-text col-red"></i>
-						<h4>65</h4>
-						<span>Comments</span>
+						<i class="zmdi zmdi-accounts-list col-red"></i>
+						<h4>@Model.CustomerCount</h4>
+						<span>Müşteri Sayısı</span>
 					</div>
 				</li>
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-account text-success"></i>
-						<h4>2,055</h4>
-						<span>Profile Views</span>
+						<i class="zmdi zmdi-shopping-cart text-success"></i>
+						<h4>@Model.OrderCount</h4>
+						<span>Sipariş Sayısı</span>
 					</div>
 				</li>
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-desktop-mac text-info"></i>
-						<h4>3,159</h4>
-						<span>Website View</span>
+						<i class="zmdi zmdi-alert-triangle text-info"></i>
+						<h4>@Model.StockAlertCount</h4>
+						<span>Stoğu Az Sayıda Olan Ürün Sayısı</span>
 					</div>
 				</li>
 				<li class="col-lg-2 col-md-4 col-6">
 					<div class="body">
-						<i class="zmdi zmdi-attachment text-warning"></i>
-						<h4>2,365</h4>
-						<span>Attachment</span>
+						<i class="zmdi zmdi-calendar-check text-warning"></i>
+						<h4>@Model.OrderCountInThisMonth</h4>
+						<span>Bu Ay Verilen Sipariş Sayısı</span>
 					</div>
 				</li>
 			</ul>

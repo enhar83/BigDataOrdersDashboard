@@ -30,7 +30,6 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetCount();
         }
 
-
         public void Delete(int id)
         {
             _uow.Products.Delete(id);
@@ -97,6 +96,11 @@ namespace Business_Layer.Concrete
         public (List<Product> products, int totalCount) GetProductsForPaging(int pageNumber, int pageSize)
         {
             return _uow.Products.GetAllWithPaging(pageNumber, pageSize,x=>x.Category);
+        }
+
+        public int GetStockAlertProductCount()
+        {
+            return _uow.Products.GetCount(p => p.StockQuantity < 25);      
         }
 
         public int GetTotalProductStock()
