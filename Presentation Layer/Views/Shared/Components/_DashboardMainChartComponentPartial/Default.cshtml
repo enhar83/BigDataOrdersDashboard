@@ -29,7 +29,65 @@
 					</div>
 				</div>
 			</div>
-			<div id="area_chart" class="graph"></div>
+
+            ﻿<div class="card">
+                <div class="body">
+                    <h4>Son 6 Aylık Satış Adetleri</h4>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const ctx = document.getElementById('salesChart').getContext('2d');
+
+                const data = {
+                  labels: ['Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos'],
+                  datasets: [{
+                    label: 'Satış Adedi',
+                    data: [12540, 11589, 13688, 12945, 14110, 15432],
+                    fill: true,
+                    backgroundColor: 'rgba(66, 165, 245, 0.25)',  // açık mavi ton
+                    borderColor: 'rgba(66, 165, 245, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: 'rgba(66, 165, 245, 1)',
+                    pointRadius: 4,
+                    tension: 0.4, // eğimli çizgi efekti
+                  }]
+                };
+
+                const options = {
+                  responsive: true,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: ctx => `${ctx.parsed.y.toLocaleString()} adet`
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      ticks: { color: '#666' },
+                      grid: { color: '#eee' }
+                    },
+                    x: {
+                      ticks: { color: '#666' },
+                      grid: { display: false }
+                    }
+                  }
+                };
+
+                new Chart(ctx, {
+                  type: 'line',
+                  data: data,
+                  options: options
+                });
+            </script>
+
+			@* <div id="area_chart" class="graph"></div> *@
 		</div>
 	</div>
 </div>
