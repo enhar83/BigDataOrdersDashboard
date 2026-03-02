@@ -1,9 +1,11 @@
 ﻿@model List<MonthlySalesDto>
 
-<div class="card">
-    <div class="body">
-        <h4>Son 6 Aylık Satış Durumları</h4>
-        <canvas id="salesStatusChart"></canvas>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <h5 class="card-title text-muted mb-4">Son 6 Aylık Sipariş Grafiği</h5>
+        <div style="height: 400px;">
+            <canvas id="salesStatusChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -12,86 +14,102 @@
     document.addEventListener("DOMContentLoaded", function () {
         const ctx = document.getElementById('salesStatusChart').getContext('2d');
 
-        // C# Listesinden Adetleri (Count) ve Tutarları (Amount) JavaScript'e aktarıyoruz
-        const monthLabels = @Html.Raw(Json.Serialize(Model.Select(x => x.MonthName)));
+        // C# Verilerini JavaScript'e Aktarma
+        const labels = @Html.Raw(Json.Serialize(Model.Select(x => x.MonthName)));
 
-        // Tutarlar (Grafik çizgileri için)
-        const completedAmounts = @Html.Raw(Json.Serialize(Model.Select(x => x.CompletedAmount)));
-        const cancelledAmounts = @Html.Raw(Json.Serialize(Model.Select(x => x.CancelledAmount)));
-        const shippedAmounts = @Html.Raw(Json.Serialize(Model.Select(x => x.ShippedAmount)));
+        const counts = {
+            completed: @Html.Raw(Json.Serialize(Model.Select(x => x.CompletedCount))),
+            cancelled: @Html.Raw(Json.Serialize(Model.Select(x => x.CancelledCount))),
+            shipped: @Html.Raw(Json.Serialize(Model.Select(x => x.ShippedCount)))
+        };
 
-        // Adetler (Tooltip'te göstermek için)
-        const completedCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.CompletedCount)));
-        const cancelledCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.CancelledCount)));
-        const shippedCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.ShippedCount)));
+        const amounts = {
+            completed: @Html.Raw(Json.Serialize(Model.Select(x => x.CompletedAmount))),
+            cancelled: @Html.Raw(Json.Serialize(Model.Select(x => x.CancelledAmount))),
+            shipped: @Html.Raw(Json.Serialize(Model.Select(x => x.ShippedAmount)))
+        };
 
         const data = {
-            labels: monthLabels,
+            labels: labels,
             datasets: [
                 {
-                    label: 'Tamamlanan Satışlar',
-                    data: completedAmounts,
-                    customCounts: completedCounts, // Özel veriyi buraya gömdük
+                    label: 'Tamamlanan',
+                    data: counts.completed,
+                    extraAmounts: amounts.completed,
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
                     fill: true,
-                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                    borderColor: 'rgba(76, 175, 80, 1)',
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 4
                 },
                 {
-                    label: 'İptal Edilen Satışlar',
-                    data: cancelledAmounts,
-                    customCounts: cancelledCounts,
+                    label: 'İptal Edilen',
+                    data: counts.cancelled,
+                    extraAmounts: amounts.cancelled,
+                    borderColor: '#f44336',
+                    backgroundColor: 'rgba(244, 67, 54, 0.1)',
                     fill: true,
-                    backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                    borderColor: 'rgba(244, 67, 54, 1)',
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 4
                 },
                 {
-                    label: 'Kargodaki Satışlar',
-                    data: shippedAmounts,
-                    customCounts: shippedCounts,
+                    label: 'Kargoda',
+                    data: counts.shipped,
+                    extraAmounts: amounts.shipped,
+                    borderColor: '#ffc107',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
                     fill: true,
-                    backgroundColor: 'rgba(255, 193, 7, 0.2)',
-                    borderColor: 'rgba(255, 193, 7, 1)',
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 4
                 }
             ]
         };
 
         const options = {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { usePointStyle: true, pointStyle: 'circle' }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
                             let label = context.dataset.label || '';
-                            let index = context.dataIndex;
-                            let count = context.dataset.customCounts[index]; // O aya ait adedi çekiyoruz
-                            let amount = context.parsed.y;
+                            let count = context.parsed.y;
+                            let amount = context.dataset.extraAmounts[context.dataIndex];
 
-                            if (label) { label += ': '; }
-
-                            // Tutar formatlama
                             let formattedAmount = new Intl.NumberFormat('tr-TR', {
-                                style: 'currency',
-                                currency: 'TRY'
+                                style: 'currency', currency: 'TRY'
                             }).format(amount);
 
-                            // Tooltip çıktısı: "Tamamlanan Satışlar: ₺15.000,00 (12 Adet)"
-                            return `${label} ${formattedAmount} (${count} Adet)`;
+                            return `${label}: ${count} Adet (Toplam: ${formattedAmount})`;
                         }
                     }
                 }
             },
             scales: {
-                y: { beginAtZero: true },
-                x: { grid: { display: false } }
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 10000, // Y ekseni tavan değeri
+                    ticks: {
+                        stepSize: 1000, // 1000'er birimlik artış
+                        color: '#666'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)' // Hafif ızgara çizgileri
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sipariş Adedi'
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#666' }
+                }
             }
         };
 
