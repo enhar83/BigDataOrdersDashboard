@@ -451,7 +451,7 @@ namespace Business_Layer.Concrete
 
             return query
                 .Where(o=>o.OrderDate <=today && o.OrderDate >= sixMonthsAgo)
-                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month }) //farklı yılların ayları karışmaması için böyle yapıldı.
                 .OrderBy(g=>g.Key.Year)
                 .ThenBy(g=>g.Key.Month)
                 .Select(g => new MonthlySalesDto
@@ -467,7 +467,7 @@ namespace Business_Layer.Concrete
                 .ToList();
         }
 
-        public MainChartDto TodaysSalesStatus() //Dashboard sayfasındaki kıyaslama için 
+        public MainChartDto TodaysSalesStatus() 
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
