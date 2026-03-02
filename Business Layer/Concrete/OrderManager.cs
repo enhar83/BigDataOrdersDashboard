@@ -39,12 +39,13 @@ namespace Business_Layer.Concrete
             var tomorrow = today.AddDays(1);
 
             var summary = query
-                .Where(o => o.OrderDate >= yesterday && o.OrderDate < tomorrow && o.OrderStatus == "Tamamlandı")
+                .Where(o => o.OrderDate >= yesterday && o.OrderDate < tomorrow)
                 .GroupBy(o => o.OrderDate.Date)
                 .Select(g => new
                 {
                     Date = g.Key,
                     OrdersCount = g.Count(),
+                    CompletedOrdersCount = g.Count(o => o.OrderStatus == "Tamamlandı"),
                     OrdersPrice = g.Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0M
                 })
                 .ToList();
@@ -57,6 +58,9 @@ namespace Business_Layer.Concrete
             int tCount = todayData?.OrdersCount ?? 0;
             int yCount = yesterdayData?.OrdersCount ?? 0;
 
+            int tCompletedCount = todayData?.CompletedOrdersCount ?? 0;
+            int yCompletedCount = yesterdayData?.CompletedOrdersCount ?? 0;
+
             decimal tAvg = tCount > 0 ? tPrice / tCount : 0;
             decimal yAvg = yCount > 0 ? yPrice / yCount : 0;
 
@@ -67,11 +71,14 @@ namespace Business_Layer.Concrete
             {
                 TodayOrdersCount = tCount,
                 YesterdayOrdersCount = yCount,
+                TodayCompletedOrdersCount = tCompletedCount,
+                YesterdayCompletedOrdersCount = yCompletedCount,
                 TodayOrdersPrice = (double)tPrice,
                 YesterdayOrdersPrice = (double)yPrice,
                 TodayOrdersAveragePrice = (double)tAvg,
                 YesterdayOrdersAveragePrice = (double)yAvg,
                 OrdersCountPercentageChange = CalcChange(tCount, yCount),
+                CompletedOrdersCountPercentageChange = CalcChange(tCompletedCount, yCompletedCount),
                 OrdersPricePercentageChange = CalcChange(tPrice, yPrice),
                 OrdersAveragePricePercentageChange = CalcChange(tAvg, yAvg)
             };
