@@ -26,6 +26,7 @@ namespace Business_Layer.Concrete
         public int CountCustomers()
         {
             return _uow.Customers.GetCount();
+            //SELECT COUNT(*) FROM Customers
         }
 
         public void Delete(int id)
@@ -37,21 +38,25 @@ namespace Business_Layer.Concrete
         public List<Customer> GetAll()
         {
             return _uow.Customers.GetAll().ToList();
+            //SELECT * FROM Customers
         }
 
         public Customer GetById(int id)
         {
             return _uow.Customers.GetById(id);
+            //SELECT * FROM Customers WHERE CustomerId = @id
         }
 
         public int GetCityNumber()
         {
             return _uow.Customers.GetDistinctCount(c => c.CustomerCity);
+            //SELECT COUNT(DISTINCT CustomerCity) FROM Customers
         }
 
         public int GetCountryNumber()
         {
             return _uow.Customers.GetDistinctCount(c => c.CustomerCountry);
+            //SELECT COUNT(DISTINCT CustomerCountry) FROM Customers
         }
 
         public (List<Customer> customers, int totalCount) GetCustomersWithPaging(int pageNumber, int pageSize)
@@ -71,6 +76,7 @@ namespace Business_Layer.Concrete
                 return "Bulunamadı";
 
             return $"{firstCustomer.CustomerName} {firstCustomer.CustomerSurname}";
+            //SELECT TOP 1 * FROM Customers ORDER BY CustomerId ASC
         }
 
         public Customer GetFirstOrDefault(int id)
@@ -90,6 +96,7 @@ namespace Business_Layer.Concrete
                 return "Bulunamadı";
 
             return $"{lastCustomer.CustomerName} {lastCustomer.CustomerSurname}";
+            //SELECT TOP 1 * FROM Customers ORDER BY CustomerId DESC
         }
 
         public void Update(Customer customer)

@@ -34,12 +34,12 @@ namespace Business_Layer.Concrete
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var today = DateTime.Today;
+            var today = new DateTime(2024, 12, 31);
             var yesterday = today.AddDays(-1);
             var tomorrow = today.AddDays(1);
 
             var summary = query
-                .Where(o => o.OrderDate >= yesterday && o.OrderDate < tomorrow)
+                .Where(o => o.OrderDate >= yesterday && o.OrderDate < tomorrow && o.OrderStatus == "Tamamlandı")
                 .GroupBy(o => o.OrderDate.Date)
                 .Select(g => new
                 {
@@ -99,24 +99,28 @@ namespace Business_Layer.Concrete
         {
             _uow.Orders.Delete(id);
             _uow.Save();
+            //DELETE * FROM Orders WHERE OrderId = id
         }
 
         public List<Order> GetAll()
         {
             return _uow.Orders.GetAll().ToList();
+            //SELECT * FROM Orders
         }
 
         public decimal GetAverageRevenue()
         {
             return _uow.Orders.Average(o => (o.Quantity) * (o.Product.UnitPrice));
+            //SELECT AVG(Quantity * UnitPrice) FROM Orders
         }
 
         public Order GetById(int id)
         {
             return _uow.Orders.GetById(id);
+            //SELECT * FROM Orders WHERE OrderId = id
         }
 
-        public List<CountryReportDto> GetCountryReportForMap()
+        public List<CountryReportDto> GetCountryReportForMap() //Dashboard harita
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -152,13 +156,8 @@ namespace Business_Layer.Concrete
                     Total2023 = y2023.Total2023,
                     Total2024 = y2024.Total2024
                 })
-            .ToList(); //Buradaki ToList() sayesinde EF artık SQL üretmeyi bırakıp veriyi RAM'e alır.
-                       //Bu kısımdan sonrası LINQ to Objects'tir.
+            .ToList();
 
-
-            //CountryCoordinaterHelper EF tarafından SQL'e çevrilmez.
-            //Ancak eski şekilde bırakılsa hala IQueryable üzerinde çalışacaktı.
-            //EF buna bazen izin verip, bazen vermiyor ve runtime exception fırlatıyor.
             var result = rawData
                 .Select(x => new CountryReportDto
                 {
@@ -176,20 +175,21 @@ namespace Business_Layer.Concrete
                 .ToList();
 
             return result;
-            //EF SQL üretirken helper çağırma, Helper'ı RAM'e geçtikten sonra çağır.
         }
 
         public Order GetFirstOrDefault(int id)
         {
             return _uow.Orders.GetFirstOrDefault(o => o.OrderId == id);
+            //SELECT TOP 1 * FROM Orders WHERE OrderId = id
         }
 
         public List<TodayOrdersDto> GetLast10OrdersToday()
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
+            var date = new DateTime(2024, 12, 31);
             var last10OrdersToday = query
-                .Where(o => o.OrderDate.Date == DateTime.Today.Date)
+                .Where(o => o.OrderDate.Date == date)
                 .OrderByDescending(o => o.OrderDate)
                 .Include(o => o.Customer)
                 .Include(o => o.Product)
@@ -208,9 +208,9 @@ namespace Business_Layer.Concrete
                 });
 
             return last10OrdersToday.ToList();
-        }
+        } //Dashboard en alttaki kısım
 
-        public string GetLeastOrderedProduct()
+        public string GetLeastOrderedProduct() //TextualStatistics 12. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -227,7 +227,7 @@ namespace Business_Layer.Concrete
             return leastOrderedProduct == null ? "Bulunamadı" : $"{leastOrderedProduct.ProductName} ({leastOrderedProduct.OrderCount} adet)";
         }
 
-        public string GetMostCancelledProduct()
+        public string GetMostCancelledProduct() //TextualStatistics 8. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -245,7 +245,7 @@ namespace Business_Layer.Concrete
             return mostCancelledProduct == null ? "Bulunamadı" : $"{mostCancelledProduct.ProductName} ({mostCancelledProduct.CancelCount} adet)";
         }
 
-        public string GetMostCompletedProductName()
+        public string GetMostCompletedProductName() //TextualStatistics 7. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -263,7 +263,7 @@ namespace Business_Layer.Concrete
             return mostCompletedProduct == null ? "Bulunamadı" : $"{mostCompletedProduct.ProductName} ({mostCompletedProduct.CompletedCount} adet)";
         }
 
-        public string GetMostOrderedCategory()
+        public string GetMostOrderedCategory() //TextualStatistics 14. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -280,7 +280,7 @@ namespace Business_Layer.Concrete
             return mostOrderedCategory == null ? "Bulunamadı" : $"{mostOrderedCategory.CategoryName} ({mostOrderedCategory.OrderCount} adet)";
         }
 
-        public string GetMostOrderedCity()
+        public string GetMostOrderedCity() //TextualStatistics 4. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -297,7 +297,7 @@ namespace Business_Layer.Concrete
             return mostOrderedCity == null ? "Bulunamadı" : $"{mostOrderedCity.City} ({mostOrderedCity.OrderCount} adet)";
         }
 
-        public string GetMostOrderedCountry()
+        public string GetMostOrderedCountry() //TextualStatistics 3. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -314,7 +314,7 @@ namespace Business_Layer.Concrete
             return mostOrderedCountry == null ? "Bulunamadı" : $"{mostOrderedCountry.Country} ({mostOrderedCountry.OrderCount} adet)";
         }
 
-        public string GetMostOrderedCustomer()
+        public string GetMostOrderedCustomer() //TextualStatistics 15. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -331,7 +331,7 @@ namespace Business_Layer.Concrete
             return mostOrderedCustomer == null ? "Bulunamadı" : $"{mostOrderedCustomer.FullName} ({mostOrderedCustomer.OrderCount} adet)";
         }
 
-        public string GetMostOrderedPayment()
+        public string GetMostOrderedPayment() //TextualStatistics 13. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -348,7 +348,7 @@ namespace Business_Layer.Concrete
             return mostOrderedPayment == null ? "Bulunamadı" : $"{mostOrderedPayment.PaymentMethod} ({mostOrderedPayment.OrderCount} adet)";
         }
 
-        public string GetMostOrderedProduct()
+        public string GetMostOrderedProduct() //TextualStatistics 11. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -365,12 +365,12 @@ namespace Business_Layer.Concrete
             return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
-        public string GetMostOrderedProductThisMonth()
+        public string GetMostOrderedProductThisMonth() //TextualStatistics 16. Kart
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
             var mostOrderedProduct = query
-                .Where(p => p.OrderDate.Month == DateTime.Now.Month && p.OrderDate.Year == DateTime.Now.Year)
+                .Where(p => p.OrderDate.Month == 11 && p.OrderDate.Year == 2025)
                 .GroupBy(p => p.Product.ProductName)
                 .Select(g => new
                 {
@@ -383,7 +383,7 @@ namespace Business_Layer.Concrete
             return mostOrderedProduct == null ? "Bulunamadı" : $"{mostOrderedProduct.ProductName} ({mostOrderedProduct.OrderCount} adet)";
         }
 
-        public List<OrderStatusChartDto> GetOrderStatusChartData()
+        public List<OrderStatusChartDto> GetOrderStatusChartData() //Dashboard sayfasındaki en üstteki bar'lar
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
@@ -423,41 +423,40 @@ namespace Business_Layer.Concrete
             return _uow.Orders.GetAllWithPaging(pageNumber, pageSize, o => o.Customer, o => o.Product);
         }
 
-        public int GetThisYearOrders()
+        public int GetThisYearOrders() //NumericalStatistics 10. Kart
         {
             return _uow.Orders.GetCount(o => o.OrderDate.Year == DateTime.Now.Year);
 
             //return _uow.Orders.GetCount(o=>o.OrderDate >= new DateTime(2025,01,01) && o.OrderDate <= new DateTime(2025,12,31));
         }
 
-        public decimal GetTotalRevenue()
+        public decimal GetTotalRevenue() //NumericalStatistics 11. Kart
         {
             return _uow.Orders.Sum(o => ((o.Quantity) * (o.Product.UnitPrice)));
         }
 
-        public MainChartDto SalesWithinTimeIntervals()
+        public MainChartDto TodaysSalesStatus() //Dashboard sayfasındaki kıyaslama için 
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var todayStart = DateTime.Today;
+            var todayStart = new DateTime(2024, 12, 31);
             var tomorrowStart = todayStart.AddDays(1);
-            var lastMonthStart = todayStart.AddMonths(-1);
-            var last6MonthsStart = todayStart.AddMonths(-6);
 
             return query
-                .Where(o => o.OrderDate >= last6MonthsStart)
+                .Where(o => o.OrderDate >= todayStart && o.OrderDate < tomorrowStart)
                 .GroupBy(o => 1)
                 .Select(g => new MainChartDto
                 {
-                    TodayOrdersPrice = g.Where(o => o.OrderDate >= todayStart && o.OrderDate < tomorrowStart)
+                    CompletedOrdersPrice = g.Where(o => o.OrderStatus == "Tamamlandı")
                                         .Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
 
-                    ThisMonthOrdersPrice = g.Where(o => o.OrderDate >= lastMonthStart)
-                                            .Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
+                    CancelledOrdersPrice = g.Where(o => o.OrderStatus == "İptal Edildi")
+                                                    .Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0,
 
-                    LastSixMonthsOrdersPrice = g.Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0
-                })
-                .FirstOrDefault() ?? new MainChartDto();
+                    ShippingOrdersPrice = g.Where(o => o.OrderStatus == "Kargoda").Sum(o => (decimal?)(o.Quantity * o.Product.UnitPrice)) ?? 0
+
+                }).FirstOrDefault() ?? new MainChartDto();
+
         }
         public void Update(Order order)
         {

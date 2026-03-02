@@ -14,7 +14,7 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var values = _orderService.SalesWithinTimeIntervals();
+            var values = _orderService.TodaysSalesStatus();
 
             return View(values);
         }

@@ -8,8 +8,8 @@ namespace Business_Layer.DTOs
 {
     public class MainChartDto
     {
-        public decimal TodayOrdersPrice { get; set; }
-        public decimal ThisMonthOrdersPrice { get; set; }
-        public decimal LastSixMonthsOrdersPrice { get; set; }
+        public decimal CompletedOrdersPrice { get; set; }
+        public decimal CancelledOrdersPrice { get; set; }
+        public decimal ShippingOrdersPrice { get; set; }
     }
 }

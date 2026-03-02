@@ -10,14 +10,14 @@ namespace Data_Layer.Abstract
 {
     public interface IRepository<T> where T : class
     {
-        IQueryable<T> GetAll();
-        IQueryable<T> GetAllIncluding(params Expression<Func<T, Object>>[] includeProperties);
+        IQueryable<T> GetAll(); //IQueryable dönmesi kritiktir. Sorgu dbye hemen gitmez, üzerinde filtreleme yapılabilir.
+        IQueryable<T> GetAllIncluding(params Expression<Func<T, Object>>[] includeProperties); //ilişkili tabloları Eager Loading ile dahil etmeyi sağlar.
         T GetById(int id);
         T GetFirstOrDefault(Expression<Func<T, bool>> predicate);
         void Add(T entity);
         void Update(T entity);
         void Delete(int id);
-        (List <T> items, int totalCount) GetAllWithPaging(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includeProperties);
+        (List <T> items, int totalCount) GetAllWithPaging(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includeProperties); //Binlerce ürünü tek seferde çekmek yerine pagination kullanarak parça parça çekmeyi sağlar.
         int GetCount(Expression<Func<T, bool>> filter = null);
         int GetDistinctCount<TKey>(Expression<Func<T, TKey>> selector);
         IQueryable<T> GetQueryable(Expression<Func<T, bool>> filter = null);
@@ -27,5 +27,3 @@ namespace Data_Layer.Abstract
     }
 }
 
-//Sum metodlarının tür ayırt etmeyecek şekilde yapamamızın sebebi IQueryable arayüzünün generic tip parametresinin tek bir türle sınırlı olmamasıdır.
-//Bu nedenle, farklı türlerdeki toplamları hesaplamak için ayrı metotlar tanımlanmıştır.
