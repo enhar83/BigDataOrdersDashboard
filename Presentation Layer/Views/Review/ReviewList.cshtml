@@ -1,10 +1,10 @@
-﻿@model List<Order>
+﻿@model List<Review>
 
 @{
-	ViewData["Title"] = "OrderList";
+	ViewData["Title"] = "ReviewList";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
-	int currentPage = (int)ViewBag.CurrentPage;
-	int pageSize = (int)ViewBag.PageSize;
+	int currentPage = @ViewBag.CurrentPage;
+	int pageSize = @ViewBag.PageSize;
 
 	int count = (currentPage - 1) * pageSize;
 }
@@ -15,14 +15,14 @@
 		<div class="row">
 			<div class="col-lg-7 col-md-6 col-sm-12">
 				<h2>
-					Sipariş Listesi
-					<small class="text-muted">Sipariş İşlemleri Sayfası</small>
+					Yorum Listesi
+					<small class="text-muted">Yorum İşlemleri Sayfası</small>
 				</h2>
 			</div>
 			<div class="col-lg-5 col-md-6 col-sm-12">
 				<ul class="breadcrumb float-md-right">
-					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Siparişler</a></li>
-					<li class="breadcrumb-item"><a href="javascript:void(0);">Sipariş Listesi</a></li>
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Yorumlar</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Yorum Listesi</a></li>
 					<li class="breadcrumb-item active">Ana Sayfa</li>
 				</ul>
 			</div>
@@ -38,14 +38,13 @@
 						<table class="table table-bordered">
 							<tr>
 								<th>#</th>
-								<th>Sipariş Sahibi</th>
-								<th>Sipariş Edilen Ürün</th>
-								<th>Miktar</th>
-								<th>Sipariş Tutarı</th>
-								<th>Ödeme Yöntemi</th>
-								<th>Sipariş Durumu</th>
-								<th>Sipariş Tarihi</th>
-								<th>Sipariş Notu</th>
+								<th>Müşteri Adı</th>
+								<th>Ürün Adı</th>
+								<th>Satın Alım Türü</th>
+								<th>Puan</th>
+								<th>Duygu</th>
+								<th>Yorum</th>
+								<th>Tarihi</th>
 								<th>Sil</th>
 								<th>Güncelle</th>
 							</tr>
@@ -55,23 +54,22 @@
 								count++;
 								<tr>
 									<td>@count</td>
-									<td>@item.Customer?.CustomerName?? @item.Customer?.CustomerSurname??</td>
-									<td>@item.Product.ProductName (@item.Product.UnitPrice.ToString("C2"))</td>
-									<td>@item.Quantity</td>
-									<td>@((item.Quantity* item.Product.UnitPrice).ToString("C2"))</td>
-									<td>@item.PaymentMethod</td>
-									<td>@item.OrderStatus</td>
-									<td>@item.OrderDate.ToString("dd/MM/yyyy")</td>
-									<td>@item.OrderNotes</td>
+									<td>@item.Customer.CustomerName @item.Customer.CustomerSurname</td>
+									<td>@item.Product.ProductName</td>
+									<td>@item.PurchaseType</td>
+									<td>@item.Rating</td>
+									<td>@item.Sentiment</td>
+									<td>@item.ReviewText</td>
+									<td>@item.ReviewDate.ToString("dd/MM/yyyy")</td>
 									<td>
-										<form id="deleteForm_@item.OrderId" asp-action="DeleteOrder" method="post" style="display:inline;">
+										<form id="deleteForm_@item.ReviewId" asp-action="DeleteReview" method="post" style="display:inline;">
 											@Html.AntiForgeryToken()
 
-											<input type="hidden" name="id" value="@item.OrderId" />
-											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.OrderId" data-order-name="@item.Customer.CustomerName @item.Customer.CustomerSurname kişisinin siparişi">Sil</button>
+											<input type="hidden" name="id" value="@item.ReviewId" />
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.ReviewId" data-reviewer-name="@item.Customer.CustomerName @item.Customer.CustomerSurname">Sil</button>
 										</form>
 									</td>
-									<td><a href="/Order/UpdateOrder/@item.OrderId" class="btn btn-success">Güncelle</a></td>
+									<td><a href="/Review/UpdateReview/@item.ReviewId" class="btn btn-success">Güncelle</a></td>
 								</tr>
 							}
 
@@ -84,7 +82,7 @@
 									@if (ViewBag.CurrentPage > 1)
 									{
 										<li class="page-item">
-											<a class="page-link" href="/Order/OrderList?page=@(ViewBag.CurrentPage - 1)">Önceki</a>
+											<a class="page-link" href="/Review/ReviewList?page=@(ViewBag.CurrentPage - 1)">Önceki</a>
 										</li>
 									}
 
@@ -95,7 +93,7 @@
 										if (startPage > 1)
 										{
 											<li class="page-item">
-												<a class="page-link" href="/Order/OrderList?page=1">1</a>
+												<a class="page-link" href="/Review/ReviewList?page=1">1</a>
 											</li>
 											if (startPage > 2)
 											{
@@ -108,7 +106,7 @@
 										for (int i = startPage; i <= endPage; i++)
 										{
 											<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-												<a class="page-link" href="/Order/OrderList?page=@i">@i</a>
+												<a class="page-link" href="/Review/ReviewList?page=@i">@i</a>
 											</li>
 										}
 
@@ -121,7 +119,7 @@
 												</li>
 											}
 											<li class="page-item">
-												<a class="page-link" href="/Order/OrderList?page=@ViewBag.TotalPages">@ViewBag.TotalPages</a>
+												<a class="page-link" href="/Review/ReviewList?page=@ViewBag.TotalPages">@ViewBag.TotalPages</a>
 											</li>
 										}
 									}
@@ -129,7 +127,7 @@
 									@if (ViewBag.CurrentPage < ViewBag.TotalPages)
 									{
 										<li class="page-item">
-											<a class="page-link" href="/Order/OrderList?page=@(ViewBag.CurrentPage + 1)">Sonraki</a>
+											<a class="page-link" href="/Review/ReviewList?page=@(ViewBag.CurrentPage + 1)">Sonraki</a>
 										</li>
 									}
 
@@ -137,7 +135,7 @@
 							</nav>
 						</div>
 
-						<a href="/Order/AddOrder/" class="btn btn-info">Yeni Sipariş Girişi</a>
+						<a href="/Review/AddReview/" class="btn btn-info">Yeni Yorum Girişi</a>
 
 					</div>
 				</div>
@@ -149,14 +147,14 @@
 <script>
 			document.querySelectorAll('.delete-btn').forEach(button => {
 		button.addEventListener('click', function() {
-			const orderId = this.getAttribute('data-id');
-			const customerName = this.getAttribute('data-order-name');
+			const reviewId = this.getAttribute('data-id');
+			const reviewerName = this.getAttribute('data-reviewer-name');
 
-			const form = document.getElementById(`deleteForm_${orderId}`);
+			const form = document.getElementById(`deleteForm_${reviewId}`);
 
 			Swal.fire({
 				title: 'Emin misiniz?',
-				text: `${customerName} adlı kullanıcının siparişi kalıcı olarak silinecek.`,
+				text: `${reviewerName} müşterisinin yorumu kalıcı olarak silinecek.`,
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#d33',

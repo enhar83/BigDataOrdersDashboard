@@ -47,7 +47,7 @@ namespace Business_Layer.Concrete
 
         public (List<Review> reviews, int totalCount) GetReviewsWithPaging(int pageNumber, int pageSize)
         {
-            return _uow.Reviews.GetAllWithPaging(pageNumber, pageSize);
+            return _uow.Reviews.GetAllWithPaging(pageNumber, pageSize, r=>r.Product, r=>r.Customer);
         }
 
         public void Update(Review review)
