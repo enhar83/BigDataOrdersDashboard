@@ -34,6 +34,8 @@ namespace Presentation_Layer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddReview(Review review)
         {
+            review.ReviewDate = DateTime.Now;
+
             _reviewService.Add(review);
             return RedirectToAction("ReviewList");
         }
@@ -42,6 +44,8 @@ namespace Presentation_Layer.Controllers
         public IActionResult UpdateReview(int id)
         {
             var reviewToUpdate = _reviewService.GetFirstOrDefault(id);
+            reviewToUpdate.ReviewDate = DateTime.Now;
+
             if (reviewToUpdate == null) return NotFound();
             return View(reviewToUpdate);
         }

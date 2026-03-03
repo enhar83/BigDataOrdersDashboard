@@ -1,0 +1,68 @@
+﻿@model Review
+
+@{
+	ViewData["Title"] = "AddReview";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Yeni Yorum Ekleme Sayfası
+					<small class="text-muted"> Yorum İşlemleri</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Yorumlar</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Yorum Ekleme</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<label>Müşteri Id'si</label>
+							<input type="text" asp-for="CustomerId" class="form-control">
+							<br />
+
+							<label>Ürün Id'si</label>
+							<input type="text" asp-for="ProductId" class="form-control">
+							<br />
+
+							<label>Satın Alım Türü</label>
+							<input type="text" asp-for="PurchaseType" class="form-control">
+							<br />
+
+							<label>Puanı</label>
+							<input type="text" asp-for="Rating" class="form-control">
+							<br />
+
+							<label>Duygusu </label>
+							<input type="text" asp-for="Sentiment" class="form-control">
+							<br />
+
+							<label>Yorum</label>
+							<input type="text" asp-for="ReviewText" class="form-control">
+							<br />
+
+							<button class="btn btn-success">Müşteriyi Oluştur</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
