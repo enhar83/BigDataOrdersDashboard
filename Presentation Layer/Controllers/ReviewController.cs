@@ -44,8 +44,7 @@ namespace Presentation_Layer.Controllers
         public IActionResult UpdateReview(int id)
         {
             var reviewToUpdate = _reviewService.GetFirstOrDefault(id);
-            reviewToUpdate.ReviewDate = DateTime.Now;
-
+    
             if (reviewToUpdate == null) return NotFound();
             return View(reviewToUpdate);
         }
@@ -54,6 +53,8 @@ namespace Presentation_Layer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdateReview(Review review)
         {
+            review.ReviewDate = DateTime.Now;
+
             _reviewService.Update(review);
             return RedirectToAction("ReviewList");
         }

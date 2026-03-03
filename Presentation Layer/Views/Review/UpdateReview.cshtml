@@ -1,0 +1,70 @@
+﻿@model Review
+
+@{
+	ViewData["Title"] = "UpdateReview";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Sipariş Listesi
+					<small class="text-muted">Yorum İşlemleri Sayfası</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Yorumlar</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Yorum Güncelleme</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<input type="hidden" asp-for="ReviewId" />
+
+							<label>Yeni Müşteri Id'si'</label>
+							<input type="text" asp-for="CustomerId" class="form-control">
+							<br />
+
+							<label>Yeni Ürün Id'si'</label>
+							<input type="text" asp-for="ProductId" class="form-control">
+							<br />
+
+							<label>Yeni Satın Alım Türü</label>
+							<input type="text" asp-for="PurchaseType" class="form-control">
+							<br />
+
+							<label>Yeni Puan</label>
+							<input type="text" asp-for="Rating" class="form-control">
+							<br />
+
+							<label>Yeni Duygu</label>
+							<input type="text" asp-for="Sentiment" class="form-control">
+							<br />
+
+							<label>Yeni Yorum</label>
+							<input type="text" asp-for="ReviewText" class="form-control">
+							<br />
+
+							<button class="btn btn-success">Yorumu Güncelle</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
