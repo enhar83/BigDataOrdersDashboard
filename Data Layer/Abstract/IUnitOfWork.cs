@@ -13,6 +13,7 @@ namespace Data_Layer.Abstract
         IRepository<Product> Products { get; }
         IRepository<Customer> Customers { get; }
         IRepository<Order> Orders { get; }
+        IRepository<Review> Reviews { get; }
         int Save();
     }
 }
