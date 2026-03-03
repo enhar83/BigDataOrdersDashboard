@@ -12,12 +12,10 @@
 					<li class="inbox-inner">
 						<a href="javascript:void(0);">
 							<div class="inbox-item">
-								<div class="inbox-img"> <img src="~/assets/images/xs/avatar3.jpg" alt=""> </div>
+								<div class="inbox-img"> <img src="@item.Customer.CustomerImageUrl" alt=""> </div>
 								<div class="inbox-item-info">
-									<p class="author">@item.Customer.CustomerName @item.Customer.CustomerSurname</p>
-									<p class="inbox-message">Ürün Adı: @item.Product.ProductName</p>
-									<p class="inbox-message">Puanı: @item.Rating</p>
-									<p class="inbox-message">@item.ReviewText</p>
+									<p class="author">@item.Customer.CustomerName @item.Customer.CustomerSurname - @item.Product.ProductName</p>
+									<p class="inbox-message">Puan: @item.Rating - @item.ReviewText</p>
 									<p class="inbox-date">@item.ReviewDate.ToString("dd/MM/yyyy")</p>
 								</div>
 							</div>
