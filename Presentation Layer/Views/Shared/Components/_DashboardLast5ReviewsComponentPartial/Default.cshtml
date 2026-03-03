@@ -1,80 +1,29 @@
-﻿<div class="col-lg-4 col-md-12 col-sm-12">
+﻿@model List<Review>
+
+<div class="col-lg-4 col-md-12 col-sm-12">
 	<div class="card ">
 		<div class="header">
-			<h2>Recent Messages</h2>
-			<ul class="header-dropdown m-r--5">
-				<li class="dropdown">
-					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more-vert"></i> </a>
-					<ul class="dropdown-menu">
-						<li><a href="javascript:void(0);" class=" waves-effect waves-block">Action</a></li>
-						<li><a href="javascript:void(0);" class=" waves-effect waves-block">Another action</a></li>
-						<li><a href="javascript:void(0);" class=" waves-effect waves-block">Something else</a></li>
-					</ul>
-				</li>
-			</ul>
+			<h2>Son 5 Değerlendirme </h2>
 		</div>
 		<div class="body">
 			<ul class="inbox-widget list-unstyled clearfix">
-				<li class="inbox-inner">
-					<a href="javascript:void(0);">
-						<div class="inbox-item">
-							<div class="inbox-img"> <img src="~/assets/images/xs/avatar3.jpg" alt=""> </div>
-							<div class="inbox-item-info">
-								<p class="author">John Doe</p>
-								<p class="inbox-message">Lorem Ipsum is simply dummy text of the been the industry's</p>
-								<p class="inbox-date">12:34 PM</p>
+				@foreach (var item in Model)
+				{
+					<li class="inbox-inner">
+						<a href="javascript:void(0);">
+							<div class="inbox-item">
+								<div class="inbox-img"> <img src="~/assets/images/xs/avatar3.jpg" alt=""> </div>
+								<div class="inbox-item-info">
+									<p class="author">@item.Customer.CustomerName @item.Customer.CustomerSurname</p>
+									<p class="inbox-message">Ürün Adı: @item.Product.ProductName</p>
+									<p class="inbox-message">Puanı: @item.Rating</p>
+									<p class="inbox-message">@item.ReviewText</p>
+									<p class="inbox-date">@item.ReviewDate.ToString("dd/MM/yyyy")</p>
+								</div>
 							</div>
-						</div>
-					</a>
-				</li>
-				<li class="inbox-inner">
-					<a href="javascript:void(0);">
-						<div class="inbox-item">
-							<div class="inbox-img"> <img src="~/assets/images/xs/avatar2.jpg" alt=""> </div>
-							<div class="inbox-item-info">
-								<p class="author">Scarlett</p>
-								<p class="inbox-message">Lorem Ipsum is simply dummyLorem Ipsum has been the industry's</p>
-								<p class="inbox-date">10:34 AM</p>
-							</div>
-						</div>
-					</a>
-				</li>
-				<li class="inbox-inner">
-					<a href="javascript:void(0);">
-						<div class="inbox-item">
-							<div class="inbox-img"> <img src="~/assets/images/xs/avatar4.jpg" alt=""> </div>
-							<div class="inbox-item-info">
-								<p class="author">Elizabeth</p>
-								<p class="inbox-message">text of the printing and  has been the industry's</p>
-								<p class="inbox-date">15:34 PM</p>
-							</div>
-						</div>
-					</a>
-				</li>
-				<li class="inbox-inner">
-					<a href="javascript:void(0);">
-						<div class="inbox-item">
-							<div class="inbox-img"> <img src="~/assets/images/xs/avatar5.jpg" alt=""> </div>
-							<div class="inbox-item-info">
-								<p class="author">Nicholas</p>
-								<p class="inbox-message">simply dummy text of the printing and typesetting industry's</p>
-								<p class="inbox-date">11:10 AM</p>
-							</div>
-						</div>
-					</a>
-				</li>
-				<li class="inbox-inner">
-					<a href="javascript:void(0);">
-						<div class="inbox-item">
-							<div class="inbox-img"> <img src="~/assets/images/xs/avatar1.jpg" alt=""> </div>
-							<div class="inbox-item-info">
-								<p class="author">Cameron</p>
-								<p class="inbox-message">text of the industry. Lorem Ipsum has been the industry's</p>
-								<p class="inbox-date">18:45 PM</p>
-							</div>
-						</div>
-					</a>
-				</li>
+						</a>
+					</li>
+				}
 			</ul>
 		</div>
 	</div>

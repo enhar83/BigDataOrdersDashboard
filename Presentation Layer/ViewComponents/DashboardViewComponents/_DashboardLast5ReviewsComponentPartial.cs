@@ -14,7 +14,8 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
 
         public IViewComponentResult Invoke()
         {
-            return View();
+            var last5Reviews = _reviewService.GetLast5Reviews();
+            return View(last5Reviews);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Business_Layer.Abstract;
 using Data_Layer.Abstract;
 using Entity_Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business_Layer.Concrete
 {
@@ -45,9 +46,20 @@ namespace Business_Layer.Concrete
             return _uow.Reviews.GetFirstOrDefault(r => r.ReviewId == id);
         }
 
+        public List<Review> GetLast5Reviews()
+        {
+            return _uow.Reviews
+                .GetAll()
+                .Include(r => r.Product)
+                .Include(r => r.Customer)
+                .OrderByDescending(r => r.ReviewDate)
+                .Take(5)
+                .ToList();
+        }
+
         public (List<Review> reviews, int totalCount) GetReviewsWithPaging(int pageNumber, int pageSize)
         {
-            return _uow.Reviews.GetAllWithPaging(pageNumber, pageSize, r=>r.Product, r=>r.Customer);
+            return _uow.Reviews.GetAllWithPaging(pageNumber, pageSize, r => r.Product, r => r.Customer);
         }
 
         public int ReviewCount()

@@ -17,5 +17,6 @@ namespace Business_Layer.Abstract
         void Delete(int id);
         (List<Review> reviews, int totalCount) GetReviewsWithPaging(int pageNumber, int pageSize);
         int ReviewCount();
+        List<Review> GetLast5Reviews();
     }
 }
