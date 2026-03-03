@@ -14,7 +14,8 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
 
         public IViewComponentResult Invoke()
         { 
-            return View();
+            var productsWithLowStock = _productService.GetProductsWithLowStock();
+            return View(productsWithLowStock);
         }
     }
 }
