@@ -22,7 +22,6 @@ namespace Business_Layer.Abstract
         string GetLeastExpensiveProductName();
         string GetMostStockedProductName();
         string GetLeastStockedProductName();
-        int GetStockAlertProductCount();
     }
 }
 

@@ -6,8 +6,8 @@
         public int ProductCount { get; set; }
         public int CustomerCount { get; set; }
         public int OrderCount { get; set; }
-        public int StockAlertCount { get; set; }
         public int OrderCountInThisMonth { get; set; }
+        public int ReviewCount { get; set; }
 
     }
 }

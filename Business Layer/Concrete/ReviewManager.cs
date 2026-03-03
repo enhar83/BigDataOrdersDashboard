@@ -50,6 +50,11 @@ namespace Business_Layer.Concrete
             return _uow.Reviews.GetAllWithPaging(pageNumber, pageSize, r=>r.Product, r=>r.Customer);
         }
 
+        public int ReviewCount()
+        {
+            return _uow.Reviews.GetCount();
+        }
+
         public void Update(Review review)
         {
             _uow.Reviews.Update(review);

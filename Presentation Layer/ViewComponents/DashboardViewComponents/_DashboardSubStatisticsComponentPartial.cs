@@ -10,13 +10,15 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
+        private readonly IReviewService _reviewService;
 
-        public _DashboardSubStatisticsComponentPartial(IOrderService orderService, IProductService productService, ICategoryService categoryService, ICustomerService customerService)
+        public _DashboardSubStatisticsComponentPartial(IOrderService orderService, IProductService productService, ICategoryService categoryService, ICustomerService customerService, IReviewService reviewService)
         {
             _orderService = orderService;
             _productService = productService;
             _categoryService = categoryService;
             _customerService = customerService;
+            _reviewService = reviewService;
         }
 
         public IViewComponentResult Invoke()
@@ -27,7 +29,7 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
                 ProductCount = _productService.CountProducts(),
                 CustomerCount = _customerService.CountCustomers(),
                 OrderCount = _orderService.CountOrders(),
-                StockAlertCount = _productService.GetStockAlertProductCount(),
+                ReviewCount = _reviewService.ReviewCount(),
                 OrderCountInThisMonth = _orderService.GetOrdersCountInThisMonth()
             };
 

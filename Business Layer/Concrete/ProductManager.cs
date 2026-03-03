@@ -98,11 +98,6 @@ namespace Business_Layer.Concrete
             return _uow.Products.GetAllWithPaging(pageNumber, pageSize,x=>x.Category);
         }
 
-        public int GetStockAlertProductCount()
-        {
-            return _uow.Products.GetCount(p => p.StockQuantity < 25);      
-        }
-
         public int GetTotalProductStock()
         {
             return _uow.Products.Sum(p => p.StockQuantity);
