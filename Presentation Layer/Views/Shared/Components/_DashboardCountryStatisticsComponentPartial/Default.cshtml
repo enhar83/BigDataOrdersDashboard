@@ -9,7 +9,8 @@
         <br />
         <br />
 
-        <div class="body" style="padding-top: 0;"> @if (Model == null || !Model.Any())
+        <div class="body" style="padding-top: 0;">
+            @if (Model == null || !Model.Any())
             {
                 <div class="alert alert-info">Görüntülenecek veri bulunamadı.</div>
             }
@@ -19,7 +20,7 @@
                     <canvas id="countryOrdersChart"></canvas>
                     <div id="chartCenterText"
                          style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-                                font-size:19px; font-weight:700; color:#222; line-height: 1.2;"></div>
+                                     font-size:19px; font-weight:700; color:#222; line-height: 1.2;"></div>
                 </div>
 
                 <br />
@@ -59,7 +60,6 @@
 
         const centerText = document.getElementById('chartCenterText');
 
-        // C# Modelinden verileri JS dizilerine çeviriyoruz
         const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.CountryName) ?? new List<string>()));
         const values = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.OrderCount) ?? new List<int>()));
         const percentages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.Percentage) ?? new List<double>()));
@@ -92,21 +92,18 @@
             }
         });
 
-        // Başlangıçta en yüksek veriyi merkeze yaz
         if (values.length > 0) {
             const maxValue = Math.max(...values);
             const maxIndex = values.indexOf(maxValue);
             updateCenterText(labels[maxIndex], percentages[maxIndex]);
 
-            // Hover olaylarını dinle
             ctx.addEventListener('mousemove', function (event) {
                 const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
                 if (points.length) {
                     const i = points[0].index;
                     updateCenterText(labels[i], percentages[i]);
-                } else {
-                    updateCenterText(labels[maxIndex], percentages[maxIndex]);
                 }
+                // 'else' bloğu kaldırıldı, böylece son hover edilen değer merkezde sabit kalır.
             });
         }
 
