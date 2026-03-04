@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
@@ -128,85 +129,51 @@ namespace Business_Layer.Concrete
         }
 
         public List<CountryOrderCountForDonutDto> GetCountryOrderCountForDonut()
-        { 
-            IQueryable<Order> query = _uow.Orders.GetQueryable();
-            var result = query
-                .Where(o=>o.OrderDate.Year == 2025) 
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable()
+                .Where(o => o.OrderDate.Year == 2025);
+
+            var totalCount = query.Count();
+
+            return query
                 .GroupBy(o => o.Customer.CustomerCountry)
-                .Select(g => new CountryOrderCountForDonutDto
+                .Select(o => new CountryOrderCountForDonutDto
                 {
-                    CountryName = g.Key,
-                    OrderCount = g.Count()
+                    CountryName = o.Key,
+                    OrderCount = o.Count(),
+                    Percentage = totalCount == 0 ? 0 : (double)o.Count() / totalCount * 100
                 })
-                .OrderByDescending(x => x.OrderCount)
+                .OrderByDescending(o => o.OrderCount)
                 .Take(5)
                 .ToList();
-
-            var totalOrders = result.Sum(x => x.OrderCount);
-            foreach (var item in result)
-            {
-                double rawPercentage = totalOrders == 0 ? 0 : (double)item.OrderCount / totalOrders * 100;
-                item.Percentage = Math.Round(rawPercentage, 2);
-            }
-
-            return result;
         }
 
         public List<CountryReportDto> GetCountryReportForMap() //Dashboard harita
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var start2023 = new DateTime(2023, 1, 1);
-            var start2024 = new DateTime(2024, 1, 1);
-            var start2025 = new DateTime(2025, 1, 1);
-
-            var orders2023 = query
-                .Where(o => o.OrderDate >= start2023 && o.OrderDate < start2024)
+            return query
+                .Where(o => o.OrderDate.Year == 2023 || o.OrderDate.Year == 2024)
                 .GroupBy(o => o.Customer.CustomerCountry)
-                .Select(g => new
+                .Select(g => new CountryReportDto
                 {
                     Country = g.Key,
-                    Total2023 = g.Count()
-                });
-
-            var orders2024 = query
-                .Where(o => o.OrderDate >= start2024 && o.OrderDate < start2025)
-                .GroupBy(o => o.Customer.CustomerCountry)
-                .Select(g => new
-                {
-                    Country = g.Key,
-                    Total2024 = g.Count()
-                });
-
-            var rawData = orders2023
-                .Join(orders2024,
-                y2023 => y2023.Country,
-                y2024 => y2024.Country,
-                (y2023, y2024) => new
-                {
-                    Country = y2023.Country,
-                    Total2023 = y2023.Total2023,
-                    Total2024 = y2024.Total2024
+                    Total2023 = g.Count(o => o.OrderDate.Year == 2023),
+                    Total2024 = g.Count(o => o.OrderDate.Year == 2024),
+                    ChangeRate = 0, //aşağıda hesaplanacak
+                    Latitude = 0, //helper ile projeye dahil edilecek
+                    Longitude = 0
                 })
-            .ToList();
-
-            var result = rawData
-                .Select(x => new CountryReportDto
+                .ToList()
+                .Select(x =>
                 {
-                    Country = x.Country,
-                    Total2023 = x.Total2023,
-                    Total2024 = x.Total2024,
-                    ChangeRate = x.Total2023 == 0
-                        ? 0
-                        : ((decimal)(x.Total2024 - x.Total2023) / x.Total2023) * 100,
-
-                    Latitude = CountryCoordinateHelper.GetLatitude(x.Country) ?? 0,
-                    Longitude = CountryCoordinateHelper.GetLongitude(x.Country) ?? 0
+                    x.ChangeRate = x.Total2023 == 0 ? 0 : ((decimal)(x.Total2024 - x.Total2023) / x.Total2023 * 100);
+                    x.Latitude = CountryCoordinateHelper.GetLatitude(x.Country) ?? 0;
+                    x.Longitude = CountryCoordinateHelper.GetLongitude(x.Country) ?? 0;
+                    return x;
                 })
-                .Where(x => x.Latitude != 0 && x.Longitude != 0)
+                .Where(x => x.Latitude != 0)
                 .ToList();
-
-            return result;
         }
 
         public Order GetFirstOrDefault(int id)
@@ -219,12 +186,11 @@ namespace Business_Layer.Concrete
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
-            var date = new DateTime(2024, 12, 31);
-            var last10OrdersToday = query
-                .Where(o => o.OrderDate.Date == date)
+            var date = new DateTime(2025, 12, 31);
+
+            return query
+                .Where(o => o.OrderDate == date)
                 .OrderByDescending(o => o.OrderDate)
-                .Include(o => o.Customer)
-                .Include(o => o.Product)
                 .Take(5)
                 .Select(o => new TodayOrdersDto
                 {
@@ -233,13 +199,12 @@ namespace Business_Layer.Concrete
                     CustomerName = o.Customer.CustomerName + " " + o.Customer.CustomerSurname,
                     ProductName = o.Product.ProductName,
                     UnitPrice = o.Product.UnitPrice,
-                    TotalPrice = o.Quantity * o.Product.UnitPrice,
                     Quantity = o.Quantity,
+                    TotalPrice = o.Quantity * o.Product.UnitPrice,
                     OrderStatus = o.OrderStatus,
                     PaymentMethod = o.PaymentMethod
-                });
-
-            return last10OrdersToday.ToList();
+                })
+                .ToList();
         } //Dashboard en alttaki kısım
 
         public string GetLeastOrderedProduct() //TextualStatistics 12. Kart
