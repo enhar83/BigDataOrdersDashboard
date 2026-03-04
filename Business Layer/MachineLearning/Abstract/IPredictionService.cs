@@ -9,7 +9,7 @@ namespace Business_Layer.MachineLearning.Abstract
 {
     public interface IPredictionService
     {
-        PaymentForecastPredictionDTO GetPaymentMethodForecast(string paymentMethod); //eğitilmiş modelden tahmin almak için
+        (PaymentForecastPredictionDTO prediction, List<PaymentForecastDataDTO> actuals) GetPaymentMethodForecast(string paymentMethod); //eğitilmiş modelden tahmin almak için
         List<string> GetDistinctPaymentMethods();
     }
 }

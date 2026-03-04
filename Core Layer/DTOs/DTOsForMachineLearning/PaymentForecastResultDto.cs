@@ -11,6 +11,7 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
         public string PaymentMethod { get; set; }
         public string Month { get; set; }
         public int PredictedCount { get; set; }
+        public int LastYearsCount { get; set; } 
     } 
 }
 

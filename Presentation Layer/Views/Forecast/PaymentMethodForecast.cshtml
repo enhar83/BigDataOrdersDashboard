@@ -1,55 +1,68 @@
 ﻿@model PaymentForecastViewModel
 @{
-	ViewData["Title"] = "PaymentMethodForecast";
-	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "PaymentMethodForecast";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <section class="content">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-12">
+                <h2>
+                    Ödeme Yöntemleri: Geçmiş Veri ve Gelecek Tahmini
+                    <small class="text-muted">2025 Yılı Gerçekleşen ve 2026 Yılı Tahmin Edilen Sipariş Sayıları</small>
+                </h2>
+            </div>
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <ul class="breadcrumb float-md-right">
+                    <li class="breadcrumb-item"><a href="/Dashboard/Index"><i class="zmdi zmdi-home"></i> Tahminlemeler</a></li>
+                    <li class="breadcrumb-item active">Sipariş Tahminleri</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-	<div class="block-header">
-		<div class="row">
-			<div class="col-lg-7 col-md-6 col-sm-12">
-				<h2>
-					2026 Yılı İlk Çeyrek Ödeme Yöntemleri Tahminleri
-					<small class="text-muted">2025 Yılı Verileri Kullanılarak Tahminlenmiştir</small>
-				</h2>
-			</div>
-			<div class="col-lg-5 col-md-6 col-sm-12">
-				<ul class="breadcrumb float-md-right">
-					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Tahminlemeler</a></li>
-					<li class="breadcrumb-item"><a href="javascript:void(0);">Sipariş Tahminlemeleri</a></li>
-					<li class="breadcrumb-item active">Dashboard</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Tahmin</strong> Tablosu</h2>
+                    </div>
+                    <div class="body">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr class="bg-blue text-white">
+                                    <th>Ödeme Yöntemi</th>
+                                    <th>Dönem</th>
+                                    <th>2025 Gerçekleşen (Adet)</th>
+                                    <th>2026 Tahmin Edilen (Adet)</th>
+                                    <th>Beklenen Fark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ForecastResults)
+                                {
+                                    var difference = item.PredictedCount - item.LastYearsCount;
+                                    var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
 
-	<div class="container-fluid">
-		<div class="row clearfix">
-			<div class="col-lg-12">
-				<div class="card">
-					<div class="body">
-
-						<table class="table table-bordered">
-							<tr>
-								<th>Ödeme Yöntemi</th>
-								<th>Ay</th>
-								<th>Tahmini Sipariş Sayısı</th>
-							</tr>
-
-							@foreach (var item in Model.ForecastResults)
-							{
-								<tr>
-									<th>@item.PaymentMethod</th>
-									<th>@item.Month</th>
-									<th><strong>@item.PredictedCount</strong> Adet</th>
-								</tr>
-							}
-
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                    <tr>
+                                        <td><strong>@item.PaymentMethod</strong></td>
+                                        <td>@item.Month</td>
+                                        <td class="text-center">@item.LastYearsCount</td>
+                                        <td class="text-center text-primary"><strong>@item.PredictedCount</strong></td>
+                                        <td class="text-center">
+                                            <span class="badge @badgeClass">
+                                                @(difference >= 0 ? "+" : "")@difference
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

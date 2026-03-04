@@ -15,7 +15,7 @@ namespace Business_Layer.MachineLearning.Concrete
     {
         private readonly IUnitOfWork _uow;
         private readonly MLContext _mlContext; //ML.NET'in ana motoru, beynidir. Tüm yapay zeka işlemleri bu nesne üzerinden yürütülür.
-        
+
 
         public PredictionManager(IUnitOfWork uow)
         {
@@ -25,7 +25,7 @@ namespace Business_Layer.MachineLearning.Concrete
 
         #region PaymentMethodForecast
 
-        public PaymentForecastPredictionDTO GetPaymentMethodForecast(string paymentMethod)
+        public (PaymentForecastPredictionDTO prediction, List<PaymentForecastDataDTO> actuals) GetPaymentMethodForecast(string paymentMethod)
         {
             var rawData = _uow.Orders.GetQueryable()
                 .Where(o => o.OrderDate.Year == 2025 && o.PaymentMethod == paymentMethod)
@@ -44,7 +44,7 @@ namespace Business_Layer.MachineLearning.Concrete
             }).ToList(); //[150,180,210] geliyorsa 1.Ay:150, 2.Ay:180, 3.Ay:210 olarak değiştirir. 
 
             //Bitcoin adında bir ödeme yöntemi olduğunu varsay ve hiç sipariş edilmemiş bu yöntemle. ML.NET boş veriyle çalışamayacağından dolayı eğitilemez. Bir nevi sigorta görevi görür.
-            if (!methodData.Any()) return new PaymentForecastPredictionDTO { ForecastedValues = new float[] { 0, 0, 0 } };
+            if (!methodData.Any()) return (new PaymentForecastPredictionDTO { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
 
             var dataView = _mlContext.Data.LoadFromEnumerable(methodData); //hazırlanan C# listesini ML.NET'in anlayacağı özel bir tablo formatına dönüştürür. (IDataView)
             //SQLden gelen veriler karışık bir deftere benzediği için LoadFromEnumerable diyerek bu notları, yapay zekanın çok hızlı okuyabildiği dijital bir Excel tablosuna dönüştürür.
@@ -55,7 +55,7 @@ namespace Business_Layer.MachineLearning.Concrete
                 outputColumnName: nameof(PaymentForecastPredictionDTO.ForecastedValues),
                 inputColumnName: nameof(PaymentForecastDataDTO.OrderCount),
                 windowSize: 4, //4 aylık dönemlerle geçmişe bakar.
-                seriesLength: methodData.Count, 
+                seriesLength: methodData.Count,
                 trainSize: methodData.Count,
                 horizon: 3, //gelecek 3 ayı hedef alır.
                 confidenceLevel: 0.95f);
@@ -65,11 +65,11 @@ namespace Business_Layer.MachineLearning.Concrete
 
             //eğitilmiş modelden çok hızlı bir şekilde sonuç almak için oluşturulan özel yapıdır.
             //eğitim bitmiş haldedir ve artık soru cevap yapılır. PayPal için Ocak 2026 ne olur gibi.
-            var forecastEngine = model.CreateTimeSeriesEngine<PaymentForecastDataDTO, PaymentForecastPredictionDTO>(_mlContext); 
+            var forecastEngine = model.CreateTimeSeriesEngine<PaymentForecastDataDTO, PaymentForecastPredictionDTO>(_mlContext);
 
             //sonucun verildiği yerdir.
             //bu satır çalıştığında elde artık bir PaymentForecastPredictionDto vardır ve içerisinde 3 aylık tahmin bulunur.
-            return forecastEngine.Predict();
+            return (forecastEngine.Predict(), methodData);
         }
 
         public List<string> GetDistinctPaymentMethods()
