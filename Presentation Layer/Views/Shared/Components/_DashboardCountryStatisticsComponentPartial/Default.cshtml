@@ -1,0 +1,96 @@
+﻿<div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h2>Ülkelere Göre Siparişler</h2>
+        </div>
+
+        <div class="card-body text-center" style="position: relative; height: 240px;">
+            <canvas id="countryOrdersChart" style="max-height: 220px;"></canvas>
+            <div id="chartCenterText"
+                 style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+                    font-size:22px; font-weight:700; color:#222;"></div>
+        </div>
+
+        <table class="table mt-2 mb-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ülke</th>
+                    <th>Sipariş Sayısı</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Türkiye</td><td>6985</td></tr>
+                <tr><td>2</td><td>Almanya</td><td>3597</td></tr>
+                <tr><td>3</td><td>İtalya</td><td>2697</td></tr>
+                <tr><td>4</td><td>Fransa</td><td>2145</td></tr>
+                <tr><td>5</td><td>İspanya</td><td>1854</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('countryOrdersChart');
+            const centerText = document.getElementById('chartCenterText');
+
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Türkiye', 'Almanya', 'İtalya', 'Fransa', 'İspanya'],
+                    datasets: [{
+                        data: [6985, 3597, 2697, 2145, 1854],
+                        backgroundColor: [
+                            '#4CAF50', // yeşil
+                            '#2196F3', // mavi
+                            '#FF9800', // turuncu
+                            '#E91E63', // pembe
+                            '#9C27B0'  // mor
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: false }, // ülke isimlerini gizle
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed} sipariş`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%',
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
+            });
+
+            // Varsayılan merkez metni (en yüksek ülke)
+            const maxValue = Math.max(...chart.data.datasets[0].data);
+            const maxIndex = chart.data.datasets[0].data.indexOf(maxValue);
+            const topCountry = chart.data.labels[maxIndex];
+            const topPercent = ((maxValue / chart.data.datasets[0].data.reduce((a,b)=>a+b)) * 100).toFixed(1);
+            centerText.innerHTML = `${topCountry}<br><span style="font-size:16px; color:#777;">${topPercent}%</span>`;
+
+            // Hover'da merkezde ülke adı + yüzde göster
+            ctx.addEventListener('mousemove', function(event) {
+                const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
+                if (points.length) {
+                    const i = points[0].index;
+                    const label = chart.data.labels[i];
+                    const value = chart.data.datasets[0].data[i];
+                    const total = chart.data.datasets[0].data.reduce((a,b)=>a+b);
+                    const percent = ((value / total) * 100).toFixed(1);
+                    centerText.innerHTML = `${label}<br><span style="font-size:16px; color:#777;">${percent}%</span>`;
+                } else {
+                    // Hover dışına çıkınca tekrar en yüksek ülkeyi göster
+                    centerText.innerHTML = `${topCountry}<br><span style="font-size:16px; color:#777;">${topPercent}%</span>`;
+                }
+            });
+        });
+    </script>
+
+</div>
