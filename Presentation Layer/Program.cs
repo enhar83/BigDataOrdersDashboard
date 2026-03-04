@@ -1,5 +1,7 @@
 using Business_Layer.Abstract;
 using Business_Layer.Concrete;
+using Business_Layer.MachineLearning.Abstract;
+using Business_Layer.MachineLearning.Concrete;
 using Data_Layer.Abstract;
 using Data_Layer.Concrete;
 using Data_Layer.Context;
@@ -24,6 +26,7 @@ builder.Services.AddScoped<IProductService, ProductManager>();
 builder.Services.AddScoped<ICustomerService, CustomerManager>();
 builder.Services.AddScoped<IOrderService, OrderManager>();
 builder.Services.AddScoped<IReviewService, ReviewManager>();
+builder.Services.AddScoped<IPredictionService, PredictionManager>();
 
 
 var app = builder.Build();

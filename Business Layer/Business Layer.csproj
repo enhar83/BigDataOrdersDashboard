@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Entity Layer\Entity Layer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MachineLearning\Models\" />
+  </ItemGroup>
+
 </Project>
