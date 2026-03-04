@@ -127,6 +127,31 @@ namespace Business_Layer.Concrete
             //SELECT * FROM Orders WHERE OrderId = id
         }
 
+        public List<CountryOrderCountForDonutDto> GetCountryOrderCountForDonut()
+        { 
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+            var result = query
+                .Where(o=>o.OrderDate.Year == 2025) 
+                .GroupBy(o => o.Customer.CustomerCountry)
+                .Select(g => new CountryOrderCountForDonutDto
+                {
+                    CountryName = g.Key,
+                    OrderCount = g.Count()
+                })
+                .OrderByDescending(x => x.OrderCount)
+                .Take(5)
+                .ToList();
+
+            var totalOrders = result.Sum(x => x.OrderCount);
+            foreach (var item in result)
+            {
+                double rawPercentage = totalOrders == 0 ? 0 : (double)item.OrderCount / totalOrders * 100;
+                item.Percentage = Math.Round(rawPercentage, 2);
+            }
+
+            return result;
+        }
+
         public List<CountryReportDto> GetCountryReportForMap() //Dashboard harita
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();

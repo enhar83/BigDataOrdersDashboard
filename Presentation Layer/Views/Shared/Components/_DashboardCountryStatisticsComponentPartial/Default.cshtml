@@ -1,96 +1,117 @@
-﻿<div class="col-lg-4 col-md-6 col-sm-12">
-    <div class="card">
-        <div class="card-header">
-            <h2>Ülkelere Göre Siparişler</h2>
+﻿@model List<CountryOrderCountForDonutDto>
+
+<div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="card activities">
+        <div class="header">
+            <h2>2025 Yılı Ülkelere Göre Siparişler</h2>
         </div>
 
-        <div class="card-body text-center" style="position: relative; height: 240px;">
-            <canvas id="countryOrdersChart" style="max-height: 220px;"></canvas>
-            <div id="chartCenterText"
-                 style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-                    font-size:22px; font-weight:700; color:#222;"></div>
-        </div>
+        <br />
+        <br />
 
-        <table class="table mt-2 mb-3">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Ülke</th>
-                    <th>Sipariş Sayısı</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>1</td><td>Türkiye</td><td>6985</td></tr>
-                <tr><td>2</td><td>Almanya</td><td>3597</td></tr>
-                <tr><td>3</td><td>İtalya</td><td>2697</td></tr>
-                <tr><td>4</td><td>Fransa</td><td>2145</td></tr>
-                <tr><td>5</td><td>İspanya</td><td>1854</td></tr>
-            </tbody>
-        </table>
+        <div class="body" style="padding-top: 0;"> @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info">Görüntülenecek veri bulunamadı.</div>
+            }
+            else
+            {
+                <div class="text-center" style="position: relative; height: 220px; margin-top: -10px;">
+                    <canvas id="countryOrdersChart"></canvas>
+                    <div id="chartCenterText"
+                         style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+                                font-size:19px; font-weight:700; color:#222; line-height: 1.2;"></div>
+                </div>
+
+                <br />
+
+                <div class="table-responsive" style="margin-top: -5px;">
+                    <table class="table table-hover mb-0" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th style="border-top: none;">#</th>
+                                <th style="border-top: none;">Ülke</th>
+                                <th style="border-top: none;" class="text-right">Sipariş</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@Model[i].CountryName</td>
+                                    <td class="text-right">@Model[i].OrderCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('countryOrdersChart');
-            const centerText = document.getElementById('chartCenterText');
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            const chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Türkiye', 'Almanya', 'İtalya', 'Fransa', 'İspanya'],
-                    datasets: [{
-                        data: [6985, 3597, 2697, 2145, 1854],
-                        backgroundColor: [
-                            '#4CAF50', // yeşil
-                            '#2196F3', // mavi
-                            '#FF9800', // turuncu
-                            '#E91E63', // pembe
-                            '#9C27B0'  // mor
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { display: false }, // ülke isimlerini gizle
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.label}: ${context.parsed} sipariş`;
-                                }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('countryOrdersChart');
+        if (!ctx) return;
+
+        const centerText = document.getElementById('chartCenterText');
+
+        // C# Modelinden verileri JS dizilerine çeviriyoruz
+        const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.CountryName) ?? new List<string>()));
+        const values = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.OrderCount) ?? new List<int>()));
+        const percentages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model?.Select(x => x.Percentage) ?? new List<double>()));
+
+        const chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const p = percentages[context.dataIndex];
+                                return `${context.label}: ${context.parsed} sipariş (%${p.toFixed(2)})`;
                             }
                         }
-                    },
-                    cutout: '70%',
-                    maintainAspectRatio: false,
-                    responsive: true
-                }
-            });
+                    }
+                },
+                cutout: '75%',
+                maintainAspectRatio: false,
+                responsive: true
+            }
+        });
 
-            // Varsayılan merkez metni (en yüksek ülke)
-            const maxValue = Math.max(...chart.data.datasets[0].data);
-            const maxIndex = chart.data.datasets[0].data.indexOf(maxValue);
-            const topCountry = chart.data.labels[maxIndex];
-            const topPercent = ((maxValue / chart.data.datasets[0].data.reduce((a,b)=>a+b)) * 100).toFixed(1);
-            centerText.innerHTML = `${topCountry}<br><span style="font-size:16px; color:#777;">${topPercent}%</span>`;
+        // Başlangıçta en yüksek veriyi merkeze yaz
+        if (values.length > 0) {
+            const maxValue = Math.max(...values);
+            const maxIndex = values.indexOf(maxValue);
+            updateCenterText(labels[maxIndex], percentages[maxIndex]);
 
-            // Hover'da merkezde ülke adı + yüzde göster
-            ctx.addEventListener('mousemove', function(event) {
+            // Hover olaylarını dinle
+            ctx.addEventListener('mousemove', function (event) {
                 const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
                 if (points.length) {
                     const i = points[0].index;
-                    const label = chart.data.labels[i];
-                    const value = chart.data.datasets[0].data[i];
-                    const total = chart.data.datasets[0].data.reduce((a,b)=>a+b);
-                    const percent = ((value / total) * 100).toFixed(1);
-                    centerText.innerHTML = `${label}<br><span style="font-size:16px; color:#777;">${percent}%</span>`;
+                    updateCenterText(labels[i], percentages[i]);
                 } else {
-                    // Hover dışına çıkınca tekrar en yüksek ülkeyi göster
-                    centerText.innerHTML = `${topCountry}<br><span style="font-size:16px; color:#777;">${topPercent}%</span>`;
+                    updateCenterText(labels[maxIndex], percentages[maxIndex]);
                 }
             });
-        });
-    </script>
+        }
 
-</div>
+        function updateCenterText(label, percent) {
+            centerText.innerHTML = `${label}<br><span style="font-size:16px; color:#777;">%${percent.toFixed(2)}</span>`;
+        }
+    });
+</script>

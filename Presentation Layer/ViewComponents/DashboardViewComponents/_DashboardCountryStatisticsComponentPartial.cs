@@ -14,7 +14,8 @@ namespace Presentation_Layer.ViewComponents.DashboardViewComponents
 
         public IViewComponentResult Invoke()
         {
-            return View();
+            var countries = _orderService.GetCountryOrderCountForDonut();
+            return View(countries);
         }
     }
 }

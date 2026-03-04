@@ -41,6 +41,7 @@ namespace Business_Layer.Abstract
         KpiCartsDto CompareTodayAndYesterdayOrdersForKpiCarts();
         MainChartDto TodaysSalesStatus();
         List<MonthlySalesDto> Last6MonthsSalesGraph();
+        List<CountryOrderCountForDonutDto> GetCountryOrderCountForDonut();
     }
 
 }
