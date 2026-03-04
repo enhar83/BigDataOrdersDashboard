@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
-using Business_Layer.DTOs;
+using Core_Layer.DTOs.DTOsForDashboard;
 using Core_Layer.Helpers;
 using Data_Layer.Abstract;
 using Entity_Layer;
