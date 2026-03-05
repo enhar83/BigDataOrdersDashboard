@@ -26,7 +26,7 @@ namespace Presentation_Layer.Controllers
 
             foreach (var method in paymentMethods)
             {
-                //sıradaki metot için managerdaki metodu çalıştırır ve tahmin elde edilir.
+                //sıradaki metot için managerdaki metodu çalıştırır, tahmin ve 2025 verisi elde edilir.
                 var (prediction,actuals) = _predictionService.GetPaymentMethodForecast(method);
 
                 //managerdan gelen 3 aylık paketi parçalara ayırır ve tek tek satır haline getirir.

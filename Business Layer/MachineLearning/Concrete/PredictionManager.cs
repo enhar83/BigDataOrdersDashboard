@@ -52,8 +52,8 @@ namespace Business_Layer.MachineLearning.Concrete
             //Verinin ham halden, işlenen bir modele dönüşene kadar izlediği yoldur.
             //SSA geçmişteki iniş çıkışlara bakar, gürültülü verileri eler ve gerçek trendi bulur.
             var pipeline = _mlContext.Forecasting.ForecastBySsa( //SSA algoritmasını yapılandırır. (Singular Spectrum Analysis, zaman içindeki verileri inceleyen özel bir matematiksel modeldir)
-                outputColumnName: nameof(PaymentForecastPredictionDTO.ForecastedValues),
-                inputColumnName: nameof(PaymentForecastDataDTO.OrderCount),
+                outputColumnName: nameof(PaymentForecastPredictionDTO.ForecastedValues), //tahminin yazılacağı sütun
+                inputColumnName: nameof(PaymentForecastDataDTO.OrderCount), //tahmin yapılacak değer, OrderCount
                 windowSize: 4, //4 aylık dönemlerle geçmişe bakar.
                 seriesLength: methodData.Count,
                 trainSize: methodData.Count,
