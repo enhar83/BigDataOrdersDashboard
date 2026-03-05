@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Business_Layer.MachineLearning.Abstract;
 using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 
@@ -27,9 +28,11 @@ namespace Business_Layer.MachineLearning.Concrete
 
         public (PaymentForecastPredictionDTO prediction, List<PaymentForecastDataDTO> actuals) GetPaymentMethodForecast(string paymentMethod)
         {
+            //sadece 2025 yılı için çalışıldığı için OrderBy kullanmaya gerek yok zaten SQL verileri sıralı veiryor.
+            //ancak 2 yıl ve üzeri için çalışılsaydı 2025 verileri 2024 verilerinin arasına karılabilir. Ocak 2025, Ocak 2024, Şubat 2025 şeklinde olabilirdi. Böyle olursa da algoritma trendi tamamen yanlış anlar.
             var rawData = _uow.Orders.GetQueryable()
                 .Where(o => o.OrderDate.Year == 2025 && o.PaymentMethod == paymentMethod)
-                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month }) //verileri aylık paketler haline getirir
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month }) //verileri aylık paketler haline getirir. Ayrıca ekstra olarak payment methodlara göre gruplamaya gerek yok çünkü Where koşulunda zaten SQL o şehre ait olan verileri getiriyor.
                 .Select(g => new
                 {
                     OrderCount = (float)g.Count() //SQLden geşem her bir aylık paket için sipariş sayısını bulur ve ML.NET için floata çevirir. Kısacası veriyi makineye uygun hale getirir.
@@ -79,6 +82,68 @@ namespace Business_Layer.MachineLearning.Concrete
                 .Distinct()
                 .ToList();
         }
+
+        #endregion
+
+        #region GermanyCitiesForecast
+
+        public (GermanyCitiesForecastPredictionDto prediction, List<GermanyCitiesForecastDataDto> actuals) GetGermanyCitiesForecast(string cityName)
+        {
+            var rawData = _uow.Orders.GetQueryable()
+                .Include(o => o.Customer)
+                .Where(o => (o.OrderDate.Year == 2024 || o.OrderDate.Year == 2025) && o.Customer.CustomerCity == cityName)
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month }) //amaç şehirleri birbirinden ayırma değil, zaten tek bir şehir üzerinde çalışılıyor. Amaç siparişleri aylar halinde gruplamak.
+                .OrderBy(x => x.Key.Year).ThenBy(x => x.Key.Month) //iki yıllık verinin birbirine karışmaması için kullanıldı.
+                .Select(g => new
+                {
+                    OrderCount = (float)g.Count()
+                })
+                .ToList();
+
+            var methodData = rawData.Select((x, index) => new GermanyCitiesForecastDataDto
+            {
+                CityName = cityName,
+                MonthIndex = index + 1,
+                OrderCount = x.OrderCount
+            }).ToList();
+
+            //en az 12 aylık veri ister
+            if (methodData.Count < 12)
+                return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+
+            //en az 50 sipariş sayısı ister yoksa veriler çok gürültülü olur ve tahminler saçma çıkabilir. Bu da algoritmanın kendini kandırmasına neden olur. 
+            if (methodData.Average(x => x.OrderCount) < 50)
+                return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+
+            if (!methodData.Any()) return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
+
+            var dataView = _mlContext.Data.LoadFromEnumerable(methodData);
+
+            var pipeline = _mlContext.Forecasting.ForecastBySsa(
+                outputColumnName: nameof(GermanyCitiesForecastPredictionDto.ForecastedValues),
+                inputColumnName: nameof(GermanyCitiesForecastDataDto.OrderCount),
+                windowSize: 12,
+                seriesLength: methodData.Count,
+                trainSize: methodData.Count,
+                horizon: 3,
+                confidenceLevel: 0.95f);
+
+            var model = pipeline.Fit(dataView);
+
+            var forecastEngine = model.CreateTimeSeriesEngine<GermanyCitiesForecastDataDto, GermanyCitiesForecastPredictionDto>(_mlContext);
+
+            return (forecastEngine.Predict(), methodData);
+        }
+
+        public List<string> GetDistinctCityNames()
+        {
+            return _uow.Customers.GetQueryable()
+                .Where(c => c.CustomerCountry == "Almanya")
+                .Select(c => c.CustomerCity)
+                .Distinct().
+                ToList();
+        }
+
         #endregion
     }
 }

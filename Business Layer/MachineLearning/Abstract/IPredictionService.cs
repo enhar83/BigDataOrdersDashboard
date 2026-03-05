@@ -11,5 +11,7 @@ namespace Business_Layer.MachineLearning.Abstract
     {
         (PaymentForecastPredictionDTO prediction, List<PaymentForecastDataDTO> actuals) GetPaymentMethodForecast(string paymentMethod); //eğitilmiş modelden tahmin almak için
         List<string> GetDistinctPaymentMethods();
+        (GermanyCitiesForecastPredictionDto prediction, List<GermanyCitiesForecastDataDto> actuals) GetGermanyCitiesForecast(string cityName); //eğitilmiş modelden tahmin almak için
+        List<string> GetDistinctCityNames();
     }
 }
