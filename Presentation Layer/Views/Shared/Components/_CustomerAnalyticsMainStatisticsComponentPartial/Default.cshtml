@@ -1,11 +1,13 @@
-﻿<div class="row clearfix">
+﻿@model CustomerAnalyticsMainStatisticsDto
+
+<div class="row clearfix">
 
 	<!-- CARD 1 -->
 	<div class="col-lg-3 col-sm-6 col-md-6">
 		<div class="card overflowhidden" style="background: linear-gradient(135deg, #3a8ef6, #5ac8fa);">
 			<div class="body">
-				<h3 class="m-t-0 text-white">2,048</h3>
-				<p class="m-b-0 text-white">Total Leads</p>
+				<h3 class="m-t-0 text-white">@Model.TotalCustomerCount</h3>
+				<p class="m-b-0 text-white">Toplam Müşteri Sayısı</p>
 				<canvas id="chart1" height="60"></canvas>
 			</div>
 		</div>
@@ -15,8 +17,8 @@
 	<div class="col-lg-3 col-sm-6 col-md-6">
 		<div class="card overflowhidden" style="background: linear-gradient(135deg, #c084fc, #a855f7);">
 			<div class="body">
-				<h3 class="m-t-0 text-white">521</h3>
-				<p class="m-b-0 text-white">Total Connections</p>
+				<h3 class="m-t-0 text-white">@Model.AverageOrderCountPerPerson.ToString("C2")</h3>
+				<p class="m-b-0 text-white">Müşteri Başına Ortalama Sipariş Sayısı</p>
 				<canvas id="chart2" height="60"></canvas>
 			</div>
 		</div>
@@ -26,8 +28,8 @@
 	<div class="col-lg-3 col-sm-6 col-md-6">
 		<div class="card overflowhidden" style="background: linear-gradient(135deg, #34d399, #10b981);">
 			<div class="body">
-				<h3 class="m-t-0 text-white">73</h3>
-				<p class="m-b-0 text-white">Articles</p>
+				<h3 class="m-t-0 text-white">@Model.AverageSpending.ToString("C2")</h3>
+				<p class="m-b-0 text-white">Müşteri Başına Ortalama Harcama</p>
 				<canvas id="chart3" height="60"></canvas>
 			</div>
 		</div>
@@ -37,8 +39,8 @@
 	<div class="col-lg-3 col-sm-6 col-md-6">
 		<div class="card overflowhidden" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
 			<div class="body">
-				<h3 class="m-t-0 text-white">15</h3>
-				<p class="m-b-0 text-white">Categories</p>
+				<h3 class="m-t-0 text-white">@Model.MostActiveCity</h3>
+				<p class="m-b-0 text-white">En Çok Sipariş Veren Şehir</p>
 				<canvas id="chart4" height="60"></canvas>
 			</div>
 		</div>
