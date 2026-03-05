@@ -107,8 +107,8 @@ namespace Business_Layer.MachineLearning.Concrete
                 OrderCount = x.OrderCount
             }).ToList();
 
-            //en az 12 aylık veri ister
-            if (methodData.Count < 12)
+            //en az 21 aylık veri ister
+            if (methodData.Count < 21) //windowSize * 2 + 1
                 return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
 
             //en az 50 sipariş sayısı ister yoksa veriler çok gürültülü olur ve tahminler saçma çıkabilir. Bu da algoritmanın kendini kandırmasına neden olur. 
@@ -122,10 +122,10 @@ namespace Business_Layer.MachineLearning.Concrete
             var pipeline = _mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(GermanyCitiesForecastPredictionDto.ForecastedValues),
                 inputColumnName: nameof(GermanyCitiesForecastDataDto.OrderCount),
-                windowSize: 12,
+                windowSize: 10, //eğitim verisi (24 şu an) windowsize'ın en az 2x+1 şeklinde olmalıdır.
                 seriesLength: methodData.Count,
                 trainSize: methodData.Count,
-                horizon: 3,
+                horizon: 6,
                 confidenceLevel: 0.95f);
 
             var model = pipeline.Fit(dataView);
