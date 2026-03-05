@@ -135,15 +135,6 @@ namespace Business_Layer.MachineLearning.Concrete
             return (forecastEngine.Predict(), methodData);
         }
 
-        public List<string> GetDistinctCityNames()
-        {
-            return _uow.Customers.GetQueryable()
-                .Where(c => c.CustomerCountry == "Almanya")
-                .Select(c => c.CustomerCity)
-                .Distinct().
-                ToList();
-        }
-
         #endregion
 
         #region TurkeyCitiesForecast
@@ -194,13 +185,17 @@ namespace Business_Layer.MachineLearning.Concrete
             return (forecastEngine.Predict(), methodData);
         }
 
-        public List<string> GetDistinctTurkeyCityNames()
+        #endregion
+
+        #region GetDistinctCityName
+
+        public List<string> GetDistinctCityNames(string countryName)
         {
             return _uow.Customers.GetQueryable()
-                .Where(c => c.CustomerCountry == "Türkiye")
+                .Where(c => c.CustomerCountry == countryName)
                 .Select(c => c.CustomerCity)
-                .Distinct()
-                .ToList();
+                .Distinct().
+                ToList();
         }
 
         #endregion

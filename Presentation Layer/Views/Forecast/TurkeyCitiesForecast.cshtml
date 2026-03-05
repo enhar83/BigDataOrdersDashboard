@@ -1,0 +1,117 @@
+﻿@model TurkeyCitiesForecastViewModel
+@{
+    ViewData["Title"] = "TurkeyCitiesForecast";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-12">
+                <h2>
+                    Türkiye Şehirleri: Geçmiş Veri ve Gelecek Tahmini
+                    <small class="text-muted">2025 Yılı Gerçekleşen ve 2026 Yılı Tahmin Edilen Sipariş Sayıları</small>
+                </h2>
+            </div>
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <ul class="breadcrumb float-md-right">
+                    <li class="breadcrumb-item"><a href="/Dashboard/Index"><i class="zmdi zmdi-home"></i> Tahminlemeler</a></li>
+                    <li class="breadcrumb-item active">Türkiye Tahminleri</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body">
+                        <form asp-action="TurkeyCitiesForecast" method="get" id="turkeyCityFilterForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Tahminini Görmek İstediğiniz Şehri Seçin:</label>
+                                    <select name="cityName" class="form-control show-tick" onchange="this.form.submit()">
+                                        @foreach (var city in Model.CityNames)
+                                        {
+                                            if (city == Model.SelectedTurkeyCity)
+                                            {
+                                                <option value="@city" selected="selected">@city</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@city">@city</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-8 text-right">
+                                    <h3 class="m-t-10">Şu an İncelenen: <span class="text-primary">@Model.SelectedTurkeyCity</span></h3>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>@Model.SelectedTurkeyCity</strong> Şehri İçin 6 Aylık Tahmin Projeksiyonu</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr class="bg-blue text-white text-center">
+                                        <th>Ay / Dönem</th>
+                                        <th>2025 Gerçekleşen (Adet)</th>
+                                        <th>2026 Tahmin Edilen (Adet)</th>
+                                        <th>Beklenen Fark</th>
+                                        <th>Değişim Oranı (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ForecastResults.Any())
+                                    {
+                                        foreach (var item in Model.ForecastResults)
+                                        {
+                                            var difference = item.PredictedCount - item.LastYearsCount;
+                                            var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
+                                            // Yüzdelik değişim hesabı
+                                            var percentChange = item.LastYearsCount > 0 ? (double)difference / item.LastYearsCount * 100 : 0;
+
+                                            <tr>
+                                                <td class="text-center"><strong>@item.Month</strong></td>
+                                                <td class="text-center">@item.LastYearsCount</td>
+                                                <td class="text-center text-primary font-bold">@item.PredictedCount</td>
+                                                <td class="text-center">
+                                                    <span class="badge @badgeClass" style="font-size: 14px; padding: 5px 10px;">
+                                                        @(difference >= 0 ? "+" : "")@difference
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-@(difference >= 0 ? "success" : "danger") font-bold">
+                                                        @(difference >= 0 ? "↑" : "↓") %@percentChange.ToString("0.0")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Seçilen şehir için tahmin üretilemedi. (Yetersiz veri veya düşük sipariş hacmi)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
