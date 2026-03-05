@@ -145,5 +145,64 @@ namespace Business_Layer.MachineLearning.Concrete
         }
 
         #endregion
+
+        #region TurkeyCitiesForecast
+
+        public (TurkeyCitiesForecastPredictionDto prediction, List<TurkeyCitiesForecastDataDto> actuals) GetTurkeyCitiesForecast(string cityName)
+        {
+            var rawData = _uow.Orders.GetQueryable()
+                .Include(o => o.Customer)
+                .Where(o => (o.OrderDate.Year == 2025 || o.OrderDate.Year == 2024) && o.Customer.CustomerCity == cityName)
+                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
+                .OrderBy(o => o.Key.Year).ThenBy(o => o.Key.Month)
+                .Select(g => new
+                {
+                    OrderCount = (float)g.Count()
+                })
+                .ToList();
+
+            var methodData = rawData.Select((x, index) => new TurkeyCitiesForecastDataDto
+            {
+                CityName = cityName,
+                MonthIndex = index + 1,
+                OrderCount = x.OrderCount
+            }).ToList();
+
+            if (methodData.Count < 21)
+                return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+
+            if (methodData.Average(x => x.OrderCount) < 50)
+                return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+
+            if (!methodData.Any()) return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
+
+            var dataView = _mlContext.Data.LoadFromEnumerable(methodData);
+
+            var pipeline = _mlContext.Forecasting.ForecastBySsa(
+                outputColumnName: nameof(TurkeyCitiesForecastPredictionDto.ForecastedValues),
+                inputColumnName: nameof(TurkeyCitiesForecastDataDto.OrderCount),
+                windowSize: 10,
+                seriesLength: methodData.Count,
+                trainSize: methodData.Count,
+                horizon: 6,
+                confidenceLevel: 0.95f);
+
+            var model = pipeline.Fit(dataView);
+
+            var forecastEngine = model.CreateTimeSeriesEngine<TurkeyCitiesForecastDataDto, TurkeyCitiesForecastPredictionDto>(_mlContext);
+
+            return (forecastEngine.Predict(), methodData);
+        }
+
+        public List<string> GetDistinctTurkeyCityNames()
+        {
+            return _uow.Customers.GetQueryable()
+                .Where(c => c.CustomerCountry == "Türkiye")
+                .Select(c => c.CustomerCity)
+                .Distinct()
+                .ToList();
+        }
+
+        #endregion
     }
 }

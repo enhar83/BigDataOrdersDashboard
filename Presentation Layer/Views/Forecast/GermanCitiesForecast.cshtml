@@ -26,40 +26,89 @@
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card">
+                    <div class="body">
+                        <form asp-action="GermanCitiesForecast" method="get" id="cityFilterForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Tahminini Görmek İstediğiniz Şehri Seçin:</label>
+                                    <select name="cityName" class="form-control show-tick" onchange="this.form.submit()">
+                                        @foreach (var city in Model.CityNames)
+                                        {
+                                            if (city == Model.SelectedGermanyCity)
+                                            {
+                                                <option value="@city" selected="selected">@city</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@city">@city</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-8 text-right">
+                                    <h3 class="m-t-10">Şu an İncelenen: <span class="text-primary">@Model.SelectedGermanyCity</span></h3>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
                     <div class="header">
-                        <h2><strong>Tahmin</strong> Tablosu</h2>
+                        <h2><strong>@Model.SelectedGermanyCity</strong> Şehri İçin 6 Aylık Tahmin Projeksiyonu</h2>
                     </div>
                     <div class="body">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                                <tr class="bg-blue text-white">
-                                    <th>Şehir Adı</th>
-                                    <th>Dönem</th>
-                                    <th>2025 Gerçekleşen (Adet)</th>
-                                    <th>2026 Tahmin Edilen (Adet)</th>
-                                    <th>Beklenen Fark</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ForecastResults)
-                                {
-                                    var difference = item.PredictedCount - item.LastYearsCount;
-                                    var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
-
-                                    <tr>
-                                        <td><strong>@item.CityName</strong></td>
-                                        <td>@item.Month</td>
-                                        <td class="text-center">@item.LastYearsCount</td>
-                                        <td class="text-center text-primary"><strong>@item.PredictedCount</strong></td>
-                                        <td class="text-center">
-                                            <span class="badge @badgeClass">
-                                                @(difference >= 0 ? "+" : "")@difference
-                                            </span>
-                                        </td>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr class="bg-blue text-white text-center">
+                                        <th>Ay / Dönem</th>
+                                        <th>2025 Gerçekleşen (Adet)</th>
+                                        <th>2026 Tahmin Edilen (Adet)</th>
+                                        <th>Beklenen Fark</th>
+                                        <th>Değişim Oranı (%)</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ForecastResults.Any())
+                                    {
+                                        foreach (var item in Model.ForecastResults)
+                                        {
+                                            var difference = item.PredictedCount - item.LastYearsCount;
+                                            var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
+                                            // Yüzdelik değişim hesabı
+                                            var percentChange = item.LastYearsCount > 0 ? (double)difference / item.LastYearsCount * 100 : 0;
+
+                                            <tr>
+                                                <td class="text-center"><strong>@item.Month</strong></td>
+                                                <td class="text-center">@item.LastYearsCount</td>
+                                                <td class="text-center text-primary font-bold">@item.PredictedCount</td>
+                                                <td class="text-center">
+                                                    <span class="badge @badgeClass" style="font-size: 14px; padding: 5px 10px;">
+                                                        @(difference >= 0 ? "+" : "")@difference
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-@(difference >= 0 ? "success" : "danger")">
+                                                        @(difference >= 0 ? "↑" : "↓") %@percentChange.ToString("0.0")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center">Seçilen şehir için tahmin üretilemedi. (Yetersiz veri)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -10,13 +10,13 @@
             <div class="col-lg-7 col-md-6 col-sm-12">
                 <h2>
                     Ödeme Yöntemleri: Geçmiş Veri ve Gelecek Tahmini
-                    <small class="text-muted">2025 Yılı Gerçekleşen ve 2026 Yılı Tahmin Edilen Sipariş Sayıları</small>
+                    <small class="text-muted">2025 Yılı Gerçekleşen ve 2026 Yılı Tahmin Edilen Kullanım Sayıları</small>
                 </h2>
             </div>
             <div class="col-lg-5 col-md-6 col-sm-12">
                 <ul class="breadcrumb float-md-right">
                     <li class="breadcrumb-item"><a href="/Dashboard/Index"><i class="zmdi zmdi-home"></i> Tahminlemeler</a></li>
-                    <li class="breadcrumb-item active">Sipariş Tahminleri</li>
+                    <li class="breadcrumb-item active">Ödeme Tahminleri</li>
                 </ul>
             </div>
         </div>
@@ -26,40 +26,91 @@
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card">
+                    <div class="body">
+                        <form asp-action="PaymentMethodForecast" method="get" id="paymentFilterForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Tahminini Görmek İstediğiniz Ödeme Yöntemini Seçin:</label>
+                                    <select name="paymentMethod" class="form-control show-tick" onchange="this.form.submit()">
+                                        @foreach (var method in Model.PaymentMethods)
+                                        {
+                                            if (method == Model.SelectedPaymentMethod)
+                                            {
+                                                <option value="@method" selected="selected">@method</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@method">@method</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-8 text-right">
+                                    <h3 class="m-t-10">Şu an İncelenen: <span class="text-primary">@Model.SelectedPaymentMethod</span></h3>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
                     <div class="header">
-                        <h2><strong>Tahmin</strong> Tablosu</h2>
+                        <h2><strong>@Model.SelectedPaymentMethod</strong> Kullanım Projeksiyonu (1. Çeyrek)</h2>
                     </div>
                     <div class="body">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                                <tr class="bg-blue text-white">
-                                    <th>Ödeme Yöntemi</th>
-                                    <th>Dönem</th> 
-                                    <th>2025 Gerçekleşen (Adet)</th>
-                                    <th>2026 Tahmin Edilen (Adet)</th>
-                                    <th>Beklenen Fark</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ForecastResults)
-                                {
-                                    var difference = item.PredictedCount - item.LastYearsCount;
-                                    var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
-
-                                    <tr>
-                                        <td><strong>@item.PaymentMethod</strong></td>
-                                        <td>@item.Month</td>
-                                        <td class="text-center">@item.LastYearsCount</td>
-                                        <td class="text-center text-primary"><strong>@item.PredictedCount</strong></td>
-                                        <td class="text-center">
-                                            <span class="badge @badgeClass">
-                                                @(difference >= 0 ? "+" : "")@difference
-                                            </span>
-                                        </td>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center">
+                                <thead>
+                                    <tr class="bg-blue text-white">
+                                        <th>Ödeme Yöntemi</th>
+                                        <th>Ay / Dönem</th>
+                                        <th>2025 Gerçekleşen (Adet)</th>
+                                        <th>2026 Tahmin Edilen (Adet)</th>
+                                        <th>Beklenen Fark</th>
+                                        <th>Değişim Oranı (%)</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ForecastResults.Any())
+                                    {
+                                        foreach (var item in Model.ForecastResults)
+                                        {
+                                            var difference = item.PredictedCount - item.LastYearsCount;
+                                            var badgeClass = difference >= 0 ? "badge-success" : "badge-danger";
+                                            // Yüzdelik değişim hesabı (0'a bölme hatasını önlemek için kontrol)
+                                            var percentChange = item.LastYearsCount > 0 ? (double)difference / item.LastYearsCount * 100 : 0;
+
+                                            <tr>
+                                                <td><strong>@item.PaymentMethod</strong></td>
+                                                <td>@item.Month</td>
+                                                <td>@item.LastYearsCount</td>
+                                                <td class="text-primary font-bold">@item.PredictedCount</td>
+                                                <td>
+                                                    <span class="badge @badgeClass" style="font-size: 14px; padding: 5px 10px;">
+                                                        @(difference >= 0 ? "+" : "")@difference
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-@(difference >= 0 ? "success" : "danger") font-bold">
+                                                        @(difference >= 0 ? "↑" : "↓") %@percentChange.ToString("0.0")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center">Bu ödeme yöntemi için henüz tahmin üretilemedi.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

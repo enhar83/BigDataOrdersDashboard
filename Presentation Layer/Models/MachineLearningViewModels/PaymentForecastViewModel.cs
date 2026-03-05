@@ -4,6 +4,8 @@ namespace Presentation_Layer.Models.MachineLearningViewModels
 {
     public class PaymentForecastViewModel
     {
+        public string SelectedPaymentMethod { get; set; }
+        public List<string> PaymentMethods { get; set; }
         public List<PaymentForecastResultDto> ForecastResults { get; set; }
     }
 }

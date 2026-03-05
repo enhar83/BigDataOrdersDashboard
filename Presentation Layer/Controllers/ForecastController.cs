@@ -15,20 +15,25 @@ namespace Presentation_Layer.Controllers
             _predictionService = predictionService;
         }
 
-        public IActionResult PaymentMethodForecast()
+        public IActionResult PaymentMethodForecast(string paymentMethod)
         {
             //tahmin motorunu her bir yöntem için ayrı ayrı çalıştırmak gerekiyor.
-            var paymentMethods = _predictionService.GetDistinctPaymentMethods(); 
+            var paymentMethods = _predictionService.GetDistinctPaymentMethods();
+
+            if (string.IsNullOrEmpty(paymentMethod) && paymentMethods.Any())
+                paymentMethod = paymentMethods.First();
 
             var viewModel = new PaymentForecastViewModel
             {
+                PaymentMethods = paymentMethods,
+                SelectedPaymentMethod = paymentMethod,
                 ForecastResults = new List<PaymentForecastResultDto>()
             };
 
-            foreach (var method in paymentMethods)
+            if (!string.IsNullOrEmpty(paymentMethod))
             {
                 //sıradaki metot için managerdaki metodu çalıştırır, tahmin ve 2025 verisi elde edilir.
-                var (prediction,actuals) = _predictionService.GetPaymentMethodForecast(method);
+                var (prediction, actuals) = _predictionService.GetPaymentMethodForecast(paymentMethod);
 
                 //managerdan gelen 3 aylık paketi parçalara ayırır ve tek tek satır haline getirir.
                 for (int i = 0; i < 3; i++)
@@ -37,42 +42,50 @@ namespace Presentation_Layer.Controllers
 
                     viewModel.ForecastResults.Add(new PaymentForecastResultDto
                     {
-                        PaymentMethod = method,
+                        PaymentMethod = paymentMethod,
                         Month = new DateTime(2026, i + 1, 1).ToString("MMMM yyyy"),
                         PredictedCount = (int)Math.Max(0, prediction.ForecastedValues[i]), //floatı integera çevirir ve eksi bir sonuç gelme ihtimalin karşı onu 0 olarak gösterir.
                         LastYearsCount = (int)lastYearValue
                     });
                 }
+
             }
 
             return View(viewModel);
         }
 
-        public IActionResult GermanCitiesForecast()
+        public IActionResult GermanCitiesForecast(string cityName)
         {
             var germanCities = _predictionService.GetDistinctCityNames();
 
+            if (string.IsNullOrEmpty(cityName) && germanCities.Any())
+                cityName =germanCities.First();
+
             var viewModel = new GermanyCitiesForecastViewModel
             {
+                CityNames = germanCities,
+                SelectedGermanyCity = cityName,
                 ForecastResults = new List<GermanyCitiesForecastResultDto>()
             };
 
-            foreach(var cityName in germanCities)
+            if (!string.IsNullOrEmpty(cityName))
             {
-                var (prediction, actuals) = _predictionService.GetGermanyCitiesForecast(cityName);
+                var (prediction, actuals) = _predictionService.GetGermanyCitiesForecast(cityName); //
 
-                for (int i=0;i<6;i++) //i değeri horizon değerine bağlı olarak belirleniyor. 6 horizon değeri olduğu için i<6
+                if (prediction.ForecastedValues.Any(v => v > 0))
                 {
-                    //2025 verilerini gösterecek, 2024'ü göstermek istesek i+1 yapılırdı.
-                    var lastYearValue = actuals.FirstOrDefault(x => x.MonthIndex == (i + 13))?.OrderCount ?? 0;
-
-                    viewModel.ForecastResults.Add(new GermanyCitiesForecastResultDto
+                    for (int i = 0; i < 6; i++) //horizon değerine bağlı olarak değişir.
                     {
-                        CityName = cityName,
-                        Month = new DateTime(2026, i + 1, 1).ToString("MMMM yyyy"),
-                        PredictedCount = (int)Math.Max(0, prediction.ForecastedValues[i]),
-                        LastYearsCount = (int)lastYearValue
-                    });
+                        var lastYearValue = actuals.FirstOrDefault(x => x.MonthIndex == (i + 13))?.OrderCount ?? 0;
+
+                        viewModel.ForecastResults.Add(new GermanyCitiesForecastResultDto
+                        {
+                            CityName = cityName,
+                            Month = new DateTime(2026, i + 1, 1).ToString("MMMM yyyy"),
+                            PredictedCount = (int)Math.Max(0, prediction.ForecastedValues[i]),
+                            LastYearsCount = (int)lastYearValue
+                        });
+                    }
                 }
             }
 
