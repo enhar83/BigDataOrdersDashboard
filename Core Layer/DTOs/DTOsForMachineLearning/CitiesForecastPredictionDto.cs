@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core_Layer.DTOs.DTOsForMachineLearning
 {
-    public class TurkeyCitiesForecastPredictionDto
+    public class CitiesForecastPredictionDto
     {
         public float[] ForecastedValues { get; set; }
     }

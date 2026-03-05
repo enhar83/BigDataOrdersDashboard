@@ -85,9 +85,9 @@ namespace Business_Layer.MachineLearning.Concrete
 
         #endregion
 
-        #region GermanyCitiesForecast
+        #region CitiesForecast
 
-        public (GermanyCitiesForecastPredictionDto prediction, List<GermanyCitiesForecastDataDto> actuals) GetGermanyCitiesForecast(string cityName)
+        public (CitiesForecastPredictionDto prediction, List<CitiesForecastDataDto> actuals) GetCitiesForecast(string cityName)
         {
             var rawData = _uow.Orders.GetQueryable()
                 .Include(o => o.Customer)
@@ -100,7 +100,7 @@ namespace Business_Layer.MachineLearning.Concrete
                 })
                 .ToList();
 
-            var methodData = rawData.Select((x, index) => new GermanyCitiesForecastDataDto
+            var methodData = rawData.Select((x, index) => new CitiesForecastDataDto
             {
                 CityName = cityName,
                 MonthIndex = index + 1,
@@ -109,19 +109,19 @@ namespace Business_Layer.MachineLearning.Concrete
 
             //en az 21 aylık veri ister
             if (methodData.Count < 21) //windowSize * 2 + 1
-                return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+                return (new CitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
 
             //en az 50 sipariş sayısı ister yoksa veriler çok gürültülü olur ve tahminler saçma çıkabilir. Bu da algoritmanın kendini kandırmasına neden olur. 
             if (methodData.Average(x => x.OrderCount) < 50)
-                return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
+                return (new CitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
 
-            if (!methodData.Any()) return (new GermanyCitiesForecastPredictionDto { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
+            if (!methodData.Any()) return (new CitiesForecastPredictionDto { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
 
             var dataView = _mlContext.Data.LoadFromEnumerable(methodData);
 
             var pipeline = _mlContext.Forecasting.ForecastBySsa(
-                outputColumnName: nameof(GermanyCitiesForecastPredictionDto.ForecastedValues),
-                inputColumnName: nameof(GermanyCitiesForecastDataDto.OrderCount),
+                outputColumnName: nameof(CitiesForecastPredictionDto.ForecastedValues),
+                inputColumnName: nameof(CitiesForecastDataDto.OrderCount),
                 windowSize: 10, //eğitim verisi (24 şu an) windowsize'ın en az 2x+1 şeklinde olmalıdır.
                 seriesLength: methodData.Count,
                 trainSize: methodData.Count,
@@ -130,64 +130,10 @@ namespace Business_Layer.MachineLearning.Concrete
 
             var model = pipeline.Fit(dataView);
 
-            var forecastEngine = model.CreateTimeSeriesEngine<GermanyCitiesForecastDataDto, GermanyCitiesForecastPredictionDto>(_mlContext);
+            var forecastEngine = model.CreateTimeSeriesEngine<CitiesForecastDataDto, CitiesForecastPredictionDto>(_mlContext);
 
             return (forecastEngine.Predict(), methodData);
         }
-
-        #endregion
-
-        #region TurkeyCitiesForecast
-
-        public (TurkeyCitiesForecastPredictionDto prediction, List<TurkeyCitiesForecastDataDto> actuals) GetTurkeyCitiesForecast(string cityName)
-        {
-            var rawData = _uow.Orders.GetQueryable()
-                .Include(o => o.Customer)
-                .Where(o => (o.OrderDate.Year == 2025 || o.OrderDate.Year == 2024) && o.Customer.CustomerCity == cityName)
-                .GroupBy(o => new { o.OrderDate.Year, o.OrderDate.Month })
-                .OrderBy(o => o.Key.Year).ThenBy(o => o.Key.Month)
-                .Select(g => new
-                {
-                    OrderCount = (float)g.Count()
-                })
-                .ToList();
-
-            var methodData = rawData.Select((x, index) => new TurkeyCitiesForecastDataDto
-            {
-                CityName = cityName,
-                MonthIndex = index + 1,
-                OrderCount = x.OrderCount
-            }).ToList();
-
-            if (methodData.Count < 21)
-                return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
-
-            if (methodData.Average(x => x.OrderCount) < 50)
-                return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[6] }, methodData);
-
-            if (!methodData.Any()) return (new TurkeyCitiesForecastPredictionDto { ForecastedValues = new float[] { 0, 0, 0 } }, methodData);
-
-            var dataView = _mlContext.Data.LoadFromEnumerable(methodData);
-
-            var pipeline = _mlContext.Forecasting.ForecastBySsa(
-                outputColumnName: nameof(TurkeyCitiesForecastPredictionDto.ForecastedValues),
-                inputColumnName: nameof(TurkeyCitiesForecastDataDto.OrderCount),
-                windowSize: 10,
-                seriesLength: methodData.Count,
-                trainSize: methodData.Count,
-                horizon: 6,
-                confidenceLevel: 0.95f);
-
-            var model = pipeline.Fit(dataView);
-
-            var forecastEngine = model.CreateTimeSeriesEngine<TurkeyCitiesForecastDataDto, TurkeyCitiesForecastPredictionDto>(_mlContext);
-
-            return (forecastEngine.Predict(), methodData);
-        }
-
-        #endregion
-
-        #region GetDistinctCityName
 
         public List<string> GetDistinctCityNames(string countryName)
         {
@@ -197,6 +143,16 @@ namespace Business_Layer.MachineLearning.Concrete
                 .Distinct().
                 ToList();
         }
+
+        public List<string> GetDistinctCountries()
+        {
+            return _uow.Customers.GetQueryable()
+                .Select(c => c.CustomerCountry)
+                .Distinct()
+                .ToList();
+        }
+
+        
 
         #endregion
     }

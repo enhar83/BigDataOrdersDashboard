@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core_Layer.DTOs.DTOsForMachineLearning
 {
-    public class TurkeyCitiesForecastDataDto
+    public class CitiesForecastDataDto
     {
+        public string CountryName { get; set; }
         public string CityName { get; set; }
         public float MonthIndex { get; set; }
         public float OrderCount { get; set; }

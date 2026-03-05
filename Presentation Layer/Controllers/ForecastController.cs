@@ -54,76 +54,54 @@ namespace Presentation_Layer.Controllers
             return View(viewModel);
         }
 
-        public IActionResult GermanCitiesForecast(string cityName)
+        public IActionResult CitiesForecast(string countryName, string cityName)
         {
-            var countryName = "Almanya";
-            var germanCities = _predictionService.GetDistinctCityNames(countryName);
+            var countries = _predictionService.GetDistinctCountries();
+            if (string.IsNullOrEmpty(countryName)) countryName = "Türkiye";
 
-            if (string.IsNullOrEmpty(cityName) && germanCities.Any())
-                cityName =germanCities.First();
+            var cities = _predictionService.GetDistinctCityNames(countryName);
+            if (string.IsNullOrEmpty(cityName) || !cities.Contains(cityName))
+                cityName = cities.FirstOrDefault();
 
-            var viewModel = new GermanyCitiesForecastViewModel
+
+            var viewModel = new CitiesForecastViewModel
             {
-                CityNames = germanCities,
-                SelectedGermanyCity = cityName,
-                ForecastResults = new List<GermanyCitiesForecastResultDto>()
+                CountryNames=countries,
+                SelectedCountry=countryName,
+                CityNames = cities,
+                SelectedCity = cityName,
+                ForecastResults = new List<CitiesForecastResultDto>()
             };
 
             if (!string.IsNullOrEmpty(cityName))
             {
-                var (prediction, actuals) = _predictionService.GetGermanyCitiesForecast(cityName);
+                var (prediction, actuals) = _predictionService.GetCitiesForecast(cityName);
 
                 if (prediction.ForecastedValues.Any(v => v > 0))
                 {
-                    for (int i = 0; i < 6; i++) //horizon değerine bağlı olarak değişir.
+                    for (int i = 0; i < 6; i++)
                     {
-                        var lastYearValue = actuals.FirstOrDefault(x => x.MonthIndex == (i + 13))?.OrderCount ?? 0;
+                        var dataFor2024 = actuals.FirstOrDefault(x => x.MonthIndex == (i + 1))?.OrderCount ?? 0;
+                        var dataFor2025 = actuals.FirstOrDefault(x => x.MonthIndex == (i + 13))?.OrderCount ?? 0;
 
-                        viewModel.ForecastResults.Add(new GermanyCitiesForecastResultDto
+                        int predicted = (int)Math.Max(0, prediction.ForecastedValues[i]);
+
+
+                        double changeRate = 0;
+                        if (dataFor2025 > 0)
                         {
+                            changeRate = (double)(predicted - dataFor2025) / dataFor2025 * 100;
+                        }
+
+                        viewModel.ForecastResults.Add(new CitiesForecastResultDto
+                        {
+                            CountryName=countryName,
                             CityName = cityName,
                             Month = new DateTime(2026, i + 1, 1).ToString("MMMM yyyy"),
-                            PredictedCount = (int)Math.Max(0, prediction.ForecastedValues[i]),
-                            LastYearsCount = (int)lastYearValue
-                        });
-                    }
-                }
-            }
-
-            return View(viewModel);
-        }
-
-        public IActionResult TurkeyCitiesForecast(string cityName)
-        {
-            var countryName = "Türkiye";
-            var turkeyCities = _predictionService.GetDistinctCityNames(countryName);
-
-            if (string.IsNullOrEmpty(cityName) && turkeyCities.Any())
-                cityName = turkeyCities.First();
-
-            var viewModel = new TurkeyCitiesForecastViewModel
-            {
-                CityNames = turkeyCities,
-                SelectedTurkeyCity = cityName,
-                ForecastResults = new List<TurkeyCitiesForecastResultDto>()
-            };
-
-            if (!string.IsNullOrEmpty(cityName))
-            {
-                var (prediction, actuals) = _predictionService.GetTurkeyCitiesForecast(cityName);
-
-                if (prediction.ForecastedValues.Any(v => v > 0))
-                {
-                    for (int i = 0; i < 6; i++) 
-                    {
-                        var lastYearValue = actuals.FirstOrDefault(x => x.MonthIndex == (i + 13))?.OrderCount ?? 0;
-
-                        viewModel.ForecastResults.Add(new TurkeyCitiesForecastResultDto
-                        {
-                            CityName = cityName,
-                            Month = new DateTime(2026, i + 1, 1).ToString("MMMM yyyy"),
-                            PredictedCount = (int)Math.Max(0, prediction.ForecastedValues[i]),
-                            LastYearsCount = (int)lastYearValue
+                            PredictedCount = predicted,
+                            CountFor2024 = (int)dataFor2024,
+                            CountFor2025 = (int)dataFor2025,
+                            ChangeRate = changeRate
                         });
                     }
                 }
