@@ -1,0 +1,100 @@
+﻿<div class="row clearfix">
+
+	<!-- CARD 1 -->
+	<div class="col-lg-3 col-sm-6 col-md-6">
+		<div class="card overflowhidden" style="background: linear-gradient(135deg, #3a8ef6, #5ac8fa);">
+			<div class="body">
+				<h3 class="m-t-0 text-white">2,048</h3>
+				<p class="m-b-0 text-white">Total Leads</p>
+				<canvas id="chart1" height="60"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- CARD 2 -->
+	<div class="col-lg-3 col-sm-6 col-md-6">
+		<div class="card overflowhidden" style="background: linear-gradient(135deg, #c084fc, #a855f7);">
+			<div class="body">
+				<h3 class="m-t-0 text-white">521</h3>
+				<p class="m-b-0 text-white">Total Connections</p>
+				<canvas id="chart2" height="60"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- CARD 3 -->
+	<div class="col-lg-3 col-sm-6 col-md-6">
+		<div class="card overflowhidden" style="background: linear-gradient(135deg, #34d399, #10b981);">
+			<div class="body">
+				<h3 class="m-t-0 text-white">73</h3>
+				<p class="m-b-0 text-white">Articles</p>
+				<canvas id="chart3" height="60"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<!-- CARD 4 -->
+	<div class="col-lg-3 col-sm-6 col-md-6">
+		<div class="card overflowhidden" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+			<div class="body">
+				<h3 class="m-t-0 text-white">15</h3>
+				<p class="m-b-0 text-white">Categories</p>
+				<canvas id="chart4" height="60"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	function createMiniChart(ctx, data) {
+		new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: Array(data.length).fill(''),
+				datasets: [{
+					data: data,
+					borderColor: '#ffffff',
+					backgroundColor: 'rgba(255,255,255,0.3)',
+					borderWidth: 2,
+					pointRadius: 0,
+					tension: 0.4,
+					fill: true
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: { legend: { display: false } },
+				scales: {
+					x: { display: false },
+					y: { display: false }
+				},
+				elements: { line: { tension: 0.4 } },
+				animation: { duration: 1000, easing: 'easeOutQuart' }
+			}
+		});
+	}
+
+	window.addEventListener('load', () => {
+		createMiniChart(document.getElementById('chart1'), [5,6,7,9,9,5,3,2,4,6,8]);
+		createMiniChart(document.getElementById('chart2'), [2,3,5,8,7,6,9,4,3,7,8]);
+		createMiniChart(document.getElementById('chart3'), [3,4,6,5,9,8,7,6,5,7,9]);
+		createMiniChart(document.getElementById('chart4'), [9,7,6,8,9,5,4,3,7,8,9]);
+	});
+</script>
+
+<style>
+	canvas {
+		width: 100% !important;
+		height: 60px !important;
+		margin-top: 12px;
+	}
+
+	.card {
+		border-radius: 10px;
+		box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+	}
+</style>
