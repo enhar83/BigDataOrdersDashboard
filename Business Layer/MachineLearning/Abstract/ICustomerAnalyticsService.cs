@@ -10,5 +10,6 @@ namespace Business_Layer.MachineLearning.Abstract
     public interface ICustomerAnalyticsService
     {
         CustomerAnalyticsMainStatisticsDto GetCustomerAnalyticsMainStatistics();
+        List<CustomerSegmentForChartDto> GetCustomerSegmentForChart();
     }
 }

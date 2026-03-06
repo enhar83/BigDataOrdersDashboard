@@ -1,0 +1,62 @@
+﻿@model List<CustomerSegmentForChartDto>
+
+<div class="card">
+    <div class="header">
+        <h2><strong>Müşteri</strong> Segmentasyonu</h2>
+    </div>
+    <div class="body">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-4 col-4 m-b-10">
+                    <span class="text-muted">@item.SegmentName</span>
+                    <h5 class="m-b-0">@item.Count.ToString("N0") <small class="text-muted">Kişi</small></h5>
+                </div>
+            }
+        </div>
+
+        <div id="segmentDonutChart"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // C# Modelinden verileri JavaScript dizilerine aktarıyoruz
+                var segmentNames = @Html.Raw(Json.Serialize(Model.Select(x => x.SegmentName)));
+                var segmentCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.Count)));
+
+                var options = {
+                    chart: {
+                        type: 'donut', // Segmentasyon için donut (simit) grafiği en uygunudur
+                        height: 300
+                    },
+                    series: segmentCounts,
+                    labels: segmentNames,
+                    colors: ['#FFD700', '#2196F3', '#9E9E9E'], // VIP (Altın), Düzenli (Mavi), Potansiyel (Gri)
+                    legend: {
+                        position: 'bottom'
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val.toFixed(1) + "%"
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
+
+                var chart = new ApexCharts(document.querySelector("#segmentDonutChart"), options);
+                chart.render();
+            });
+        </script>
+    </div>
+</div>
