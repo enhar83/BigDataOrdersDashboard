@@ -28,23 +28,24 @@ namespace Business_Layer.MachineLearning.Concrete
             var orderCount = _uow.Orders.GetCount();
             var averageOrderCountPerPerson=(double)orderCount/(double)totalCustomerCount;
 
-            var totalSpending = _uow.Orders.GetQueryable()
-                .Include(o=>o.Product)
-                .Sum(o => (double)o.Quantity * (double)o.Product.UnitPrice);
-            var totalSpendingPerPerson=totalSpending/totalCustomerCount;
-
             var mostActiveCity=_uow.Orders.GetQueryable()
                 .GroupBy(o=> o.Customer.CustomerCity)
                 .OrderByDescending(g=>g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefault() ?? "Veri Yok";
 
+            var today = new DateTime(2025, 12, 31);
+            var activeCustomerCountForLast3Days = _uow.Orders.GetQueryable()
+                .Where(o => o.OrderDate >= today.AddDays(-3) && o.OrderDate <= today)
+                .Select(o=>o.CustomerId) //sadece customerId kolonu seçildiği için distinc uygulanır.
+                .Distinct().Count();
+
             return new CustomerAnalyticsMainStatisticsDto
             {
                 TotalCustomerCount = totalCustomerCount,
                 AverageOrderCountPerPerson = (int)Math.Round((double)orderCount / totalCustomerCount),
-                AverageSpending = totalSpendingPerPerson,
-                MostActiveCity = mostActiveCity
+                MostActiveCity = mostActiveCity,
+                ActiveCustomerCountForLast3Days= activeCustomerCountForLast3Days,
             };
         }
     }
