@@ -11,5 +11,6 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
         public string CountryName { get; set; }
         public string CityName { get; set; }
         public int OrderCount { get; set; }
+        public double Percentage { get; set; }
     }
 }

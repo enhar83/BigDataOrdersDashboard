@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.MachineLearning.Abstract;
 using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
+using Entity_Layer;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
 
@@ -20,6 +22,27 @@ namespace Business_Layer.MachineLearning.Concrete
         public CustomerAnalyticsManager(IUnitOfWork uow)
         {
             _uow = uow;
+        }
+
+        public List<CustomerCityOrderCountForDonutDto> GetCountryOrderCountForDonut()
+        {
+            IQueryable<Order> query = _uow.Orders.GetQueryable();
+
+            var totalCount = query.Count();
+
+            return query
+                .Where(o=>o.OrderDate.Year==2025)
+                .GroupBy(o => new { o.Customer.CustomerCity, o.Customer.CustomerCountry })
+                .Select(g=>new CustomerCityOrderCountForDonutDto
+                {
+                    CityName = g.Key.CustomerCity,
+                    CountryName = g.Key.CustomerCountry,
+                    OrderCount = g.Count(),
+                    Percentage = totalCount == 0 ? 0 : (double)g.Count() / totalCount * 100
+                })
+                .OrderByDescending(o => o.OrderCount)
+                .Take(5)
+                .ToList();
         }
 
         public CustomerAnalyticsMainStatisticsDto GetCustomerAnalyticsMainStatistics()
