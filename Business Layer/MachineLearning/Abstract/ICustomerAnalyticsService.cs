@@ -11,6 +11,6 @@ namespace Business_Layer.MachineLearning.Abstract
     {
         CustomerAnalyticsMainStatisticsDto GetCustomerAnalyticsMainStatistics();
         List<CustomerSegmentForChartDto> GetCustomerSegmentForChart();
-        List<CustomerCityOrderCountForDonutDto> GetCountryOrderCountForDonut();
+        List<CustomerCityOrderCountForDonutDto> GetCityOrderCountForDonut();
     }
 }

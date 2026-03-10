@@ -14,7 +14,8 @@ namespace Presentation_Layer.ViewComponents.CustomerAnalyticsViewComponents
 
         public IViewComponentResult Invoke()
         {
-            return View();
+            var citiesInformation = _customerAnalyticsService.GetCityOrderCountForDonut();
+            return View(citiesInformation);
         }
     }
 }

@@ -1,64 +1,145 @@
-﻿<div class="col-lg-4 col-md-12">
+﻿@model List<CustomerCityOrderCountForDonutDto>
 
-    <div class="card">
+<div id="city-widget" class="col-lg-4 col-md-6 col-sm-12">
+    <style>
+        /* Başlık fontunu ve rengini soldaki grafikle eşitlemek için özel ayar */
+        #city-widget .header h2 {
+            font-size: 15px !important; /* Soldaki kartın standart font boyutu */
+            font-weight: 600 !important;
+            color: #444 !important;
+            margin: 0 !important;
+        }
+
+        #city-widget .header {
+            padding: 20px 20px 10px 20px !important; /* Standart header boşluğu */
+            border-bottom: none !important;
+        }
+
+        #city-widget .chart-box {
+            position: relative;
+            width: 100%;
+            height: 320px; /* Görsel denge için optimize edildi */
+            contain: content;
+        }
+
+        #city-widget canvas {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+
+    <div class="card activities">
+        @* Soldakiyle aynı 'activities' class'ı kullanıldı *@
         <div class="header">
-            <h2>Browser Usage</h2>
-            <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more-vert"></i> </a>
-                    <ul class="dropdown-menu slideUp ">
-                        <li><a href="javascript:void(0);">Action</a></li>
-                        <li><a href="javascript:void(0);">Another action</a></li>
-                        <li><a href="javascript:void(0);">Something else</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <h2>Şehirlere Göre Sipariş Dağılımı (2025)</h2>
         </div>
-        <div class="body">
-            <div id="donut_chart" class="dashboard-donut-chart"></div>
-            <div class="table-responsive">
-                <table class="table m-b-0 m-t-15">
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Chrome</td>
-                            <td>6985</td>
-                            <td><i class="zmdi zmdi-caret-up text-success"></i></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Other</td>
-                            <td>2697</td>
-                            <td><i class="zmdi zmdi-caret-up text-success"></i></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Safari</td>
-                            <td>3597</td>
-                            <td><i class="zmdi zmdi-caret-down text-danger"></i></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Firefox</td>
-                            <td>2145</td>
-                            <td><i class="zmdi zmdi-caret-up text-success"></i></td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Opera</td>
-                            <td>1854</td>
-                            <td><i class="zmdi zmdi-caret-down text-danger"></i></td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>IE</td>
-                            <td>54</td>
-                            <td><i class="zmdi zmdi-caret-down text-danger"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+
+        <div class="body" style="padding-top: 10px;">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info">Veri bulunamadı.</div>
+            }
+            else
+            {
+                @* Dinamik Bilgi Paneli *@
+                <div id="cityBarInfo" class="text-center mb-3" style="min-height: 70px;">
+                    @* JS tarafından doldurulacak *@
+                </div>
+
+                <div class="chart-box">
+                    <canvas id="cityOrdersBar"></canvas>
+                </div>
+
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover mb-0" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th style="border-top: none; width: 30px;">#</th>
+                                <th style="border-top: none;">Şehir / Ülke</th>
+                                <th style="border-top: none;" class="text-right">Sipariş</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <strong>@Model[i].CityName</strong>
+                                        <small class="text-muted">(@Model[i].CountryName)</small>
+                                    </td>
+                                    <td class="text-right">@Model[i].OrderCount.ToString("N0")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (() => {
+            const canvas = document.querySelector('#city-widget #cityOrdersBar');
+            if (!canvas) return;
+
+            const labels = @Html.Raw(Json.Serialize(Model.Select(x => x.CityName)));
+            const countries = @Html.Raw(Json.Serialize(Model.Select(x => x.CountryName)));
+            const values = @Html.Raw(Json.Serialize(Model.Select(x => x.OrderCount)));
+            const percs = @Html.Raw(Json.Serialize(Model.Select(x => x.Percentage)));
+
+            const colors = ['#1F77B4', '#FF7F0E', '#2CA02C', '#9467BD', '#D62728'];
+            const info = document.querySelector('#city-widget #cityBarInfo');
+
+            const chart = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderRadius: 6,
+                        barThickness: 22
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.label}: ${ctx.raw.toLocaleString()} Sipariş`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#f5f5f5' }, ticks: { display: false } },
+                        y: { grid: { display: false }, ticks: { font: { weight: '600' } } }
+                    }
+                }
+            });
+
+            const updateInfo = (i) => {
+                info.innerHTML = `
+                    <span style="font-size:20px; font-weight:700; color:#333; display:block;">${labels[i]}</span>
+                    <span style="font-size:13px; color:#888;">${countries[i]}</span>
+                    <div style="font-size:16px; font-weight:700; color:#2196F3; margin-top:2px;">%${percs[i].toFixed(1)}</div>
+                `;
+            };
+
+            if(values.length > 0) updateInfo(0);
+
+            canvas.addEventListener('mousemove', (e) => {
+                const pts = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+                if (pts.length) updateInfo(pts[0].index);
+            });
+            canvas.addEventListener('mouseleave', () => updateInfo(0));
+
+            new ResizeObserver(() => chart.resize()).observe(document.querySelector('#city-widget .chart-box'));
+        })();
+    </script>
 </div>

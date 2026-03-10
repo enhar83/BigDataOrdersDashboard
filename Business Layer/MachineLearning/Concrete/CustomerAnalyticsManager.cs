@@ -24,7 +24,7 @@ namespace Business_Layer.MachineLearning.Concrete
             _uow = uow;
         }
 
-        public List<CustomerCityOrderCountForDonutDto> GetCountryOrderCountForDonut()
+        public List<CustomerCityOrderCountForDonutDto> GetCityOrderCountForDonut()
         {
             IQueryable<Order> query = _uow.Orders.GetQueryable();
 
