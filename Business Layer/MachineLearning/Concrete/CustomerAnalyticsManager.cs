@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,31 +53,25 @@ namespace Business_Layer.MachineLearning.Concrete
 
         public List<CustomerSegmentForChartDto> GetCustomerSegmentForChart()
         {
-            var orders = _uow.Orders.GetQueryable()
-                .Include(o => o.Product).ToList();
-
-            var customerStats = orders
+            var customerStats = _uow.Orders.GetQueryable()
                 .GroupBy(o => o.CustomerId)
                 .Select(g => new
                 {
                     CustomerId = g.Key,
                     TotalSpend = g.Sum(o => (double)o.Quantity * (double)o.Product.UnitPrice)
-                }).ToList();
+                })
+                .ToList();
 
-            var vipCount = customerStats
-                .Count(c => c.TotalSpend > 800000);
-
-            var regularCount = customerStats
-                .Count(c => (c.TotalSpend <= 800000 && c.TotalSpend > 650000));
-
-            var lowVolumeCount = customerStats
-                .Count(c => c.TotalSpend <= 650000);
+            //RFM = Recency (Yenilik), Frequency(Sıklık), Monetary(Parasal Değer). Burada F ve R veri setinden dolayı kullanılamadı. Sadece M kullanıldı. 
+            var vipCustomers = customerStats.Where(c => c.TotalSpend > 800000).ToList();
+            var regularCustomers = customerStats.Where(c => c.TotalSpend <= 800000 && c.TotalSpend > 650000).ToList();
+            var lowVolumeCustomers = customerStats.Where(c => c.TotalSpend <= 650000).ToList();
 
             return new List<CustomerSegmentForChartDto>
             {
-                new CustomerSegmentForChartDto { SegmentName = "V.I.P Müşteriler", Count = vipCount },
-                new CustomerSegmentForChartDto { SegmentName = "Düzenli Alıcılar", Count = regularCount },
-                new CustomerSegmentForChartDto { SegmentName = "Potansiyel Büyüme", Count = lowVolumeCount }
+                new CustomerSegmentForChartDto { SegmentName = "V.I.P Müşteriler", Count = vipCustomers.Count, AverageSegmentSpend = vipCustomers.Any() ? vipCustomers.Average(x => x.TotalSpend) : 0 },
+                new CustomerSegmentForChartDto { SegmentName = "Düzenli Alıcılar", Count = regularCustomers.Count,AverageSegmentSpend = regularCustomers.Any() ? regularCustomers.Average(x => x.TotalSpend) : 0 },
+                new CustomerSegmentForChartDto { SegmentName = "Potansiyel Büyüme", Count = lowVolumeCustomers.Count,AverageSegmentSpend = lowVolumeCustomers.Any() ? lowVolumeCustomers.Average(x => x.TotalSpend) : 0 }
             };
         }
     }

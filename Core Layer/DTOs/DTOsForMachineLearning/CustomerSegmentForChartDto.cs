@@ -10,5 +10,6 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
     {
         public string SegmentName { get; set; }
         public int Count { get; set; }
+        public double AverageSegmentSpend { get; set; }
     }
 }

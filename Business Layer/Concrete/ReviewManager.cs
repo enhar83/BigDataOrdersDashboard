@@ -48,13 +48,12 @@ namespace Business_Layer.Concrete
 
         public List<Review> GetLast5Reviews()
         {
-            return _uow.Reviews
-                .GetAll()
-                .Include(r => r.Product)
-                .Include(r => r.Customer)
-                .OrderByDescending(r => r.ReviewDate)
-                .Take(5)
-                .ToList();
+            return _uow.Reviews.GetQueryable()
+                .OrderByDescending(r => r.ReviewDate) 
+                .Take(5) 
+                .Include(r => r.Product) 
+                .Include(r => r.Customer) 
+                .ToList(); 
         }
 
         public (List<Review> reviews, int totalCount) GetReviewsWithPaging(int pageNumber, int pageSize)

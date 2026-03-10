@@ -11,6 +11,7 @@
                 <div class="col-sm-4 col-4 m-b-10">
                     <span class="text-muted">@item.SegmentName</span>
                     <h5 class="m-b-0">@item.Count.ToString("N0") <small class="text-muted">Kişi</small></h5>
+                    <small class="text-primary">Ort: @item.AverageSegmentSpend.ToString("C0")</small>
                 </div>
             }
         </div>
@@ -20,18 +21,19 @@
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // C# Modelinden verileri JavaScript dizilerine aktarıyoruz
                 var segmentNames = @Html.Raw(Json.Serialize(Model.Select(x => x.SegmentName)));
                 var segmentCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.Count)));
+                // Tooltip'te göstermek için ortalama harcamaları JS dizisine alıyoruz
+                var segmentAverages = @Html.Raw(Json.Serialize(Model.Select(x => x.AverageSegmentSpend.ToString("C0"))));
 
                 var options = {
                     chart: {
-                        type: 'donut', // Segmentasyon için donut (simit) grafiği en uygunudur
+                        type: 'donut',
                         height: 300
                     },
                     series: segmentCounts,
                     labels: segmentNames,
-                    colors: ['#FFD700', '#2196F3', '#9E9E9E'], // VIP (Altın), Düzenli (Mavi), Potansiyel (Gri)
+                    colors: ['#FFD700', '#2196F3', '#9E9E9E'],
                     legend: {
                         position: 'bottom'
                     },
@@ -41,15 +43,19 @@
                             return val.toFixed(1) + "%"
                         }
                     },
+                    tooltip: {
+                        y: {
+                            formatter: function (val, { seriesIndex }) {
+                                // Kişi sayısının yanına ortalama harcamayı da ekliyoruz
+                                return val + " Kişi (Ort. Harcama: " + segmentAverages[seriesIndex] + ")";
+                            }
+                        }
+                    },
                     responsive: [{
                         breakpoint: 480,
                         options: {
-                            chart: {
-                                width: 200
-                            },
-                            legend: {
-                                position: 'bottom'
-                            }
+                            chart: { width: 200 },
+                            legend: { position: 'bottom' }
                         }
                     }]
                 };

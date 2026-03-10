@@ -100,7 +100,7 @@ namespace Business_Layer.Concrete
 
         public List<Product> GetProductsWithLowStock()
         {
-            return _uow.Products.GetAll()
+            return _uow.Products.GetQueryable()
                 .Where(p=>p.StockQuantity<20)
                 .OrderBy(p=>p.StockQuantity)
                 .Take(9)
