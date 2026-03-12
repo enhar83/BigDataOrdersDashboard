@@ -1,0 +1,119 @@
+﻿@model List<CustomerLoyaltyScoreDto>
+
+@{
+    ViewData["Title"] = "ItalyLoyaltyScores";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-12">
+                <h2>
+                    İtalya Müşteri Analitiği: Sadakat Skorları
+                    <small class="text-muted">RFM (Recency, Frequency, Monetary) Tabanlı Puanlama Sistemi</small>
+                </h2>
+            </div>
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <ul class="breadcrumb float-md-right">
+                    <li class="breadcrumb-item"><a href="/Dashboard/Index"><i class="zmdi zmdi-home"></i> Analitik</a></li>
+                    <li class="breadcrumb-item active">Müşteri Sadakati</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-md-4 border-right">
+                                <label class="text-muted">Kapsam</label>
+                                <h3 class="m-t-0 text-primary">İtalya Pazarı</h3>
+                            </div>
+                            <div class="col-md-4 border-right text-center">
+                                <label class="text-muted">Toplam Değerlendirilen Müşteri</label>
+                                <h3 class="m-t-0">@Model.Count</h3>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <label class="text-muted">Ortalama Sadakat Skoru</label>
+                                <h3 class="m-t-0 text-success">
+                                    @(Model.Any() ? Model.Average(x => x.LoyaltyScore).ToString("0.0") : "0")
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Müşteri Sadakat</strong> Listesi</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center">
+                                <thead>
+                                    <tr class="bg-blue text-white">
+                                        <th>Sıra</th>
+                                        <th>Müşteri Adı</th>
+                                        <th>Toplam Sipariş (F)</th>
+                                        <th>Toplam Harcama (M)</th>
+                                        <th>Son Sipariş Tarihi (R)</th>
+                                        <th>Sadakat Skoru</th>
+                                        <th>Durum / Segment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        int rank = 1;
+                                        foreach (var item in Model)
+                                        {
+                                            string badgeClass;
+                                            string segmentName;
+                                            string scoreColor;
+
+                                            if (item.LoyaltyScore >= 80) { badgeClass = "badge-success"; segmentName = "Elite"; scoreColor = "text-success"; }
+                                            else if (item.LoyaltyScore >= 50) { badgeClass = "badge-primary"; segmentName = "Loyal"; scoreColor = "text-primary"; }
+                                            else if (item.LoyaltyScore >= 25) { badgeClass = "badge-warning"; segmentName = "At Risk"; scoreColor = "text-warning"; }
+                                            else { badgeClass = "badge-danger"; segmentName = "Hibernating"; scoreColor = "text-danger"; }
+
+                                            <tr>
+                                                <td><strong>#@rank</strong></td>
+                                                <td class="text-left"><strong>@item.CustomerName</strong></td>
+                                                <td><span class="badge badge-info">@item.OrderCount Adet</span></td>
+                                                <td>@item.TotalSpend.ToString("C2")</td>
+                                                <td>@(item.LastOrderDate.HasValue ? item.LastOrderDate.Value.ToString("dd.MM.yyyy") : "Veri Yok")</td>
+                                                <td class="@scoreColor font-bold" style="font-size: 16px;">
+                                                    @item.LoyaltyScore.ToString("0.00")
+                                                </td>
+                                                <td>
+                                                    <span class="badge @badgeClass" style="font-size: 12px; padding: 5px 10px; width: 100px;">
+                                                        @segmentName
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            rank++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">İtalya için henüz sadakat verisi hesaplanmadı.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
