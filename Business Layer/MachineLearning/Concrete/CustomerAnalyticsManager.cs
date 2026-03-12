@@ -31,7 +31,6 @@ namespace Business_Layer.MachineLearning.Concrete
             var totalCount = query.Count();
 
             return query
-                .Where(o=>o.OrderDate.Year==2025)
                 .GroupBy(o => new { o.Customer.CustomerCity, o.Customer.CustomerCountry })
                 .Select(g=>new CustomerCityOrderCountForDonutDto
                 {

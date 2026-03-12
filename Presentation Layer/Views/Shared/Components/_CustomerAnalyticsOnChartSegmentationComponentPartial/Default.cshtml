@@ -1,63 +1,96 @@
 ﻿@model List<CustomerSegmentForChartDto>
 
-<div class="card">
+<div class="card shadow-sm">
     <div class="header">
-        <h2><strong>Müşteri</strong> Segmentasyonu</h2>
+        <h2>Müşteri Segmentasyonu (RFM Analizi)</h2>
     </div>
     <div class="body">
-        <div class="row">
+        <div class="row text-center m-b-20">
             @foreach (var item in Model)
             {
-                <div class="col-sm-4 col-4 m-b-10">
-                    <span class="text-muted">@item.SegmentName</span>
-                    <h5 class="m-b-0">@item.Count.ToString("N0") <small class="text-muted">Kişi</small></h5>
-                    <small class="text-primary">Ort: @item.AverageSegmentSpend.ToString("C0")</small>
+                <div class="col-sm-4 col-4">
+                    @* Segment isimleri daha koyu ve belirgin yapıldı *@
+                    <span style="color: #222; font-weight: 700; font-size: 13px; display: block;">@item.SegmentName</span>
+                    <h5 class="m-b-0" style="font-weight: 800; color: #333;">
+                        @item.Count.ToString("N0") <small style="font-weight: 400; color: #777;">Kişi</small>
+                    </h5>
+                    @* Ortalama harcama rengi daha ağır bir tona çekildi *@
+                    <small style="color: #3f51b5; font-weight: 600;">Ort: @item.AverageSegmentSpend.ToString("C0")</small>
                 </div>
             }
         </div>
 
-        <div id="segmentDonutChart"></div>
+        @* Grafik alanı *@
+        <div id="segmentDonutChart" style="margin-top: 20px;"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var segmentNames = @Html.Raw(Json.Serialize(Model.Select(x => x.SegmentName)));
                 var segmentCounts = @Html.Raw(Json.Serialize(Model.Select(x => x.Count)));
-                // Tooltip'te göstermek için ortalama harcamaları JS dizisine alıyoruz
                 var segmentAverages = @Html.Raw(Json.Serialize(Model.Select(x => x.AverageSegmentSpend.ToString("C0"))));
 
                 var options = {
                     chart: {
                         type: 'donut',
-                        height: 300
+                        height: 320,
+                        fontFamily: 'inherit'
                     },
                     series: segmentCounts,
                     labels: segmentNames,
-                    colors: ['#FFD700', '#2196F3', '#9E9E9E'],
+                    // Modern & Profesyonel Renk Paleti: Yeşil (VIP), Mavi (Düzenli), Turuncu (Potansiyel)
+                    colors: ['#2ecc71', '#3498db', '#f39c12'],
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        labels: { colors: '#555' },
+                        markers: { radius: 12 }
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['#fff']
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '70%',
+                                labels: {
+                                    show: true,
+                                    total: {
+                                        show: true,
+                                        label: 'Toplam Müşteri',
+                                        fontSize: '14px',
+                                        color: '#777',
+                                        formatter: function (w) {
+                                            return w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString()
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     dataLabels: {
                         enabled: true,
+                        style: {
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            colors: ['#fff']
+                        },
+                        dropShadow: { enabled: false },
                         formatter: function (val) {
                             return val.toFixed(1) + "%"
                         }
                     },
                     tooltip: {
+                        theme: 'dark',
                         y: {
                             formatter: function (val, { seriesIndex }) {
-                                // Kişi sayısının yanına ortalama harcamayı da ekliyoruz
-                                return val + " Kişi (Ort. Harcama: " + segmentAverages[seriesIndex] + ")";
+                                return val + " Kişi <br/> <small>Ort. Harcama: " + segmentAverages[seriesIndex] + "</small>";
                             }
                         }
-                    },
-                    responsive: [{
-                        breakpoint: 480,
-                        options: {
-                            chart: { width: 200 },
-                            legend: { position: 'bottom' }
-                        }
-                    }]
+                    }
                 };
 
                 var chart = new ApexCharts(document.querySelector("#segmentDonutChart"), options);

@@ -32,7 +32,7 @@
     <div class="card activities">
         @* Soldakiyle aynı 'activities' class'ı kullanıldı *@
         <div class="header">
-            <h2>Şehirlere Göre Sipariş Dağılımı (2025)</h2>
+            <h2>Şehirlere Göre Sipariş Dağılımı</h2>
         </div>
 
         <div class="body" style="padding-top: 10px;">
@@ -127,7 +127,7 @@
                 info.innerHTML = `
                     <span style="font-size:20px; font-weight:700; color:#333; display:block;">${labels[i]}</span>
                     <span style="font-size:13px; color:#888;">${countries[i]}</span>
-                    <div style="font-size:16px; font-weight:700; color:#2196F3; margin-top:2px;">%${percs[i].toFixed(1)}</div>
+                    <div style="font-size:16px; font-weight:700; color:#2196F3; margin-top:2px;">%${percs[i].toFixed(2)}</div>
                 `;
             };
 
