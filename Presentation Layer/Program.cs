@@ -28,7 +28,7 @@ builder.Services.AddScoped<IOrderService, OrderManager>();
 builder.Services.AddScoped<IReviewService, ReviewManager>();
 builder.Services.AddScoped<IPredictionService, PredictionManager>();
 builder.Services.AddScoped<ICustomerAnalyticsService, CustomerAnalyticsManager>();
-
+builder.Services.AddScoped<ICustomerLoyaltyService, CustomerLoyaltyManager>();
 
 var app = builder.Build();
 

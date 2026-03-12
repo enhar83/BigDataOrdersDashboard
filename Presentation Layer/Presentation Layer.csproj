@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Entity Layer\Entity Layer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewComponents\CustomerLoyaltyViewComponents\" />
+  </ItemGroup>
+
 </Project>
