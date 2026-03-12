@@ -1,5 +1,7 @@
 ﻿using Business_Layer.MachineLearning.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Presentation_Layer.Models.MachineLearningViewModels;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Presentation_Layer.Controllers
 {
@@ -12,10 +14,27 @@ namespace Presentation_Layer.Controllers
             _customerLoyaltyService = customerLoyaltyService;
         }
 
-        public IActionResult ItalyLoyaltyScores()
+        public IActionResult LoyaltyScores(string countryName, string cityName)
         {
-            var customerLoyalytScores = _customerLoyaltyService.GetCustomerLoyaltyScores();
-            return View(customerLoyalytScores);
+            var countries = _customerLoyaltyService.GetDistictCountryNames();
+            if (string.IsNullOrEmpty(countryName)) countryName = "Türkiye";
+
+            var cities = _customerLoyaltyService.GetDistictCityNames(countryName);
+            if (string.IsNullOrEmpty(cityName) || !cities.Contains(cityName))
+                cityName = cities.FirstOrDefault();
+
+            var customerLoyalytScores = _customerLoyaltyService.GetCustomerLoyaltyScores(cityName);
+
+            var vm = new CustomerLoyaltyViewModel
+            {
+                LoyaltyScores = customerLoyalytScores,
+                Countries = countries,
+                Cities = cities,
+                SelectedCountry = countryName,
+                SelectedCity = cityName
+            };
+
+            return View(vm);
         }
     }
 }
