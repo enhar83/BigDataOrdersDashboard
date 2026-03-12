@@ -1,32 +1,55 @@
-﻿<div class="card">
-    <ul class="row profile_state list-unstyled">
-        <li class="col-lg-3 col-md-3 col-6">
-            <div class="body">
-                <i class="zmdi zmdi-eye col-amber"></i>
-                <h4>2,365</h4>
-                <span>Post View</span>
-            </div>
-        </li>
-        <li class="col-lg-3 col-md-3 col-6">
-            <div class="body">
-                <i class="zmdi zmdi-thumb-up col-blue"></i>
-                <h4>365</h4>
-                <span>Likes</span>
-            </div>
-        </li>
-        <li class="col-lg-3 col-md-3 col-6">
-            <div class="body">
-                <i class="zmdi zmdi-comment-text col-red"></i>
-                <h4>65</h4>
-                <span>Comments</span>
-            </div>
-        </li>
-        <li class="col-lg-3 col-md-3 col-6">
-            <div class="body">
-                <i class="zmdi zmdi-account text-success"></i>
-                <h4>2,055</h4>
-                <span>Profile Views</span>
-            </div>
-        </li>
-    </ul>
+﻿@model CustomerAnalyticsSubstatisticsDto
+
+<div class="card shadow-sm">
+    <div class="body" style="padding: 0;">
+        <ul class="row profile_state list-unstyled" style="margin: 0; display: flex; align-items: stretch;">
+
+            <li class="col-lg-3 col-md-3 col-6" style="border-right: 1px solid #eee; padding: 25px 15px;">
+                <div class="text-center">
+                    <i class="zmdi zmdi-hc-3x zmdi-star col-amber" style="margin-bottom: 10px; display: block;"></i>
+                    <h4 style="font-size: 13px; font-weight: 600; color: #444; margin-bottom: 15px; min-height: 32px;">En Çok Sipariş Veren Müşteri</h4>
+                    <div style="line-height: 1.4;">
+                        <span style="display: block; font-size: 14px; font-weight: 800; color: #222;">@Model.MostActiveCustomerName</span>
+                        <small style="color: #FFB300; font-weight: 700;">@Model.MostActiveCustomerOrderCount.ToString("N0") Adet</small>
+                    </div>
+                </div>
+            </li>
+
+
+            <li class="col-lg-3 col-md-3 col-6" style="border-right: 1px solid #eee; padding: 25px 15px;">
+                <div class="text-center">
+                    <i class="zmdi zmdi-hc-3x zmdi-alert-triangle col-red" style="margin-bottom: 10px; display: block;"></i>
+                    <h4 style="font-size: 13px; font-weight: 600; color: #444; margin-bottom: 15px; min-height: 32px;">En Az Sipariş Veren Müşteri</h4>
+                    <div style="line-height: 1.4;">
+                        <span style="display: block; font-size: 14px; font-weight: 800; color: #222;">@Model.LeastActiveCustomerName</span>
+                        <small style="color: #F44336; font-weight: 700;">@Model.LeastActiveCustomerOrderCount.ToString("N0") Adet</small>
+                    </div>
+                </div>
+            </li>
+
+
+            <li class="col-lg-3 col-md-3 col-6" style="border-right: 1px solid #eee; padding: 25px 15px;">
+                <div class="text-center">
+                    <i class="zmdi zmdi-hc-3x zmdi-trending-up col-blue" style="margin-bottom: 10px; display: block;"></i>
+                    <h4 style="font-size: 13px; font-weight: 600; color: #444; margin-bottom: 15px; min-height: 32px;">Bu Ayın Yükselen Yıldızı</h4>
+                    <div style="line-height: 1.4;">
+                        <span style="display: block; font-size: 14px; font-weight: 800; color: #222;">@Model.RisingStarCustomerName</span>
+                        <small style="color: #2196F3; font-weight: 700;">@Model.RisingStarCustomerOrderCount.ToString("N0") Adet</small>
+                    </div>
+                </div>
+            </li>
+
+
+            <li class="col-lg-3 col-md-3 col-6" style="padding: 25px 15px;">
+                <div class="text-center">
+                    <i class="zmdi zmdi-hc-3x zmdi-trending-down text-success" style="margin-bottom: 10px; display: block;"></i>
+                    <h4 style="font-size: 13px; font-weight: 600; color: #444; margin-bottom: 15px; min-height: 32px;">Bu Ayın En Düşük Aktivitesi</h4>
+                    <div style="line-height: 1.4;">
+                        <span style="display: block; font-size: 14px; font-weight: 800; color: #222;">@Model.FallingStarCustomerName</span>
+                        <small style="color: #4CAF50; font-weight: 700;">@Model.FallingStarCustomerOrderCount.ToString("N0") Adet</small>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>

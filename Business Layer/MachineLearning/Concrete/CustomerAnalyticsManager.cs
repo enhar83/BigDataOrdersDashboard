@@ -11,7 +11,9 @@ using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using NuGet.Packaging.Signing;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Business_Layer.MachineLearning.Concrete
 {
@@ -70,6 +72,38 @@ namespace Business_Layer.MachineLearning.Concrete
                 AverageOrderCountPerPerson = (int)Math.Round((double)orderCount / totalCustomerCount),
                 MostActiveCity = mostActiveCity,
                 ActiveCustomerCountForLast3Days = activeCustomerCountForLast3Days,
+            };
+        }
+
+        public CustomerAnalyticsSubstatisticsDto GetCustomerAnalyticsSubstatistics()
+        {
+            var date = new DateTime(2024,12,31);
+            var lastMonth = date.AddMonths(-1);
+            var twoMonthsAgo = date.AddMonths(-2);
+
+            var customerStats = _uow.Orders.GetQueryable()
+                .GroupBy(o => new { o.CustomerId ,o.Customer.CustomerName, o.Customer.CustomerSurname })
+                .Select(g => new {
+                    FullName = g.Key.CustomerName + " " + g.Key.CustomerSurname,
+                    TotalCount = g.Count(),
+                    LastMonthCount = g.Count(o => o.OrderDate >= lastMonth && o.OrderDate <= date),
+                    TwoMonthAgoCount = g.Count(o => o.OrderDate >= twoMonthsAgo && o.OrderDate <= lastMonth),
+                })
+                .ToList(); 
+
+            return new CustomerAnalyticsSubstatisticsDto
+            {
+                MostActiveCustomerName = customerStats.OrderByDescending(x => x.TotalCount).FirstOrDefault()?.FullName ?? "Veri Yok",
+                MostActiveCustomerOrderCount = customerStats.Max(x => x.TotalCount),
+
+                LeastActiveCustomerName = customerStats.OrderBy(x => x.TotalCount).FirstOrDefault()?.FullName ?? "Veri Yok",
+                LeastActiveCustomerOrderCount = customerStats.Min(x => x.TotalCount),
+
+                RisingStarCustomerName = customerStats.OrderByDescending(x => x.LastMonthCount).FirstOrDefault()?.FullName ?? "Veri Yok",
+                RisingStarCustomerOrderCount = customerStats.Max(x => x.LastMonthCount),
+
+                FallingStarCustomerName = customerStats.Where(x => x.LastMonthCount > 0).OrderBy(x => x.LastMonthCount).FirstOrDefault()?.FullName ?? "Veri Yok",
+                FallingStarCustomerOrderCount = customerStats.Where(x => x.LastMonthCount > 0).Min(x => x.LastMonthCount)
             };
         }
 
