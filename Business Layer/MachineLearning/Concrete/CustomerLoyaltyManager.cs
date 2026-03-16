@@ -96,14 +96,14 @@ namespace Business_Layer.MachineLearning.Concrete
             ITransformer model;
 
             var rawData = _uow.Customers.GetQueryable()
-                .AsNoTracking()
+                .AsNoTracking() //veri üzerinde değişiklik yapılmayacağından dolayı takip mekanizması kapatıldı. readonly bir işlem
                 .Where(c => c.CustomerCity == cityName)
                 .Select(g => new
                 {
                     CustomerName = g.CustomerName + " " + g.CustomerSurname,
-                    OrderCount = g.Orders.Count(),
-                    TotalSpend = g.Orders.Sum(o => (double)o.Quantity * (double)o.Product.UnitPrice),
-                    LastOrderDate = g.Orders.Any() ? g.Orders.Max(o => (DateTime?)o.OrderDate) : null
+                    OrderCount = g.Orders.Count(), //frequency
+                    TotalSpend = g.Orders.Sum(o => (double)o.Quantity * (double)o.Product.UnitPrice), //monetary
+                    LastOrderDate = g.Orders.Any() ? g.Orders.Max(o => (DateTime?)o.OrderDate) : null //recency
                 })
                 .ToList();
 
@@ -113,7 +113,7 @@ namespace Business_Layer.MachineLearning.Concrete
                 CustomerName = x.CustomerName,
                 Frequency = (float)x.OrderCount, //ml.net float ile çalıştığından dolayı dönüşüm yapılır
                 Monetary = (float)x.TotalSpend,
-                Recency = x.LastOrderDate.HasValue ? (float)(date - x.LastOrderDate.Value).TotalDays : 999f,
+                Recency = x.LastOrderDate.HasValue ? (float)(date - x.LastOrderDate.Value).TotalDays : 999f, //tarih farkı gün cinsinden sayıya dökülüyor
                 LoyaltyScore = CalculateManualScore(x.OrderCount, x.TotalSpend, x.LastOrderDate, date)
             }).ToList();
 
@@ -132,6 +132,7 @@ namespace Business_Layer.MachineLearning.Concrete
                 //sdca: bir sayı tahmin etme (regression) problemidir denir ve SDCA algoritması eklenir. labelColumnName: "LoyaltyScore" diyerek de öğrenmen gereken hedef değer budur denir.
                 var pipeline = _mlContext.Transforms
                     .Concatenate("Features", "Recency", "Frequency", "Monetary")
+                    .Append(_mlContext.Transforms.NormalizeMinMax("Features")) //böylelikle features içerisinde tüm veriler 0-1 arasında ölçeklendirilir ve doğruluk artar
                     .Append(_mlContext.Regression.Trainers.Sdca(
                         labelColumnName: "LoyaltyScore", //modelin tahmin etmeye çalıştığı hedef değişken (label) belirlenir.
                         maximumNumberOfIterations: 100) //modelin kaç kez kendi iç optimizasyon döngüsünü çalıştıracağını belirtir.
@@ -181,30 +182,45 @@ namespace Business_Layer.MachineLearning.Concrete
             float recencyScore = daySinceLastOrder switch
             {
                 <= 1 => 100,
+                <= 2 => 90,
                 <= 3 => 80,
+                <= 5 => 70,
                 <= 7 => 60,
-                <= 15 => 40,
-                <= 25 => 20,
+                <= 10 => 50,
+                <= 13 => 40,
+                <= 16 => 30,
+                <= 20 => 20,
+                <= 25 => 10,
                 _ => 0
             };
 
             float frequencyScore = orderCount switch
             {
-                >= 600 => 100,
-                >= 400 => 80,
-                >= 200 => 60,
-                >= 100 => 40,
-                >= 50 => 20,
+                >= 390 => 100,
+                >= 380 => 90,
+                >= 370 => 80,
+                >= 360 => 70,
+                >= 350 => 60,
+                >= 340 => 50,
+                >= 330 => 40,
+                >= 320 => 30,
+                >= 310 => 20,
+                >= 300 => 10,
                 _ => 5
             };
 
             float monetaryScore = totalSpend switch
             {
-                >= 500000 => 100,
-                >= 300000 => 80,
-                >= 100000 => 60,
-                >= 50000 => 40,
-                >= 10000 => 20,
+                >= 800000 => 100,
+                >= 765000 => 90,
+                >= 730000 => 80,
+                >= 695000 => 70,
+                >= 660000 => 60,
+                >= 625000 => 50,
+                >= 590000 => 40,
+                >= 555000 => 30,
+                >= 520000 => 20,
+                >= 495000 => 10,
                 _ => 5
             };
 

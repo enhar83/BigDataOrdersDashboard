@@ -81,9 +81,9 @@
                                     <tr class="bg-dark text-white">
                                         <th>Sıra</th>
                                         <th>Müşteri Adı</th>
-                                        <th>Frekans</th>
-                                        <th>Parasal Değer</th>
-                                        <th>Yenilik (Gün)</th>
+                                        <th>Sipariş Sayısı</th>
+                                        <th>Toplam Harcama</th>
+                                        <th>Son Siparişten Geçen Gün Sayısı</th>
                                         <th class="bg-blue">Manuel Skor</th>
                                         <th class="bg-purple">ML Tahmin</th>
                                         <th>Sapma</th>
@@ -105,9 +105,9 @@
                                             <tr>
                                                 <td><strong>#@rank</strong></td>
                                                 <td class="text-left">@item.CustomerName</td>
-                                                <td>@item.Frequency</td>
+                                                <td>@item.Frequency adet</td>
                                                 <td>@item.Monetary.ToString("C0")</td>
-                                                <td>@item.Recency</td>
+                                                <td>@item.Recency gün önce</td>
                                                 <td>@item.ActualLoyaltyScore.ToString("0.0")</td>
                                                 <td>@item.PredictedLoyaltyScore.ToString("0.0")</td>
                                                 <td class="@varianceClass">±@variance.ToString("0.00")</td>
