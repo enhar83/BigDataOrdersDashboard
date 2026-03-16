@@ -36,5 +36,28 @@ namespace Presentation_Layer.Controllers
 
             return View(vm);
         }
+
+        public IActionResult LoyaltyScoresWithMl(string countryName, string cityName)
+        {
+            var countries = _customerLoyaltyService.GetDistictCountryNames();
+            if (string.IsNullOrEmpty(countryName)) countryName = "Türkiye";
+
+            var cities = _customerLoyaltyService.GetDistictCityNames(countryName);
+            if (string.IsNullOrEmpty(cityName) || !cities.Contains(cityName))
+                cityName = cities.FirstOrDefault();
+
+            var customerLoyalytScores = _customerLoyaltyService.GetCustomerLoyaltyScoresWithML(cityName);
+
+            var vm = new CustomerLoyaltyWithMlViewModel
+            {
+                LoyaltyScores = customerLoyalytScores,
+                Countries = countries,
+                Cities = cities,
+                SelectedCountry = countryName,
+                SelectedCity = cityName
+            };
+
+            return View(vm);
+        }
     }
 }

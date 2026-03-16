@@ -19,3 +19,5 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
 //Label: Tahmin edilecek gerçek değer.
 //Features: Tahmin için kullanılan girdiler. (R,F,M)
 //Score: Modelin yaptığı tahminin nihai çıktısıdır. 
+
+//bu dto içerisinde algoritmadan çıkan sonuç yakalanır. Modelden gelen veri LoyaltyScore içerisine hapsolur.

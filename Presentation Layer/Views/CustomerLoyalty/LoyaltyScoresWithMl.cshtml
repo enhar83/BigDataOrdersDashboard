@@ -1,0 +1,137 @@
+﻿@model CustomerLoyaltyWithMlViewModel
+
+@{
+    ViewData["Title"] = "LoyaltyScoresWithMl";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-12">
+                <h2>
+                    @Model.SelectedCountry - @Model.SelectedCity: <span class="text-primary">ML Destekli</span> Sadakat Analizi
+                    <small class="text-muted">Makine Öğrenmesi (SDCA Regression) Tabanlı Tahminleme Modeli</small>
+                </h2>
+            </div>
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <ul class="breadcrumb float-md-right">
+                    <li class="breadcrumb-item"><a href="/Dashboard/Index"><i class="zmdi zmdi-home"></i> Analitik</a></li>
+                    <li class="breadcrumb-item active">ML Sadakat Skorları</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body">
+                        <form asp-action="LoyaltyScoresWithMl" method="get" id="loyaltyFilterForm">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Ülke Seçimi:</label>
+                                    <select name="countryName" class="form-control show-tick" onchange="this.form.submit()">
+                                        @foreach (var country in Model.Countries)
+                                        {
+                                            <option value="@country" selected="@(country == Model.SelectedCountry ? "selected" : null)">@country</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Şehir Seçimi:</label>
+                                    <select name="cityName" class="form-control show-tick" onchange="this.form.submit()">
+                                        @foreach (var city in Model.Cities)
+                                        {
+                                            <option value="@city" selected="@(city == Model.SelectedCity ? "selected" : null)">@city</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <div class="p-t-10">
+                                        <span class="text-muted">ML Tahmin Ortalaması: </span>
+                                        <h3 class="d-inline text-primary m-l-10">
+                                            @(Model.LoyaltyScores.Any() ? Model.LoyaltyScores.Average(x => x.PredictedLoyaltyScore).ToString("0.0") : "0")
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>ML Tahminleme</strong> ve Karşılaştırmalı Analiz</h2>
+                        <ul class="header-dropdown">
+                            <li class="remove">
+                                <span class="badge badge-info">Model: SDCA Regression</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center">
+                                <thead>
+                                    <tr class="bg-dark text-white">
+                                        <th>Sıra</th>
+                                        <th>Müşteri Adı</th>
+                                        <th>Frekans</th>
+                                        <th>Parasal Değer</th>
+                                        <th>Yenilik (Gün)</th>
+                                        <th class="bg-blue">Manuel Skor</th>
+                                        <th class="bg-purple">ML Tahmin</th>
+                                        <th>Sapma</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.LoyaltyScores != null && Model.LoyaltyScores.Any())
+                                    {
+                                        int rank = 1;
+                                        foreach (var item in Model.LoyaltyScores)
+                                        {
+                                            double variance = Math.Abs(item.ActualLoyaltyScore - item.PredictedLoyaltyScore);
+                                            string varianceClass = variance < 5 ? "text-success" : (variance < 15 ? "text-warning" : "text-danger");
+
+                                            string badgeClass = item.PredictedLoyaltyScore >= 75 ? "badge-success" :
+                                            (item.PredictedLoyaltyScore >= 45 ? "badge-primary" : "badge-danger");
+
+                                            <tr>
+                                                <td><strong>#@rank</strong></td>
+                                                <td class="text-left">@item.CustomerName</td>
+                                                <td>@item.Frequency</td>
+                                                <td>@item.Monetary.ToString("C0")</td>
+                                                <td>@item.Recency</td>
+                                                <td>@item.ActualLoyaltyScore.ToString("0.0")</td>
+                                                <td>@item.PredictedLoyaltyScore.ToString("0.0")</td>
+                                                <td class="@varianceClass">±@variance.ToString("0.00")</td>
+                                                <td>
+                                                    <span class="badge @badgeClass">
+                                                        @(item.PredictedLoyaltyScore >= 75 ? "V.I.P" : (item.PredictedLoyaltyScore >= 45 ? "Sıradan" : "Riskli"))
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            rank++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="9" class="p-40 text-muted">ML analizi için veri seti oluşturulamadı.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

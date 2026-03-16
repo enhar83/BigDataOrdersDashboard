@@ -10,6 +10,7 @@ namespace Business_Layer.MachineLearning.Abstract
     public interface ICustomerLoyaltyService
     {
         List<CustomerLoyaltyScoreDto> GetCustomerLoyaltyScores(string cityName);
+        List<CustomerLoyaltyScoreResultMLDto>  GetCustomerLoyaltyScoresWithML(string cityName);
         List<string> GetDistictCountryNames();
         List<string> GetDistictCityNames(string countryName);
     }

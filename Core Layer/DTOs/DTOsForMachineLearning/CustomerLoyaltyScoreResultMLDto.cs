@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core_Layer.DTOs.DTOsForMachineLearning
 {
-    public class CustomerLoyaltysScoreResultMLDto
+    public class CustomerLoyaltyScoreResultMLDto
     {
         public string CustomerName { get; set; }
         public double Recency { get; set; }
@@ -16,3 +16,5 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
         public double PredictedLoyaltyScore { get; set; }
     }
 }
+
+//modelden sadece bir puan (float) döner. Kullanıcıya gösterilmesi için müşteri adı, skor vs gereken dto budur.

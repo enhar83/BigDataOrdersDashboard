@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core_Layer.DTOs.DTOsForMachineLearning
 {
-    public class CustomerLoyaltyScoreMLDto
+    public class CustomerLoyaltyScoreDataMLDto
     {
         public string CustomerName { get; set; }
         public float Recency { get; set; }
@@ -15,3 +15,5 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
         public float LoyaltyScore { get; set; }
     }
 }
+
+//modelin eğitilmesi için gerekli olan ham maddedir. ML.NET'e müşterilerin verileri bunlar denilen sınıftır.
