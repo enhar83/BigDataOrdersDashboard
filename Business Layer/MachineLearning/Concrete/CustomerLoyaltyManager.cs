@@ -93,6 +93,7 @@ namespace Business_Layer.MachineLearning.Concrete
         public List<CustomerLoyaltyScoreResultMLDto> GetCustomerLoyaltyScoresWithML(string cityName)
         {
             var date = new DateTime(2025, 12, 31);
+            ITransformer model;
 
             var rawData = _uow.Customers.GetQueryable()
                 .AsNoTracking()
@@ -116,23 +117,34 @@ namespace Business_Layer.MachineLearning.Concrete
                 LoyaltyScore = CalculateManualScore(x.OrderCount, x.TotalSpend, x.LastOrderDate, date)
             }).ToList();
 
-            //c# listesi (traningData), ml.net kütüphanesinin üzerinde matematiksel işlem yapabileceği özel bir tablı formatına yüklenir
-            IDataView dataView = _mlContext.Data.LoadFromEnumerable(trainingData);
+            //eğer eğitilmiş model dosyası diskte varsa, onu yükleyip kullanıyoruz
+            if (File.Exists(_modelPath))
+            {
+                DataViewSchema modelSchema;
+                model = _mlContext.Model.Load(_modelPath, out modelSchema);
+            }
+            else
+            {
+                //c# listesi (traningData), ml.net kütüphanesinin üzerinde matematiksel işlem yapabileceği özel bir tablı formatına yüklenir
+                IDataView dataView = _mlContext.Data.LoadFromEnumerable(trainingData);
 
-            //concatenate: ai kolonlara tek tek bakmaz. r,f,m değerlerini birleştirip features adında tek bir paket yapar.
-            //sdca: bir sayı tahmin etme (regression) problemidir denir ve SDCA algoritması eklenir. labelColumnName: "LoyaltyScore" diyerek de öğrenmen gereken hedef değer budur denir.
-            var pipeline = _mlContext.Transforms
-                .Concatenate("Features", "Recency", "Frequency", "Monetary")
-                .Append(_mlContext.Regression.Trainers.Sdca(
-                    labelColumnName: "LoyaltyScore", //modelin tahmin etmeye çalıştığı hedef değişken (label) belirlenir.
-                    maximumNumberOfIterations: 100) //modelin kaç kez kendi iç optimizasyon döngüsünü çalıştıracağını belirtir.
-                );
+                //concatenate: ai kolonlara tek tek bakmaz. r,f,m değerlerini birleştirip features adında tek bir paket yapar.
+                //sdca: bir sayı tahmin etme (regression) problemidir denir ve SDCA algoritması eklenir. labelColumnName: "LoyaltyScore" diyerek de öğrenmen gereken hedef değer budur denir.
+                var pipeline = _mlContext.Transforms
+                    .Concatenate("Features", "Recency", "Frequency", "Monetary")
+                    .Append(_mlContext.Regression.Trainers.Sdca(
+                        labelColumnName: "LoyaltyScore", //modelin tahmin etmeye çalıştığı hedef değişken (label) belirlenir.
+                        maximumNumberOfIterations: 100) //modelin kaç kez kendi iç optimizasyon döngüsünü çalıştıracağını belirtir.
+                    );
 
-            //ai eğitimi başlar. algoritma dataView içerisinde verilere bakar ve müşterilerin R-F-M değerleri arasındaki matematiksel bağı çözer
-            var model = pipeline.Fit(dataView);
+                //ai eğitimi başlar. algoritma dataView içerisinde verilere bakar ve müşterilerin R-F-M değerleri arasındaki matematiksel bağı çözer
+                model = pipeline.Fit(dataView);
 
-            //modeli kaydetme işlemi
-            _mlContext.Model.Save(model, dataView.Schema, _modelPath);
+                //modeli kaydetme işlemi
+                var directory = Path.GetDirectoryName(_modelPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+                _mlContext.Model.Save(model, dataView.Schema, _modelPath);
+            }
 
             //tekil tahminler yapmak için motor oluşturur
             var predictionEngine = _mlContext.Model.CreatePredictionEngine<CustomerLoyaltyScoreDataMLDto, CustomerLoyaltyScorePredictionMLDto>(model);
