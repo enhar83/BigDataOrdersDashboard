@@ -12,5 +12,6 @@ namespace Business_Layer.MachineLearning.Abstract
     {
         SentimentAnalysisMainCoverTableDto GetCustomerInformations(int id);
         SentimentAnalysisStatisticsDto GetCustomerStatistics(int id);
+        Task<SentimentAnalysisCustomerInsightsWithGeminiDto> GetCustomerComprehensiveAnalysisAsync(int customerId);
     }
 }
