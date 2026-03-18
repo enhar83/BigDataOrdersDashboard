@@ -11,58 +11,12 @@
 
 					@await Component.InvokeAsync("_SentimentAnalysisMainCoverTableComponentPartial")
 
+					@await Component.InvokeAsync("_SentimentAnalysisSubHeaderComponentPartial")
 
-					<div class="profile-sub-header">
-						<div class="box-list">
-							<ul class="text-center">
-								<li><a href="mail-inbox.html" class=""><i class="zmdi zmdi-email"></i><p>My Inbox</p></a></li>
-								<li><a href="image-gallery.html" class=""><i class="zmdi zmdi-camera"></i><p>Gallery</p></a></li>
-								<li><a href="javascript:void(0);"><i class="zmdi zmdi-attachment"></i><p>Collections</p></a></li>
-								<li><a href="events.html"><i class="zmdi zmdi-format-subject"></i><p>Events</p></a></li>
-							</ul>
-						</div>
-					</div>
 				</div>
-				<div class="card">
-					<div class="row">
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>Page View</p>
-								<input type="text" class="knob" value="42" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#00adef" readonly>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>Storage</p>
-								<input type="text" class="knob" value="81" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#49cdd0" readonly>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>New User</p>
-								<input type="text" class="knob" value="62" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#8f78db" readonly>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>Total Visit</p>
-								<input type="text" class="knob" value="38" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#f67a82" readonly>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>Subscribers</p>
-								<input type="text" class="knob" value="87" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#40b988" readonly>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-4 col-sm-6 col-6 text-center">
-							<div class="body">
-								<p>Bounce Rate</p>
-								<input type="text" class="knob" value="64" data-linecap="round" data-width="80" data-height="80" data-thickness="0.15" data-fgColor="#f7bb97" readonly>
-							</div>
-						</div>
-					</div>
-				</div>
+
+				@await Component.InvokeAsync("_SentimentAnalysisStatisticsComponentPartial")
+
 			</div>
 		</div>
 		<div class="row clearfix">

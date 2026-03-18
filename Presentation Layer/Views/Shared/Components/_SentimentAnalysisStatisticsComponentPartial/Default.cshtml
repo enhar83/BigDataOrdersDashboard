@@ -1,0 +1,52 @@
+﻿@model SentimentAnalysisStatisticsDto
+
+<div class="row clearfix">
+	<div class="col-lg-12">
+		<div class="card">
+			<ul class="row profile_state list-unstyled">
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-collection-item col-amber"></i>
+						<h4>@Model.CustomerTotalOrderCount</h4>
+						<span>Toplam Sipariş Sayısı</span>
+					</div>
+				</li>
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-shopping-basket col-blue"></i>
+						<h4>@Model.CustomerCompletedOrderCount</h4>
+						<span>Tamamlanan Sipariş Sayısı</span>
+					</div>
+				</li>
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-accounts-list col-red"></i>
+						<h4>@Model.CustomerCancelledOrderCount</h4>
+						<span>İptal Edilen Sipariş Sayısı</span>
+					</div>
+				</li>
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-shopping-cart text-success"></i>
+						<h4>@Model.CustomerCountryCityInformation</h4>
+						<span>Ülke-Şehir Bilgisi</span>
+					</div>
+				</li>
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-comments"></i>
+						<h4>@Model.CustomerReviewCount</h4>
+						<span>Yorum Sayısı</span>
+					</div>
+				</li>
+				<li class="col-lg-2 col-md-4 col-6">
+					<div class="body">
+						<i class="zmdi zmdi-calendar-check text-warning"></i>
+						<h4>@Model.CustomerTotalPurchase.ToString("C2")</h4>
+						<span>Toplam Harcama</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

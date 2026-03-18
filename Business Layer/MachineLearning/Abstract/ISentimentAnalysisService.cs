@@ -11,5 +11,6 @@ namespace Business_Layer.MachineLearning.Abstract
     public interface ISentimentAnalysisService
     {
         SentimentAnalysisMainCoverTableDto GetCustomerInformations(int id);
+        SentimentAnalysisStatisticsDto GetCustomerStatistics(int id);
     }
 }
