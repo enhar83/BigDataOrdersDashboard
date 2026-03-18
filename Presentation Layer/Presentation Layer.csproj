@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewComponents\CustomerLoyaltyViewComponents\" />
     <Folder Include="wwwroot\mlmodels\" />
   </ItemGroup>
 

@@ -14,6 +14,7 @@ namespace Entity_Layer
         public string CustomerEmail { get; set; }
         public string CustomerPhone { get; set; }
         public string CustomerImageUrl { get; set; }
+        public string? CustomerDescription { get; set; }
         public string CustomerCountry { get; set; }
         public string CustomerCity { get; set; }
         public string CustomerDistrict { get; set; }

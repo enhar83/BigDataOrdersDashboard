@@ -46,6 +46,7 @@
 								<th>Adresi</th>
 								<th>Sil</th>
 								<th>Güncelle</th>
+								<th>Analiz Detayı</th>
 							</tr>
 
 							@foreach (var item in Model)
@@ -68,6 +69,7 @@
 										</form>
 									</td>
 									<td><a href="/Customer/UpdateCustomer/@item.CustomerId" class="btn btn-success">Güncelle</a></td>
+									<td><a href="/SentimentAnalysis/CustomerInsights/@item.CustomerId" class="btn btn-info">Detay</a></td>
 								</tr>
 							}
 
