@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient(); //api isteði için eklendi. 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

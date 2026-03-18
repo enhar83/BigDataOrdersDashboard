@@ -7,6 +7,8 @@ using Business_Layer.MachineLearning.Abstract;
 using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Business_Layer.MachineLearning.Concrete
 {
@@ -14,9 +16,16 @@ namespace Business_Layer.MachineLearning.Concrete
     {
         private readonly IUnitOfWork _uow;
 
-        public SentimentAnalysisManager(IUnitOfWork uow)
+        //pooling: arka planda bağlantıları yönetir, ihtiyaç bittiğinde onları öldürmek yerine yeniden kullanmak üzere saklar.
+        //apı anahtarlarını -, base url gibi ayarları program.cs içerisinde tek bir yerden yönetmeyi saülar.
+        //ancak program.cs içerisinde builder.Services.AddHttpClient(); yazılması unutulmamalıdır.
+        private readonly IHttpClientFactory _httpClientFactory;
+
+
+        public SentimentAnalysisManager(IUnitOfWork uow, IHttpClientFactory httpClientFactory)
         {
             _uow = uow;
+            _httpClientFactory = httpClientFactory;
         }
 
         public SentimentAnalysisMainCoverTableDto GetCustomerInformations(int id)
