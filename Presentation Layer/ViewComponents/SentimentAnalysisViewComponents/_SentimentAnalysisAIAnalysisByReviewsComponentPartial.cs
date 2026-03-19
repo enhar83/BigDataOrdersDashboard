@@ -12,9 +12,10 @@ namespace Presentation_Layer.ViewComponents.SentimentAnalysisViewComponents
             _sentimentAnalysisService = sentimentAnalysisService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            return View();
+            var values = await _sentimentAnalysisService.GetCustomerReviewsComprehensiveAnalysisAsync(id);
+            return View(values);
         }
     }
 }

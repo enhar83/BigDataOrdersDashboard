@@ -8,9 +8,8 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
 {
     public class SentimentAnalysisReviewDetailsForReviewInsightsWithGeminiDto
     {
-        public string ProductName { get; set; }
-        public string CategoryName { get; set; }
-        public string ReviewContent { get; set; }
+        public string ReviewText { get; set; }
+        public string Sentiment { get; set; }
         public int Rating { get; set; }
         public DateTime ReviewDate { get; set; }
     }

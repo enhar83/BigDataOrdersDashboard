@@ -154,6 +154,104 @@ namespace Business_Layer.MachineLearning.Concrete
             };
         }
 
+        public async Task<SentimentAnalysisReviewInsightsWithGeminiDto> GetCustomerReviewsComprehensiveAnalysisAsync(int customerId)
+        {
+            var query = _uow.Customers.GetQueryable()
+        .Where(c => c.CustomerId == customerId)
+        .Select(c => new SentimentAnalysisReviewInsightsWithGeminiDto
+        {
+            CustomerFullName = c.CustomerName + " " + c.CustomerSurname,
+            LastReviews = c.Reviews
+                .OrderByDescending(r => r.ReviewDate)
+                .Take(10)
+                .Select(r => new SentimentAnalysisReviewDetailsForReviewInsightsWithGeminiDto
+                {
+                    ReviewText = r.ReviewText,
+                    Sentiment = r.Sentiment,
+                    Rating = r.Rating,
+                    ReviewDate = r.ReviewDate
+                }).ToList()
+        });
+
+            var customerData = await query.FirstOrDefaultAsync();
+
+            if (customerData == null) return new SentimentAnalysisReviewInsightsWithGeminiDto();
+
+            //ai'a gönderilecek veri hazırlanır. 
+            var jsonData = JsonSerializer.Serialize(customerData);
+
+            //ai yönlendiriliyor, prompt engineering
+            string prompt = $@"
+        Sen bir müşteri davranış analisti ve psikoloji destekli yorum analiz uzmanısın.
+        
+        Aşağıda bir müşterinin son yorumlarına ait JSON verisi bulunmaktadır.
+        Bu veriyi analiz ederek detaylı bir müşteri analiz raporu oluşturmanı istiyorum.
+        
+        Rapor şu alt başlıklardan oluşmalıdır:
+        1. Müşteri Yorum Profili
+        2. Duygu & Ton Analizi
+        3. Karakter Analizi (Review Temelli)
+        4. Şikayet & Övgü Temaları
+        5. Davranış Trendi
+        6. Aksiyon & İletişim Stratejisi
+        
+        ÖNEMLİ FORMAT KURALLARI:
+        - Çıktıyı SADECE HTML formatında üret.
+        - Alt başlıklar için <h4> kullan.
+        - Paragraflar için <p> kullan.
+        - Listeler için <ul> ve <li> kullan.
+        - Önemli sayısal değerleri <strong> ile vurgula.
+        - Gereksiz açıklama yazma, sadece HTML üret.
+        
+        Veri:
+        {jsonData}
+    ";
+
+            var apiKey = _geminiSettings.ApiKey;
+            var httpClient = _httpClientFactory.CreateClient();
+
+            var model = "gemini-2.5-flash";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
+
+            var requestObject = new
+            {
+                contents = new[]
+                {
+            new { parts = new[] { new { text = prompt } } }
+        }
+            };
+
+            var serializeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+
+            var response = await httpClient.PostAsJsonAsync(url, requestObject, serializeOptions);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(jsonResponse);
+
+                var aiText = doc.RootElement
+                    .GetProperty("candidates")[0]
+                    .GetProperty("content")
+                    .GetProperty("parts")[0]
+                    .GetProperty("text")
+                    .GetString();
+
+                customerData.AiAnalysis = aiText;
+            }
+            else
+            {
+                var errorDetails = await response.Content.ReadAsStringAsync();
+                customerData.AiAnalysis = $"Hata Oluştu! Durum Kodu: {response.StatusCode}. Detay: {errorDetails}";
+            }
+
+            return customerData;
+        }
+
         public SentimentAnalysisStatisticsDto GetCustomerStatistics(int id)
         {
             var orders = _uow.Orders.GetQueryable()
