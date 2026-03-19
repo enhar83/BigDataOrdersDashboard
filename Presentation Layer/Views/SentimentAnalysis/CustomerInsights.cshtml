@@ -9,18 +9,18 @@
 			<div class="col-sm-12">
 				<div class="card overflowhidden m-t-20">
 
-					@await Component.InvokeAsync("_SentimentAnalysisMainCoverTableComponentPartial")
+					@await Component.InvokeAsync("_SentimentAnalysisMainCoverTableComponentPartial", new { id = ViewBag.SelectedId })
 
 					@await Component.InvokeAsync("_SentimentAnalysisSubHeaderComponentPartial")
 
 				</div>
 
-				@await Component.InvokeAsync("_SentimentAnalysisStatisticsComponentPartial")
+				@await Component.InvokeAsync("_SentimentAnalysisStatisticsComponentPartial", new { id = ViewBag.SelectedId })
 
 			</div>
 		</div>
 
-		@await Component.InvokeAsync("_SentimentAnalysisAIAnalysisByLastOrdersComponentPartial")
+		@await Component.InvokeAsync("_SentimentAnalysisAIAnalysisByLastOrdersComponentPartial",new { id = ViewBag.SelectedId })
 
 	</div>
 </section>

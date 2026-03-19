@@ -13,3 +13,6 @@ namespace Core_Layer.DTOs.DTOsForMachineLearning
         public string AiAnalysis  { get; set; }
     }
 }
+
+//bu sınıf ekrana gidecek ana veri paketi.
+//içerisindeki diğer dto ise her siparişin detayını taşımak için kullanılmaktadır.

@@ -2,6 +2,7 @@ using Business_Layer.Abstract;
 using Business_Layer.Concrete;
 using Business_Layer.MachineLearning.Abstract;
 using Business_Layer.MachineLearning.Concrete;
+using Core_Layer.Configuration;
 using Data_Layer.Abstract;
 using Data_Layer.Concrete;
 using Data_Layer.Context;
@@ -32,6 +33,10 @@ builder.Services.AddScoped<IPredictionService, PredictionManager>();
 builder.Services.AddScoped<ICustomerAnalyticsService, CustomerAnalyticsManager>();
 builder.Services.AddScoped<ICustomerLoyaltyService, CustomerLoyaltyManager>();
 builder.Services.AddScoped<ISentimentAnalysisService, SentimentAnalysisManager>();
+
+//githubtan leaked problemi yaþanmamasý için api key appsettingsdevelopment.json içerisine koyuldu ve core katmaný içerisindeki configuration ile iletiþim saðlanacak.
+builder.Services.Configure<GeminiSettings>( 
+    builder.Configuration.GetSection("GeminiSettings"));
 
 var app = builder.Build();
 

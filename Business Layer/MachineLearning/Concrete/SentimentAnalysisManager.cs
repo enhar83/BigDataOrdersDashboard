@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Business_Layer.MachineLearning.Abstract;
+using Core_Layer.Configuration;
 using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Business_Layer.MachineLearning.Concrete
 {
@@ -23,19 +27,17 @@ namespace Business_Layer.MachineLearning.Concrete
         //apı anahtarlarını -, base url gibi ayarları program.cs içerisinde tek bir yerden yönetmeyi saülar.
         //ancak program.cs içerisinde builder.Services.AddHttpClient(); yazılması unutulmamalıdır.
         private readonly IHttpClientFactory _httpClientFactory;
-
-
-        public SentimentAnalysisManager(IUnitOfWork uow, IHttpClientFactory httpClientFactory)
+        private readonly GeminiSettings _geminiSettings;
+        public SentimentAnalysisManager(IUnitOfWork uow, IHttpClientFactory httpClientFactory, IOptions<GeminiSettings> geminiSettings)
         {
             _uow = uow;
             _httpClientFactory = httpClientFactory;
+            _geminiSettings = geminiSettings.Value;
         }
 
         //async olmasının sebebi, kullanıcı istek attığı sırada bir yavaşlık olursa o sırada başka işlemlere de devam edebilmesi içindir.
         public async Task<SentimentAnalysisCustomerInsightsWithGeminiDto> GetCustomerComprehensiveAnalysisAsync(int customerId)
         {
-            customerId = 8;
-
             var query = _uow.Customers.GetQueryable()
                 .Where(c => c.CustomerId == customerId)
                 .Select(c => new SentimentAnalysisCustomerInsightsWithGeminiDto
@@ -59,9 +61,11 @@ namespace Business_Layer.MachineLearning.Concrete
 
             if (customerData == null) return new SentimentAnalysisCustomerInsightsWithGeminiDto();
 
-            // Serialize işlemi
+            //ai'a gönderilecek veri hazırlanır. 
             var jsonData = JsonSerializer.Serialize(customerData);
 
+            //ai yönlendiriliyor, prompt engineering
+            //verilen promptta çıktıyı sadece html formatında üret diyerek güzel görünüm elde edilmektedir.
             string prompt = $@"
                 Sen bir veri analisti ve müşteri davranış uzmanısın.
                 
@@ -87,24 +91,21 @@ namespace Business_Layer.MachineLearning.Concrete
                 Veri:
                 {jsonData}
             ";
-            var apiKey = "AIzaSyDploFA4RbQgoonCmmyiu5-ecaBfq3TcOM";
+            var apiKey = _geminiSettings.ApiKey;
             var httpClient = _httpClientFactory.CreateClient();
 
-            // 1. URL: v1beta kullanımı en stabil olanıdır
             var model = "gemini-2.5-flash";
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
 
-            // 2. JSON Yapısı ve İsimlendirme Politikası (Kritik Nokta!)
-            // Gemini API "Contents" değil "contents" bekler. Bu yüzden CamelCase kullanmalıyız.
+            //gemini camelcase istediğinden dolayı Contents değil contents olması önemlidir
             var requestObject = new
             {
                 contents = new[]
                 {
-            new { parts = new[] { new { text = prompt } } }
+            new { parts = new[] { new { text = prompt } } } //prompt api formatına sokuluyor.
         }
             };
 
-            // JSON ayarlarını küçük harfe (camelCase) zorluyoruz
             var serializeOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -138,7 +139,6 @@ namespace Business_Layer.MachineLearning.Concrete
 
         public SentimentAnalysisMainCoverTableDto GetCustomerInformations(int id)
         {
-            id = 8;
             var customer = _uow.Customers.GetFirstOrDefault(c => c.CustomerId == id);
 
             if (customer == null)
@@ -156,8 +156,6 @@ namespace Business_Layer.MachineLearning.Concrete
 
         public SentimentAnalysisStatisticsDto GetCustomerStatistics(int id)
         {
-            id = 8;
-
             var orders = _uow.Orders.GetQueryable()
                 .Where(o => o.CustomerId == id);
 
