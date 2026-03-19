@@ -1,5 +1,26 @@
 ﻿@{
-	ViewData["Title"] = "CustomerInsights";
+	ViewData["Title"] = "ReviewInsights";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<section class="content profile-page">
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-sm-12">
+				<div class="card overflowhidden m-t-20">
+
+					@await Component.InvokeAsync("_SentimentAnalysisMainCoverTableComponentPartial", new { id = ViewBag.SelectedId })
+
+					@await Component.InvokeAsync("_SentimentAnalysisSubHeaderComponentPartial")
+
+				</div>
+
+				@await Component.InvokeAsync("_SentimentAnalysisStatisticsComponentPartial", new { id = ViewBag.SelectedId })
+
+			</div>
+		</div>
+
+		@await Component.InvokeAsync("_SentimentAnalysisAIAnalysisByReviewsComponentPartial", new { id = ViewBag.SelectedId })
+
+	</div>
+</section>
