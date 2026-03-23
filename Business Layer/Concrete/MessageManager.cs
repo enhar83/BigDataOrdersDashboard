@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Business_Layer.Abstract;
 using Data_Layer.Abstract;
 using Entity_Layer;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 
 namespace Business_Layer.Concrete
@@ -34,7 +35,8 @@ namespace Business_Layer.Concrete
 
         public List<Message> GetAll()
         {
-            return _uow.Messages.GetAll().ToList();
+            return _uow.Messages.GetAll()
+                .ToList();
         }
 
         public Message GetById(int id)
@@ -49,7 +51,7 @@ namespace Business_Layer.Concrete
 
         public (List<Message> messages, int totalCount) GetMessagesWithPaging(int pageNumber, int pageSize)
         {
-            return _uow.Messages.GetAllWithPaging(pageNumber, pageSize);
+            return _uow.Messages.GetAllWithPaging(pageNumber, pageSize, m=>m.Customer);
         }
 
         public void Update(Message message)

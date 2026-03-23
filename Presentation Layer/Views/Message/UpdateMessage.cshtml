@@ -1,0 +1,60 @@
+﻿@model Message
+
+@{
+	ViewData["Title"] = "UpdateMessage";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Ürün Güncelleme Sayfası
+					<small class="text-muted"> Mesaj İşlemleri</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Mesajlar</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Mesaj Güncelleme</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<form method="post">
+							<input type="hidden" asp-for="MessageId" />
+							<input type="hidden" asp-for="CustomerId" />
+							<input type="hidden" asp-for="CreatedDate" />
+
+							<label>Müşteri Mesaj Konusu</label>
+							<input type="text" asp-for="MessageSubject" class="form-control">
+							<br />
+
+							<label>Yeni Mesaj Durumu</label>
+							<input type="text" asp-for="SentimentLabel" class="form-control">
+							<br />
+
+							<label>Yeni Mesaj İçeriği</label>
+							<input type="text" asp-for="MessageText" class="form-control">
+							<br />
+
+							<button class="btn btn-success">Mesajı Güncelle</button>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

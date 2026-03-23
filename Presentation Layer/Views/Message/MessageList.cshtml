@@ -1,0 +1,168 @@
+﻿@model List<Message>
+
+@{
+	ViewData["Title"] = "MessageList";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+	int currentPage = (int)ViewBag.CurrentPage;
+	int pageSize = (int)ViewBag.PageSize;
+
+	int count = (currentPage - 1) * pageSize;
+}
+
+<section class="content">
+
+	<div class="block-header">
+		<div class="row">
+			<div class="col-lg-7 col-md-6 col-sm-12">
+				<h2>
+					Ürün Listesi
+					<small class="text-muted">Mesaj İşlemleri Sayfası</small>
+				</h2>
+			</div>
+			<div class="col-lg-5 col-md-6 col-sm-12">
+				<ul class="breadcrumb float-md-right">
+					<li class="breadcrumb-item"><a href="index.html"><i class="zmdi zmdi-home"></i> Mesajlar</a></li>
+					<li class="breadcrumb-item"><a href="javascript:void(0);">Mesaj Listesi</a></li>
+					<li class="breadcrumb-item active">Ana Sayfa</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row clearfix">
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="body">
+
+						<table class="table table-bordered">
+							<tr>
+								<th>#</th>
+								<th>Gönderici</th>
+								<th>Konu</th>
+								<th>Durum</th>
+								<th>Mesaj Tarihi</th>
+								<th>Mesajı Aç</th>
+								<th>Sil</th>
+								<th>Güncelle</th>
+							</tr>
+
+							@foreach (var item in Model)
+							{
+								count++;
+								<tr>
+									<td>@count</td>
+									<td>@item.Customer.CustomerName @item.Customer.CustomerSurname</td>
+									<td>@item.MessageSubject</td>
+									<td>@item.SentimentLabel</td>
+									<td>@item.CreatedDate.ToString("dd-MMM-yyyy")</td>
+									<td><a href="/Message/MessageDetail/@item.MessageId" class="btn btn-warning">Mesajı Aç</a></td>
+									<td>
+										<form id="deleteForm_@item.MessageId" asp-action="DeleteMessage" method="post" style="display:inline;">
+											@Html.AntiForgeryToken()
+
+											<input type="hidden" name="id" value="@item.MessageId" />
+											<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="@item.MessageId" data-customer-name="@item.Customer.CustomerName @item.Customer.CustomerSurname">Sil</button>
+										</form>
+									</td>
+									<td><a href="/Message/UpdateMessage/@item.MessageId" class="btn btn-success">Güncelle</a></td>
+								</tr>
+							}
+
+						</table>
+
+						<div class="mt-3 text-center">
+							<nav aria-label="Page navigation">
+								<ul class="pagination justify-content-center">
+
+									@if (ViewBag.CurrentPage > 1)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Message/MessageList?page=@(ViewBag.CurrentPage - 1)">Önceki</a>
+										</li>
+									}
+
+									@{
+										int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+										int endPage = Math.Min(ViewBag.TotalPages, ViewBag.CurrentPage + 2);
+
+										if (startPage > 1)
+										{
+											<li class="page-item">
+												<a class="page-link" href="/Message/MessageList?page=1">1</a>
+											</li>
+											if (startPage > 2)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+										}
+
+										for (int i = startPage; i <= endPage; i++)
+										{
+											<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+												<a class="page-link" href="/Message/MessageList?page=@i">@i</a>
+											</li>
+										}
+
+										if (endPage < ViewBag.TotalPages)
+										{
+											if (endPage < ViewBag.TotalPages - 1)
+											{
+												<li class="page-item disabled">
+													<span class="page-link">...</span>
+												</li>
+											}
+											<li class="page-item">
+												<a class="page-link" href="/Message/MessageList?page=@ViewBag.TotalPages">@ViewBag.TotalPages</a>
+											</li>
+										}
+									}
+
+									@if (ViewBag.CurrentPage < ViewBag.TotalPages)
+									{
+										<li class="page-item">
+											<a class="page-link" href="/Message/MessageList?page=@(ViewBag.CurrentPage + 1)">Sonraki</a>
+										</li>
+									}
+
+								</ul>
+							</nav>
+						</div>
+
+						<a href="/Message/AddMessage/" class="btn btn-info">Yeni Mesaj Girişi</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+			document.querySelectorAll('.delete-btn').forEach(button => {
+		button.addEventListener('click', function() {
+			const messageId = this.getAttribute('data-id');
+			const customerName = this.getAttribute('data-customer-name');
+
+			const form = document.getElementById(`deleteForm_${messageId}`);
+
+			Swal.fire({
+				title: 'Emin misiniz?',
+				text: `${customerName} kişisinin mesajı kalıcı olarak silinecek.`,
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Evet, Sil!',
+				cancelButtonText: 'Vazgeç'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					form.submit();
+				}
+			});
+		});
+	});
+</script>
