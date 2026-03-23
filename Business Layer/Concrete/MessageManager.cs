@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business_Layer.Abstract;
+using Business_Layer.MachineLearning.Concrete;
+using Core_Layer.DTOs.DTOsForMachineLearning;
 using Data_Layer.Abstract;
 using Entity_Layer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
 using NuGet.Protocol;
 
 namespace Business_Layer.Concrete
@@ -14,6 +17,7 @@ namespace Business_Layer.Concrete
     public class MessageManager : IMessageService
     {
         private readonly IUnitOfWork _uow;
+        private readonly string _modelPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mlmodels", "sentiment_model.zip");
 
         public MessageManager(IUnitOfWork uow)
         {
@@ -54,6 +58,39 @@ namespace Business_Layer.Concrete
             return _uow.Messages.GetAllWithPaging(pageNumber, pageSize, m=>m.Customer);
         }
 
+        //trainmodel metodu içerisinde kaydedilen .zip dosyasını yükler. yeni gelen bir mesajı bu modele sorar. ardından modelden gelen cevabı döner. 
+        public string GetSentimentPrediction(string subject, string text)
+        {
+            if (!File.Exists(_modelPath)) return "Model Eğitilmedi";
+
+            MLContext mlContext = new MLContext();
+            ITransformer trainedModel = mlContext.Model.Load(_modelPath, out _);
+
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<MessageModelInputDto, MessageModelOutput>(trainedModel);
+
+            var prediction = predictionEngine.Predict(new MessageModelInputDto
+            {
+                MessageSubject = subject,
+                MessageText = text
+            });
+
+            return prediction.PredictedLabel;
+        }
+
+        //dbdeki eski mesajları çeker ve onları ML.NET'in anlayacağı DTO formatına sokar. ardından MessageSentimentTrainer içerisindeki TrainAndSaveModel metodunu çalıştırır.
+        public void TrainModel()
+        {
+            var messages = _uow.Messages.GetAll().Select(x => new MessageModelInputDto
+            {
+                MessageSubject = x.MessageSubject,
+                MessageText = x.MessageText,
+                SentimentLabel = x.SentimentLabel
+            }).ToList();
+
+            var trainer = new MessageSentimentTrainer();
+            trainer.TrainAndSaveModel(messages, _modelPath);
+        }
+
         public void Update(Message message)
         {
             _uow.Messages.Update(message);
@@ -61,3 +98,19 @@ namespace Business_Layer.Concrete
         }
     }
 }
+
+/*
+  
+Düşün ki bir müşteri şu mesajı yazdı: "Kargom 10 gün gecikti, rezalet!"
+
+    1.Controller: Bu metni alır ve Service'e "Bunu bir analiz et" der.
+
+    2.Service: Daha önce eğitilmiş olan sentiment_model.zip dosyasını açar.
+
+    3.Model: İçindeki matematiksel fonksiyonlarla metni tarar, "gecikti" ve "rezalet" kelimelerinin ağırlığına bakar.
+
+Sonuç: PredictedLabel olarak "negative" sonucunu üretir.
+
+Veritabanı: Mesaj artık sistemde "negative" etiketiyle saklanır, böylece sen ileride panelinde "en çok şikayet edilen konuları" raporlayabilirsin.
+ 
+ */

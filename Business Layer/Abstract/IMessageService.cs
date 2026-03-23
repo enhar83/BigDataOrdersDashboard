@@ -16,5 +16,7 @@ namespace Business_Layer.Abstract
         void Update(Message message);
         void Delete(int id);
         (List<Message> messages, int totalCount) GetMessagesWithPaging(int pageNumber, int pageSize);
+        void TrainModel();
+        string GetSentimentPrediction(string subject, string text);
     }
 }

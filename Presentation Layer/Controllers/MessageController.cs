@@ -37,6 +37,10 @@ namespace Presentation_Layer.Controllers
         public IActionResult AddMessage(Message message)
         {
             message.CreatedDate = DateTime.Now;
+            
+            string prediction = _messageService.GetSentimentPrediction(message.MessageSubject, message.MessageText);
+            message.SentimentLabel = prediction;
+
             _messageService.Add(message);
             return RedirectToAction("MessageList");
         }
@@ -53,6 +57,9 @@ namespace Presentation_Layer.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdateMessage(Message message)
         {
+            string prediction = _messageService.GetSentimentPrediction(message.MessageSubject, message.MessageText);
+            message.SentimentLabel = prediction;
+
             _messageService.Update(message);
             return RedirectToAction("MessageList");
         }
@@ -82,6 +89,12 @@ namespace Presentation_Layer.Controllers
                 date = message.CreatedDate.ToString("dd MMM yyyy HH:mm"),
                 sentiment = message.SentimentLabel
             });
+        }
+
+        public IActionResult Train()
+        {
+            _messageService.TrainModel();
+            return Content("Model başarıyla eğitildi ve wwwroot/mlmodels altına kaydedildi.");
         }
     }
 }
