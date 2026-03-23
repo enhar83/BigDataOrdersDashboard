@@ -46,7 +46,7 @@ namespace Business_Layer.Concrete
 
         public Message GetFirstOrDefault(int id)
         {
-            return _uow.Messages.GetFirstOrDefault(m=>m.MessageId==id);
+            return _uow.Messages.GetFirstOrDefault(m=>m.MessageId==id,m=>m.Customer);
         }
 
         public (List<Message> messages, int totalCount) GetMessagesWithPaging(int pageNumber, int pageSize)

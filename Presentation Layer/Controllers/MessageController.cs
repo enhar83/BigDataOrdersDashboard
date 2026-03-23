@@ -64,5 +64,24 @@ namespace Presentation_Layer.Controllers
             _messageService.Delete(id);
             return RedirectToAction("MessageList");
         }
+
+        public IActionResult GetMessageDetail(int id)
+        {
+            var message = _messageService.GetFirstOrDefault(id);
+
+            if (message == null)
+                return Json(new { success = false });
+
+            return Json(new
+            {
+                success = true,
+                messageId = message.MessageId,
+                sender = $"{message.Customer.CustomerName} {message.Customer.CustomerSurname}",
+                subject = message.MessageSubject,
+                content = message.MessageText,
+                date = message.CreatedDate.ToString("dd MMM yyyy HH:mm"),
+                sentiment = message.SentimentLabel
+            });
+        }
     }
 }

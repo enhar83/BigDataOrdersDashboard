@@ -92,9 +92,14 @@ namespace Data_Layer.Concrete
             return _dbSet.Find(id);
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>> predicate)
+        public T GetFirstOrDefault(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            return _dbSet.FirstOrDefault(predicate);
+            IQueryable<T> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return query.FirstOrDefault(predicate);
         }
 
         public void Update(T entity)

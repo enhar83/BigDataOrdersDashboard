@@ -13,7 +13,7 @@ namespace Data_Layer.Abstract
         IQueryable<T> GetAll(); //IQueryable dönmesi kritiktir. Sorgu dbye hemen gitmez, üzerinde filtreleme yapılabilir.
         IQueryable<T> GetAllIncluding(params Expression<Func<T, Object>>[] includeProperties); //ilişkili tabloları Eager Loading ile dahil etmeyi sağlar.
         T GetById(int id);
-        T GetFirstOrDefault(Expression<Func<T, bool>> predicate);
+        T GetFirstOrDefault(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         void Add(T entity);
         void Update(T entity);
         void Delete(int id);

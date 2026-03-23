@@ -55,7 +55,7 @@
 								count++;
 								<tr>
 									<td>@count</td>
-									<td>@item.Customer?.CustomerName?? @item.Customer?.CustomerSurname??</td>
+									<td>@item.Customer.CustomerName @item.Customer.CustomerSurname</td>
 									<td>@item.Product.ProductName (@item.Product.UnitPrice.ToString("C2"))</td>
 									<td>@item.Quantity</td>
 									<td>@((item.Quantity* item.Product.UnitPrice).ToString("C2"))</td>
