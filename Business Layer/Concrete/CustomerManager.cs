@@ -101,11 +101,6 @@ namespace Business_Layer.Concrete
 
         public void Update(Customer customer)
         {
-            if (customer.CustomerId <= 0)
-            {
-                throw new Exception("Geçersiz müşteri ID'si.");
-            }
-
             _uow.Customers.Update(customer);
             _uow.Save();
         }
