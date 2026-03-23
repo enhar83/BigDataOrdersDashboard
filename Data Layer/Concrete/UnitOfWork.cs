@@ -16,6 +16,8 @@ namespace Data_Layer.Concrete
         public IRepository<Customer> Customers { get; private set; }
         public IRepository<Order> Orders { get; private set; }
         public IRepository<Review> Reviews { get; private set; }
+        public IRepository<Message> Messages { get; private set; }
+
 
         private readonly BigDataOrdersDbContext _db;
 
@@ -28,6 +30,7 @@ namespace Data_Layer.Concrete
             Customers=new Repository<Customer>(_db);
             Orders=new Repository<Order>(_db);
             Reviews=new Repository<Review>(_db);
+            Messages=new Repository<Message>(_db);
         }
 
         public void Dispose()
