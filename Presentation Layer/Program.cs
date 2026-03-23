@@ -34,6 +34,7 @@ builder.Services.AddScoped<ICustomerAnalyticsService, CustomerAnalyticsManager>(
 builder.Services.AddScoped<ICustomerLoyaltyService, CustomerLoyaltyManager>();
 builder.Services.AddScoped<ISentimentAnalysisService, SentimentAnalysisManager>();
 builder.Services.AddScoped<IMessageService, MessageManager>();
+builder.Services.AddScoped<IToxicCheckService, ToxicCheckManager>();
 
 //githubtan leaked problemi yaþanmamasý için api key appsettingsdevelopment.json içerisine koyuldu ve core katmaný içerisindeki configuration ile iletiþim saðlanacak.
 builder.Services.Configure<GeminiSettings>( 
