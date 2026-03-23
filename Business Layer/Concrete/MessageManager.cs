@@ -98,19 +98,3 @@ namespace Business_Layer.Concrete
         }
     }
 }
-
-/*
-  
-Düşün ki bir müşteri şu mesajı yazdı: "Kargom 10 gün gecikti, rezalet!"
-
-    1.Controller: Bu metni alır ve Service'e "Bunu bir analiz et" der.
-
-    2.Service: Daha önce eğitilmiş olan sentiment_model.zip dosyasını açar.
-
-    3.Model: İçindeki matematiksel fonksiyonlarla metni tarar, "gecikti" ve "rezalet" kelimelerinin ağırlığına bakar.
-
-Sonuç: PredictedLabel olarak "negative" sonucunu üretir.
-
-Veritabanı: Mesaj artık sistemde "negative" etiketiyle saklanır, böylece sen ileride panelinde "en çok şikayet edilen konuları" raporlayabilirsin.
- 
- */
